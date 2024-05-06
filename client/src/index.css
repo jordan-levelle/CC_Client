@@ -1,0 +1,793 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/*************************** Styles for header ***************************/
+.header {
+  background-color: #1b1b1b;
+  height: 50px;
+}
+
+.logo-link {
+  text-decoration: none;
+}
+
+.logo {
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ececec;
+  display: flex;
+  align-items: center;
+  margin-left: 40px; /* Add margin-left to align the logo properly */
+
+}
+
+.logo-text {
+  margin-left: 40px;
+}
+
+.logo:hover {
+  text-decoration: underline;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding-right: 50px;
+}
+
+.nav-menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item-center {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #dbdbdb;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropbtn {
+  text-decoration: none;
+  color: #dbdbdb;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  line-height: 3; /* Add this line to ensure consistent alignment */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  top: 2.5rem;
+  right: 35px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.logout-link {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.logout-link:hover {
+  cursor: pointer;
+  background-color: #f1f1f1;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.hamburger {
+  display: none;
+}
+
+@media only screen and (max-width: 1133px) {
+  /* Media Query for smaller screens */
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    padding-right: 50px;
+  }
+
+  .logo-link {
+    position: absolute;
+    transform: translateY(10%); /* Adjust to properly center the logo */}
+
+
+  .nav-menu {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+    position: absolute;
+    right: 5%;
+    transform: translateY(10%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .hamburger-icon {
+    font-size: 24px;
+    color: #fff;
+  }
+
+  .nav-menu.active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50px;
+    background-color: #8f8e8e;
+    width: 100%;
+  }
+
+  .nav-item {
+    margin: 0;
+    padding: 10px 15px;
+    border-bottom: 1px solid #424242;
+  }
+
+  .nav-item:last-child {
+    border-bottom: none;
+  }
+}
+
+.nav-menu.active .dropdown-content {
+  top: calc(100%); /* Adjust as needed */
+  left: 0;
+}
+
+
+/************************* Styles for Footer *************************/
+.footer {
+  background-color: #1b1b1b;
+  color: white;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 70px;
+}
+
+.footer-container nav {
+  padding-right: 15px;
+}
+
+/************************* Styles for Homepage *************************/
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px; /* Add padding for better spacing */
+}
+
+.rectangle {
+  width: 80%; /* Adjusted width for responsiveness */
+  max-width: 700px; /* Limiting maximum width for better readability */
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px; /* Moved margin-bottom here */
+}
+
+.rectangle h1 {
+  margin-bottom: 10px;
+}
+
+.rectangle p {
+  margin-bottom: 20px;
+  line-height: 21px;
+}
+
+.rectangle-link-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.rectangle-link-group a {
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.rectangle-link-group .create-proposal-link {
+  background-color: #5bb75b;
+}
+
+.rectangle-link-group .example-proposal-link {
+  background-color: #006dcc;
+}
+
+.rectangle-link-group a:hover {
+  filter: brightness(90%); /* Slightly reduce brightness on hover */
+}
+
+.sections-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow sections to wrap */
+  justify-content: center;
+  gap: 20px; /* Add gap between sections */
+}
+
+.section {
+  flex: 1;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px; /* Limiting maximum width for better readability */
+}
+
+.section h2 {
+  margin-bottom: 10px;
+}
+
+.section p {
+  margin-bottom: 10px;
+}
+
+.section a {
+  display: block;
+  padding: 10px 0;
+  background-color: #007bff;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.section a:hover {
+  filter: brightness(90%); /* Slightly reduce brightness on hover */
+}
+
+@media (max-width: 768px) {
+  .rectangle {
+    width: 100%;
+    margin-bottom: 20px; /* Added margin-bottom */
+  }
+
+  .sections-container {
+    padding: 0 20px; /* Added padding to the sides */
+  }
+
+  .section {
+    flex: 1 1 100%; /* Full width on smaller screens */
+    max-width: none; /* Remove max-width on smaller screens */
+  }
+}
+
+
+/*************** Styles for Proposal Form Component ***************/
+.proposal-form {
+  width: 90%; /* Adjusted width for better mobile responsiveness */
+  max-width: 800px; /* Limiting maximum width for better readability on larger screens */
+  background-color: lightgray;
+  padding: 20px; /* Reduced padding for better spacing */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 50px auto 0;
+}
+
+.proposal-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.proposal-form input[type="text"],
+.proposal-form input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.proposal-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+}
+
+.quill-editor {
+  width: 100%; /* Adjusted width for better responsiveness */
+  height: 300px; /* Increased height */
+  max-height: 500px;
+  min-height: 150px; /* Reduced minimum height for better mobile view */
+  overflow-y: auto;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+}
+
+
+
+
+/* 
+  *************Styles for Proposal Vote Component************* 
+*/
+.proposal-vote-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.proposal-info {
+  margin-bottom: 20px; /* Add more margin between the title and description */
+}
+
+.proposal-info h2 {
+  margin-bottom: 10px; /* Keep existing margin for the title */
+}
+
+.proposal-info p {
+  margin-bottom: 20px; /* Keep existing margin for the description */
+}
+
+.proposal-vote-container textarea {
+  width: 100%; /* Adjust width for smaller screens */
+}
+
+.submitted-votes-container {
+  margin: 20px;
+  overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+}
+
+.votes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.votes-table th,
+.votes-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.votes-table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.votes-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.votes-table tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.vote-buttons {
+  margin-bottom: 10px; /* Reduce margin for smaller screens */
+  display: flex; /* Ensure buttons are displayed in a row */
+  flex-wrap: wrap; /* Allow buttons to wrap to next line on smaller screens */
+}
+
+.vote-buttons button {
+  margin-right: 10px;
+  margin-bottom: 10px; /* Add margin bottom for spacing */
+  padding: 10px 15px; /* Adjust padding for smaller screens */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #007bff;
+}
+
+.shaded:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+
+/* Example Proposal */
+.example-alert {
+  color: #c09853;
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+}
+
+.alert-block {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+
+
+
+
+/* 
+  *************Styles for User Dashboard*************** 
+*/
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Align items to the top */
+  height: 100vh;
+  padding: 0 20px;
+}
+
+.proposal-list-container {
+  margin-top: 5px;
+  max-height: calc(100vh - 40px); /* Account for padding and ensure it doesn't overflow */
+
+}
+
+.user-details {
+  padding: 10px;
+  margin-top: 5px;
+  background-color: #dddbdb;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.proposal-details {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #dddbdb;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.proposal-button-group {
+  justify-content: center;
+}
+
+.delete-proposal-button,
+.edit-button {
+  font-size: medium;
+  padding: 8px 16px;
+  width: 120px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.details-button {
+  font-size: medium;
+  padding: 8px 16px;
+  width: 160px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #007bff; /* Blue background color */
+  color: #ffffff;
+  
+}
+
+.delete-proposal-button {
+  background-color: #dddbdb;
+  color: #dc3545;
+}
+
+.edit-button {
+  background-color: #a8a8a8; /* Blue background color */
+  color: #ffffff;
+}
+
+.details-button:hover,
+.edit-button:hover {
+  background-color: #6d6d6d; /* Darker shade of blue for hover */
+}
+
+
+
+
+
+
+
+
+
+/* 
+  *************Styles for Authentication Pages*************
+*/
+.auth-container {
+  width: 320px; /* Smaller width */
+  background-color: lightgray;
+  padding: 40px; /* Add padding */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 50px auto 0; /* Center horizontally and add space from the top */
+  text-align: center; /* Center contents */
+}
+
+.auth-container input {
+  width: calc(100%); /* Adjust input width */
+  padding: 13px;
+  margin-bottom: 20px; /* Increase margin */
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.auth-container button {
+  width: calc(100% - 20px); /* Adjust button width */
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+/* ************** Styles for Settings Page **************/
+.settings-container {
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 75vw;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.settings-container h3 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+}
+
+.edit-profile {
+  margin-top: 30px;
+}
+
+.edit-email-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-email-row p {
+  margin-right: 20px;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+input.email {
+  height: 40px;
+  width: 200px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  margin-right: 10px;
+}
+
+.edit-email-row button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-left: 10px;
+}
+
+.edit-email-row button:hover {
+  background-color: #0056b3;
+}
+
+.delete-button {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  color: #fff;
+  margin-top: 20px;
+  background-color: #dc3545;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+/* Confirmation popup */
+.confirmation-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.confirmation-content {
+  text-align: center;
+}
+
+.confirmation-popup button {
+  margin: 0 10px;
+}
+
+.confirmation-popup p {
+  margin-bottom: 10px;
+}
+
+.confirmation-content label {
+  display: block;
+  margin-bottom: 15px;
+}
+
+/* Media Queries for Mobile */
+@media only screen and (max-width: 768px) {
+  .settings-container {
+    padding: 10px;
+    max-width: 90vw;
+  }
+
+  input.email {
+    width: 100%;
+    margin-right: 0;
+
+  }
+
+  .delete-button {
+    margin-top: 10px;
+  }
+}
+
+
+
+
+
+
+
+
+
+/************ Styles For Consensus Basics Page ***************/
+.consensus-basics-container {
+  max-width: 800px;
+  
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.subsection-title {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.basics-section {
+  margin-bottom: 20px;
+}
+
+ul, ol {
+  margin-left: 20px;
+}
+
+/************ Styles For Pricing/Upgrade Page ***************/
+
+.price-innerdetail h5 {
+  font-weight: 400;
+  letter-spacing: 2px;
+  font-size: 15px;
+}
+
+.price-innerdetail p {
+  font-size: 50px;
+}
+
+.detail-pricing {
+  border-bottom: 1px solid;
+  padding: 30px 0 30px 0;
+}
+
+.detail-pricing .float-left {
+  padding: 0 0 0 40px;
+}
+
+.detail-pricing .float-left i {
+  position: absolute;
+  left: 0;
+  font-size: 20px;
+}
+
+.detail-pricing span {
+  display: inline-block;
+  position: relative;
+  font-weight: 400;
+}
+
+.wrap-price {
+  background: rgba(32, 33, 36, .1);
+  padding: 50px 20px 50px;
+  border-radius: 10px;
+}
+
+.center-wrap {
+  background: #070707;
+  color: #fff;
+}
