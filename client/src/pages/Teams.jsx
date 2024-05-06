@@ -29,7 +29,7 @@ const Teams = () => {
                         <div class="detail-pricing">
                             <span class="float-left"> <i class="bi bi-check2-circle"></i> Natus quas optio</span>
                         </div>
-                        <a href="#" class="btn btn-secondary mt-5">Create</a>
+                        <button href="#" class="btn btn-secondary mt-5">Create</button>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@ const Teams = () => {
                             <span class="float-left"> <i class="bi bi-check2-circle"></i> amet consectetur adipisicing</span>
                       
                         </div>
-                        <a href="#" class="btn btn-secondary mt-5">Sign up</a>
+                        <button href="#" class="btn btn-secondary mt-5">Sign up</button>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@ const Teams = () => {
                             <span class="float-left"> <i class="bi bi-check2-circle"></i>amet consectetur adipisicing</span>
                       
                         </div>
-                        <a href="#" class="btn btn-secondary mt-5">Buy Now</a>
+                        <button href="#" class="btn btn-secondary mt-5">Buy Now</button>
                     </div>
                 </div>
             </div>
