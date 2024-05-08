@@ -57,7 +57,7 @@ export const createProposal = async (proposalData, token) => {
     }
   };
   
-  export const submitVote = async (proposalId, newVote) => {
+  export const submitNewVote = async (proposalId, newVote) => {
     try {
       const response = await fetch(`${BASE_URL}/${proposalId}/vote`, {
         method: 'POST',
