@@ -15,21 +15,99 @@ export const fetchExampleProposal = async () => {
   }
 };
 
-export const updateVote = async (proposalId, voteIndex, newVoteValue) => {
-  try {
-    const response = await fetch(`${BASE_URL}/vote/${proposalId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ index: voteIndex, vote: newVoteValue })
-    });
-    if (!response.ok) {
-      throw new Error('Failed to update vote');
+export const createProposal = async (proposalData, token) => {
+    try {
+      const response = await fetch(`${BASE_URL}`, {
+        method: 'POST',
+        body: JSON.stringify(proposalData),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to create proposal');
+      }
+  
+      return response.json();
+    } catch (error) {
+      console.error('Error creating proposal:', error);
+      throw error;
     }
-    return response.json();
-  } catch (error) {
-    console.error('Error updating vote:', error);
-    throw error;
-  }
-};
+  };
+
+  export const fetchProposalAndVotes = async (uniqueUrl) => {
+    try {
+      const proposalResponse = await fetch(`${BASE_URL}/${uniqueUrl}`);
+      if (!proposalResponse.ok) {
+        throw new Error('Failed to fetch proposal');
+      }
+      const proposalData = await proposalResponse.json();
+  
+      const votesResponse = await fetch(`${BASE_URL}/${proposalData._id}/votes`);
+      if (!votesResponse.ok) {
+        throw new Error('Failed to fetch submitted votes');
+      }
+      const votesData = await votesResponse.json();
+  
+      return { proposal: proposalData, submittedVotes: votesData.votes };
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  export const submitVote = async (proposalId, newVote) => {
+    try {
+      const response = await fetch(`${BASE_URL}/${proposalId}/vote`, {
+        method: 'POST',
+        body: JSON.stringify(newVote),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error submitting vote');
+      }
+  
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  export const updateVote = async (proposalId, voteId, updatedVote) => {
+    try {
+      const response = await fetch(`${BASE_URL}/${proposalId}/votes/${voteId}`, {
+        method: 'PUT',
+        body: JSON.stringify(updatedVote),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error updating vote');
+      }
+  
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  export const deleteVote = async (voteId) => {
+    try {
+      const response = await fetch(`${BASE_URL}/votes/${voteId}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Error deleting vote: ${errorMessage}`);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };

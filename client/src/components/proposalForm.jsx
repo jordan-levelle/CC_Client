@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid';
 import { generateDummyUser } from '../utils/authUtils'; 
 import ReactQuill from 'react-quill'; 
 import 'react-quill/dist/quill.snow.css'; 
+import { createProposal } from '../api/proposalsApi'; // Importing API function
 
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
@@ -43,22 +44,7 @@ const ProposalForm = () => {
                       };
 
     try {
-      const response = await fetch('/api/proposals', {
-        method: 'POST',
-        body: JSON.stringify(proposal),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}` 
-        },
-      });
-
-      if (!response.ok) {
-        setError('Error submitting proposal');
-        console.error('Error response:', response);
-        return;
-      }
-
-      const json = await response.json();
+      const json = await createProposal(proposal, currentUser.token);
       setError(null);
       setTitle('');
       setDescription('');

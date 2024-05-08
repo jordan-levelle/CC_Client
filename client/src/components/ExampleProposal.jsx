@@ -47,13 +47,14 @@ const ExampleProposal = () => {
     }
   };
 
-  const handleVoteUpdate = async (index, newVoteValue) => {
-    try {
-      const updatedProposal = await updateVote(exampleProposal._id, index, newVoteValue);
-      setExampleProposal(updatedProposal);
-    } catch (error) {
-      console.error('Error updating vote:', error);
-    }
+  const handleVoteUpdate = (index, newVoteValue) => {
+    // Implement the logic to update a vote (does not save to database)
+    const updatedVotes = [...exampleProposal.votes];
+    updatedVotes[index].vote = newVoteValue;
+    setExampleProposal(prevProposal => ({
+      ...prevProposal,
+      votes: updatedVotes
+    }));
   };
 
   const handleCommentUpdate = (index, newComment) => {

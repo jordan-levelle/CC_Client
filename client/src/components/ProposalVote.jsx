@@ -8,6 +8,7 @@ import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown, faBan, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip } from 'react-tooltip';
+import { fetchProposalAndVotes, submitVote, updateVote, deleteVote } from '../api/proposalsApi'; // Importing API functions
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
@@ -21,19 +22,9 @@ const ProposalVote = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const proposalResponse = await fetch(`/api/proposals/${uniqueUrl}`);
-        if (!proposalResponse.ok) {
-          throw new Error('Failed to fetch proposal');
-        }
-        const proposalData = await proposalResponse.json();
+        const { proposal: proposalData, submittedVotes: votesData } = await fetchProposalAndVotes(uniqueUrl);
         setProposal(proposalData);
-
-        const votesResponse = await fetch(`/api/proposals/${proposalData._id}/votes`);
-        if (!votesResponse.ok) {
-          throw new Error('Failed to fetch submitted votes');
-        }
-        const votesData = await votesResponse.json();
-        setSubmittedVotes(votesData.votes);
+        setSubmittedVotes(votesData);
       } catch (error) {
         setError(error.message);
       } finally {
