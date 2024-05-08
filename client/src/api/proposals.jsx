@@ -1,6 +1,6 @@
 // api/proposals.js
 
-const BASE_URL = 'https://consensus-check-4f851f681e3a.herokuapp.com/api/proposals';
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const fetchExampleProposal = async () => {
   try {
@@ -53,7 +53,7 @@ export const createProposal = async (proposalData, token) => {
   
       return { proposal: proposalData, submittedVotes: votesData.votes };
     } catch (error) {
-      throw error;
+      return { error: error.message }; // Return error message
     }
   };
   
