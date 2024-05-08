@@ -7,6 +7,7 @@ import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown, faBan, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip } from 'react-tooltip';
+import { fetchExampleProposal, updateVote } from '../api/proposals'; // Importing API functions
 
 const ExampleProposal = () => {
   const [exampleProposal, setExampleProposal] = useState(null);
@@ -14,14 +15,10 @@ const ExampleProposal = () => {
   const [newVote, setNewVote] = useState({ name: '', vote: '', comment: '' });
 
   useEffect(() => {
-    const fetchExampleProposal = async () => {
+    const fetchProposal = async () => {
       try {
-        const response = await fetch('/api/proposals/example');
-        if (!response.ok) {
-          throw new Error('Failed to fetch example proposal');
-        }
-        const exampleProposalData = await response.json();
-        setExampleProposal(exampleProposalData);
+        const proposalData = await fetchExampleProposal();
+        setExampleProposal(proposalData);
       } catch (error) {
         console.error('Error fetching example proposal:', error);
       } finally {
@@ -29,7 +26,7 @@ const ExampleProposal = () => {
       }
     };
 
-    fetchExampleProposal();
+    fetchProposal();
   }, []);
 
   const handleNewVoteChange = (e) => {
@@ -40,24 +37,23 @@ const ExampleProposal = () => {
     }));
   };
 
-  const submitNewVote = () => {
-    // Implement the logic to submit a new vote (does not save to database)
-    const updatedVotes = [...exampleProposal.votes, newVote];
-    setExampleProposal(prevProposal => ({
-      ...prevProposal,
-      votes: updatedVotes
-    }));
-    setNewVote({ name: '', vote: '', comment: '' });
+  const submitNewVote = async () => {
+    try {
+      const updatedProposal = await updateVote(exampleProposal._id, newVote);
+      setExampleProposal(updatedProposal);
+      setNewVote({ name: '', vote: '', comment: '' });
+    } catch (error) {
+      console.error('Error submitting new vote:', error);
+    }
   };
 
-  const handleVoteUpdate = (index, newVoteValue) => {
-    // Implement the logic to update a vote (does not save to database)
-    const updatedVotes = [...exampleProposal.votes];
-    updatedVotes[index].vote = newVoteValue;
-    setExampleProposal(prevProposal => ({
-      ...prevProposal,
-      votes: updatedVotes
-    }));
+  const handleVoteUpdate = async (index, newVoteValue) => {
+    try {
+      const updatedProposal = await updateVote(exampleProposal._id, index, newVoteValue);
+      setExampleProposal(updatedProposal);
+    } catch (error) {
+      console.error('Error updating vote:', error);
+    }
   };
 
   const handleCommentUpdate = (index, newComment) => {

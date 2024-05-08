@@ -1,5 +1,5 @@
 {
-  "proxy": "https://consensus-check-4f851f681e3a.herokuapp.com/",
+  "proxy": "http://localhost:4000",
   "name": "client",
   "version": "0.1.0",
   "private": true,
