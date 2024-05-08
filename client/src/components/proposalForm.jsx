@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid';
 import { generateDummyUser } from '../utils/authUtils'; 
 import ReactQuill from 'react-quill'; 
 import 'react-quill/dist/quill.snow.css'; 
-import { createProposal } from '../api/proposalsApi'; // Importing API function
+import { createProposal } from "../api/proposals";
 
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
