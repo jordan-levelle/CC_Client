@@ -1,3 +1,10 @@
+/* Comments */
+/* 
+  Update May 9
+  
+  Refactored Beta Ready
+*/
+
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

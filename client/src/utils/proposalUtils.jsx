@@ -1,5 +1,12 @@
 // proposalUtils.jsx
 
+/* Proposal Util Functions */
+
+
+
+
+
+/* Example Proposal Util Functions */
 export const handleExistingVoteUpdate = (index, newVoteValue, exampleProposal, setExampleProposal) => {
     if (!exampleProposal) {
       console.error('Example proposal is undefined.');
