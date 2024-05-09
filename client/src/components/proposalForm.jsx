@@ -22,26 +22,24 @@ const ProposalForm = () => {
   const [receiveNotifications, setReceiveNotifications] = useState(false);
   const [error, setError] = useState(null);
 
-  // Update email state with user's email when checkbox is checked
   useEffect(() => {
     if (user && receiveNotifications) {
       setEmail(user.email);
     }
   }, [user, receiveNotifications]);
 
+  const handleSetTitle = (e) => { setTitle(e.target.value);};
+  const handleSetDescription = (value) => { setDescription(value);};
+  const handleSetName = (e) => { setName(e.target.value);};
+  const handleSetEmail = (e) => { setEmail(e.target.value);};
+  const handleReceiveNotificationsChange = (e) => { setReceiveNotifications(e.target.checked);};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let currentUser = user || generateDummyUser();
-    
+    const currentUser = user || generateDummyUser();
     const uniqueUrl = nanoid(10);
-    const proposal = { title, 
-                       description, 
-                       name, 
-                       email, 
-                       receiveNotifications, 
-                       uniqueUrl 
-                      };
+    const proposal = { title, description, name, email, receiveNotifications, uniqueUrl };
 
     try {
       const json = await createProposal(proposal, currentUser.token);
@@ -66,24 +64,23 @@ const ProposalForm = () => {
       <form className="create" onSubmit={handleSubmit}>
         <div className="proposal-form">
           <label>Title:</label>
-          <input type="text" onChange={(e) => setTitle(e.target.value)} value={title} />
+          <input type="text" onChange={handleSetTitle} value={title} />
 
           <label>Description:</label>
-          <ReactQuill className="quill-editor" value={description} onChange={setDescription} />
+          <ReactQuill className="quill-editor" value={description} onChange={handleSetDescription} />
 
           <label>Proposed by:</label>
-          <input type="text" placeholder="Your Name (Optional)" onChange={(e) => setName(e.target.value)} value={name} />
+          <input type="text" placeholder="Your Name (Optional)" onChange={handleSetName} value={name} />
 
-          {/* Display email input if user is not logged in */}
           {user ? (
             <div>
-              <input type="checkbox" onChange={(e) => setReceiveNotifications(e.target.checked)} />
+              <input type="checkbox" onChange={handleReceiveNotificationsChange} checked={receiveNotifications} />
               <label>Receive response notifications at: {user.email}</label>
             </div>
           ) : (
             <>
               <label>Send notifications of new responses to:</label>
-              <input type="email" placeholder="Your Email (Optional)" onChange={(e) => setEmail(e.target.value)} value={email} />
+              <input type="email" placeholder="Your Email (Optional)" onChange={handleSetEmail} value={email} />
             </>
           )}
 
@@ -96,6 +93,7 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
+
 
 
 

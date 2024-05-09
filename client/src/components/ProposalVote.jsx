@@ -1,13 +1,21 @@
-/* 4/30 Refactored
-   Beta Ready
-*/
+/* Comments */
+/* 
 
+*/
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faThumbsDown, faBan, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip } from 'react-tooltip';
+import { icons, tooltips } from '../constants/Icons_Tooltips';
+import {
+  fetchProposalData,
+  fetchSubmittedVotes,
+  submitNewTableEntry,
+  deleteTableEntry,
+  updateComment,
+  updateVote
+} from '../api/proposals';
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
@@ -21,19 +29,11 @@ const ProposalVote = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const proposalResponse = await fetch(`/api/proposals/${uniqueUrl}`);
-        if (!proposalResponse.ok) {
-          throw new Error('Failed to fetch proposal');
-        }
-        const proposalData = await proposalResponse.json();
+        const proposalData = await fetchProposalData(uniqueUrl);
         setProposal(proposalData);
 
-        const votesResponse = await fetch(`/api/proposals/${proposalData._id}/votes`);
-        if (!votesResponse.ok) {
-          throw new Error('Failed to fetch submitted votes');
-        }
-        const votesData = await votesResponse.json();
-        setSubmittedVotes(votesData.votes);
+        const votesData = await fetchSubmittedVotes(proposalData._id);
+        setSubmittedVotes(votesData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -44,12 +44,39 @@ const ProposalVote = () => {
     fetchData();
   }, [uniqueUrl]);
 
-  const copyUrlToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
+  const handleNewTableEntry = async () => {
+    try {
+      await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes, setNewVote, setError);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
-  const handleNewVoteChange = (e) => {
+  const handleDeleteEntry = async (voteId) => {
+    try {
+      await deleteTableEntry(voteId, setSubmittedVotes, submittedVotes, setError);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleVoteUpdate = async (index, newVoteValue) => {
+    try {
+      await updateVote(proposal._id, submittedVotes, setSubmittedVotes, index, newVoteValue);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  
+  const handleCommentUpdate = async (index, newComment) => {
+    try {
+      await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  
+  const handleNewVoteChange = (e) => { 
     const { name, value } = e.target;
     setNewVote(prevVote => ({
       ...prevVote,
@@ -57,87 +84,6 @@ const ProposalVote = () => {
     }));
   };
 
-  const submitNewVote = async () => {
-    try {
-      const response = await fetch(`/api/proposals/${proposal._id}/vote`, {
-        method: 'POST',
-        body: JSON.stringify(newVote),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Error submitting vote');
-      }
-
-      const votesResponse = await fetch(`/api/proposals/${proposal._id}/votes`);
-      if (!votesResponse.ok) {
-        throw new Error('Failed to fetch submitted votes');
-      }
-      const votesData = await votesResponse.json();
-      setSubmittedVotes(votesData.votes);
-
-      setNewVote({ name: '', vote: '', comment: '' });
-    } catch (error) {
-      setError(error.message);
-      console.error('Error submitting vote:', error);
-    }
-  };
-
-  const handleVoteUpdate = async (index, newVoteValue) => {
-    const updatedVotes = [...submittedVotes];
-    updatedVotes[index].vote = newVoteValue;
-    setSubmittedVotes(updatedVotes);
-    saveVote(updatedVotes[index]);
-  };
-
-  const handleCommentUpdate = async (index, newComment) => {
-    const updatedVotes = [...submittedVotes];
-    updatedVotes[index].comment = newComment;
-    setSubmittedVotes(updatedVotes);
-    saveVote(updatedVotes[index]);
-  };
-
-  const saveVote = async (vote) => {
-    try {
-      const response = await fetch(`/api/proposals/${proposal._id}/vote`, {
-        method: 'PUT',
-        body: JSON.stringify(vote),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Error updating vote');
-      }
-
-      const responseData = await response.json();
-      console.log('Vote updated successfully:', responseData);
-    } catch (error) {
-      console.error('Error updating vote:', error);
-    }
-  };
-
-  const handleDeleteVote = async (voteId) => {
-    try {
-      const response = await fetch(`/api/proposals/votes/${voteId}`, {
-        method: 'DELETE',
-      });
-  
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Error deleting vote: ${errorMessage}`);
-      }
-  
-      const updatedVotes = submittedVotes.filter(vote => vote._id !== voteId);
-      setSubmittedVotes(updatedVotes);
-    } catch (error) {
-      setError(error.message);
-      console.error('Error deleting vote:', error);
-    }
-  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -147,21 +93,12 @@ const ProposalVote = () => {
     return <div>Error: {error || 'No proposal found'}</div>;
   }
 
+  const copyUrlToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+  };
+
   const sanitizedProposal = DOMPurify.sanitize(proposal.description);
-
-  const icons = {
-    Agree: faThumbsUp,
-    Disagree: faThumbsDown,
-    Neutral: faHandPointRight,
-    Block: faBan
-  };
-
-  const tooltips = {
-    Agree: '<div><h3>Agree</h3><p>Basic alignment with the proposal</p></div>',
-    Disagree: '<div><h3>Stand Aside</h3><p>A choice to let the proposal proceed,<br/>while personally not feeling aligned with direction.</p></div>',
-    Neutral: '<div><h3>Neutral</h3><p>Not having an opinion either way and agreeing<br/>to go along with the group\'s decision.</p></div>',
-    Block: '<div><h3>Block</h3><p>Proposal is disastrous for the group or<br/>doesn\'t align with the group\'s core principles.</p></div>'
-  };
 
   return (
     <div className="proposal-vote-container">
@@ -214,7 +151,7 @@ const ProposalVote = () => {
                   />
                 </td>
                 <td>
-                  <button onClick={() => handleDeleteVote(vote._id)}>Delete</button>
+                  <button onClick={() => handleDeleteEntry(vote._id)}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -253,7 +190,7 @@ const ProposalVote = () => {
                 />
               </td>
               <td>
-                <button onClick={submitNewVote}>Save</button>
+                <button onClick={handleNewTableEntry}>Save</button>
               </td>
             </tr>
           </tbody>
@@ -264,6 +201,7 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+
 
 
 
