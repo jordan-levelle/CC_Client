@@ -1,10 +1,13 @@
+/* 4/30 Refactored
+   Beta Ready
+*/
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown, faBan, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip } from 'react-tooltip';
-import { fetchProposalAndVotes, submitVote, updateVote, deleteVote  } from '../api/proposals'; // Importing API functions
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
@@ -18,9 +21,19 @@ const ProposalVote = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { proposal: proposalData, submittedVotes: votesData } = await fetchProposalAndVotes(uniqueUrl);
+        const proposalResponse = await fetch(`/api/proposals/${uniqueUrl}`);
+        if (!proposalResponse.ok) {
+          throw new Error('Failed to fetch proposal');
+        }
+        const proposalData = await proposalResponse.json();
         setProposal(proposalData);
-        setSubmittedVotes(votesData);
+
+        const votesResponse = await fetch(`/api/proposals/${proposalData._id}/votes`);
+        if (!votesResponse.ok) {
+          throw new Error('Failed to fetch submitted votes');
+        }
+        const votesData = await votesResponse.json();
+        setSubmittedVotes(votesData.votes);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -46,38 +59,78 @@ const ProposalVote = () => {
 
   const submitNewVote = async () => {
     try {
-      await submitVote(proposal._id, newVote); // Submit the new vote
-      
-      // Fetch the updated votes after submission
-      const votesData = await fetchProposalAndVotes(proposal._id); // Use fetchProposalAndVotes instead of fetchProposalVotes
-      setSubmittedVotes(votesData);
-  
-      // Clear the new vote fields
+      const response = await fetch(`/api/proposals/${proposal._id}/vote`, {
+        method: 'POST',
+        body: JSON.stringify(newVote),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error submitting vote');
+      }
+
+      const votesResponse = await fetch(`/api/proposals/${proposal._id}/votes`);
+      if (!votesResponse.ok) {
+        throw new Error('Failed to fetch submitted votes');
+      }
+      const votesData = await votesResponse.json();
+      setSubmittedVotes(votesData.votes);
+
       setNewVote({ name: '', vote: '', comment: '' });
     } catch (error) {
       setError(error.message);
       console.error('Error submitting vote:', error);
     }
   };
-  
 
   const handleVoteUpdate = async (index, newVoteValue) => {
     const updatedVotes = [...submittedVotes];
     updatedVotes[index].vote = newVoteValue;
     setSubmittedVotes(updatedVotes);
-    await updateVote(proposal._id, submittedVotes[index]._id, { vote: newVoteValue });
+    saveVote(updatedVotes[index]);
   };
 
   const handleCommentUpdate = async (index, newComment) => {
     const updatedVotes = [...submittedVotes];
     updatedVotes[index].comment = newComment;
     setSubmittedVotes(updatedVotes);
-    await updateVote(proposal._id, submittedVotes[index]._id, { comment: newComment });
+    saveVote(updatedVotes[index]);
+  };
+
+  const saveVote = async (vote) => {
+    try {
+      const response = await fetch(`/api/proposals/${proposal._id}/vote`, {
+        method: 'PUT',
+        body: JSON.stringify(vote),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error updating vote');
+      }
+
+      const responseData = await response.json();
+      console.log('Vote updated successfully:', responseData);
+    } catch (error) {
+      console.error('Error updating vote:', error);
+    }
   };
 
   const handleDeleteVote = async (voteId) => {
     try {
-      await deleteVote(voteId);
+      const response = await fetch(`/api/proposals/votes/${voteId}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Error deleting vote: ${errorMessage}`);
+      }
+  
       const updatedVotes = submittedVotes.filter(vote => vote._id !== voteId);
       setSubmittedVotes(updatedVotes);
     } catch (error) {

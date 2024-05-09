@@ -1,13 +1,16 @@
-/* 4/30 Refactored
-   Beta Ready
-*/
-
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faThumbsDown, faBan, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip } from 'react-tooltip';
-import { fetchExampleProposal, updateVote } from '../api/proposals'; // Importing API functions
+import { icons, tooltips } from '../constants/Icons_Tooltips';
+import { fetchExampleProposal } from '../api/proposals';
+import {
+  handleExistingVoteUpdate,
+  handleExistingCommentUpdate,
+  handleExistingSubmissionDelete,
+  handleNewSubmission,
+  handleNewTableEntry
+} from '../utils/proposalUtils';
 
 const ExampleProposal = () => {
   const [exampleProposal, setExampleProposal] = useState(null);
@@ -29,51 +32,24 @@ const ExampleProposal = () => {
     fetchProposal();
   }, []);
 
-  const handleNewVoteChange = (e) => {
-    const { name, value } = e.target;
-    setNewVote(prevVote => ({
-      ...prevVote,
-      [name]: value
-    }));
+  const updateVote = (index, newVoteValue) => {
+    handleExistingVoteUpdate(index, newVoteValue, exampleProposal, setExampleProposal);
   };
 
-  const submitNewVote = async () => {
-    try {
-      const updatedProposal = await updateVote(exampleProposal._id, newVote);
-      setExampleProposal(updatedProposal);
-      setNewVote({ name: '', vote: '', comment: '' });
-    } catch (error) {
-      console.error('Error submitting new vote:', error);
-    }
+  const updateComment = (index, newComment) => {
+    handleExistingCommentUpdate(index, newComment, exampleProposal, setExampleProposal);
   };
 
-  const handleVoteUpdate = (index, newVoteValue) => {
-    // Implement the logic to update a vote (does not save to database)
-    const updatedVotes = [...exampleProposal.votes];
-    updatedVotes[index].vote = newVoteValue;
-    setExampleProposal(prevProposal => ({
-      ...prevProposal,
-      votes: updatedVotes
-    }));
+  const deleteSubmission = (index) => {
+    handleExistingSubmissionDelete(index, exampleProposal, setExampleProposal);
   };
 
-  const handleCommentUpdate = (index, newComment) => {
-    // Implement the logic to update a comment (does not save to database)
-    const updatedVotes = [...exampleProposal.votes];
-    updatedVotes[index].comment = newComment;
-    setExampleProposal(prevProposal => ({
-      ...prevProposal,
-      votes: updatedVotes
-    }));
+  const newTableEntry = (e) => {
+    handleNewTableEntry(e, newVote, setNewVote);
   };
 
-  const handleDeleteVote = (index) => {
-    // Implement the logic to delete a vote (does not save to database)
-    const updatedVotes = exampleProposal.votes.filter((_, i) => i !== index);
-    setExampleProposal(prevProposal => ({
-      ...prevProposal,
-      votes: updatedVotes
-    }));
+  const newSubmission = () => {
+    handleNewSubmission(exampleProposal, newVote, setExampleProposal, setNewVote);
   };
 
   if (isLoading) {
@@ -119,9 +95,9 @@ const ExampleProposal = () => {
                           key={voteOption}
                           type="button"
                           className={vote.vote === voteOption ? 'selected' : ''}
-                          onClick={() => handleVoteUpdate(index, voteOption)}
+                          onClick={() => updateVote(index, voteOption)}
                         >
-                          <FontAwesomeIcon icon={icons[voteOption]} /> {' '}{voteOption}
+                          <FontAwesomeIcon icon={icons[voteOption]} /> {voteOption}
                         </button>
                       ))}
                     </div>
@@ -130,12 +106,12 @@ const ExampleProposal = () => {
                     <textarea
                       type="text"
                       value={vote.comment}
-                      onChange={(e) => handleCommentUpdate(index, e.target.value)}
+                      onChange={(e) => updateComment(index, e.target.value)}
                       placeholder='Explain your vote...'
                     />
                   </td>
                   <td>
-                    <button onClick={() => handleDeleteVote(index)}>Delete</button>
+                    <button onClick={() => deleteSubmission(index)}>Delete</button>
                   </td>
                 </tr>
               ))}
@@ -145,7 +121,7 @@ const ExampleProposal = () => {
                     type="text"
                     name="name"
                     value={newVote.name}
-                    onChange={handleNewVoteChange}
+                    onChange={newTableEntry}
                   />
                 </td>
                 <td>
@@ -161,7 +137,7 @@ const ExampleProposal = () => {
                           className={newVote.vote === voteOption ? 'selected' : ''}
                           onClick={() => setNewVote({ ...newVote, vote: voteOption })}
                         >
-                          <FontAwesomeIcon icon={icons[voteOption]} /> {' '}{voteOption}
+                          <FontAwesomeIcon icon={icons[voteOption]} /> {voteOption}
                         </button>
                         <Tooltip id={`${voteOption.toLowerCase()}-tooltip`} />
                       </div>
@@ -173,12 +149,12 @@ const ExampleProposal = () => {
                     type="text"
                     name="comment"
                     value={newVote.comment}
-                    onChange={handleNewVoteChange}
+                    onChange={newTableEntry}
                     placeholder='Explain your vote...'
                   />
                 </td>
                 <td>
-                  <button onClick={submitNewVote}>Save</button>
+                  <button onClick={newSubmission}>Save</button>
                 </td>
               </tr>
             </tbody>
@@ -187,21 +163,6 @@ const ExampleProposal = () => {
       </div>
     </section>
   );
-};
-
-// Object containing icons and tooltips for different vote options
-const icons = {
-  Agree: faThumbsUp,
-  Disagree: faThumbsDown,
-  Neutral: faHandPointRight,
-  Block: faBan
-};
-
-const tooltips = {
-  Agree: '<div><h3>Agree</h3><p>Basic alignment with the proposal</p></div>',
-  Disagree: '<div><h3>Stand Aside</h3><p>A choice to let the proposal proceed,<br/>while personally not feeling aligned with direction.</p></div>',
-  Neutral: '<div><h3>Neutral</h3><p>Not having an opinion either way and agreeing<br/>to go along with the group\'s decision.</p></div>',
-  Block: '<div><h3>Block</h3><p>Proposal is disastrous for the group or<br/>doesn\'t align with the group\'s core principles.</p></div>'
 };
 
 export default ExampleProposal;
