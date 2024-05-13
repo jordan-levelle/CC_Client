@@ -1,5 +1,7 @@
+// useSignup.js
 import { useState } from 'react';
 import { useAuthContext } from './useAuthContext';
+import { signupAPI } from '../api/users';
 
 export const useSignup = () => {
   const [error, setError] = useState(null);
@@ -11,18 +13,8 @@ export const useSignup = () => {
     setError(null);
 
     try {
-      const response = await fetch('/api/user/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const json = await response.json();
-        throw new Error(json.error);
-      }
-
-      const json = await response.json();
+      const json = await signupAPI(email, password);
+      
       // Save the user to local storage
       localStorage.setItem('user', JSON.stringify(json));
       // Update the auth context

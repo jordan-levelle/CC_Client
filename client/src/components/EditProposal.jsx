@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import ReactQuill from 'react-quill'; 
 import 'react-quill/dist/quill.snow.css'; 
-
+import { fetchEditProposalAPI, updateProposalAPI } from "../api/proposals";
 const EditProposal = () => {
   const { uniqueUrl } = useParams(); // Get unique URL parameter
   const navigate = useNavigate();
@@ -11,22 +10,16 @@ const EditProposal = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [receiveNotifications, setReceiveNotifications] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/proposals/${uniqueUrl}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch proposal');
-        }
-        const proposalData = await response.json();
+        const proposalData = await fetchEditProposalAPI(uniqueUrl);
         setTitle(proposalData.title || '');
         setDescription(proposalData.description || '');
         setName(proposalData.name || '');
-        setEmail(proposalData.email || '');
         setReceiveNotifications(proposalData.receiveNotifications || false);
       } catch (error) {
         setError(error.message);
@@ -38,45 +31,22 @@ const EditProposal = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const updatedProposal = {
       title,
       description,
       name,
-      email,
       receiveNotifications
     };
-  
+
     try {
-      const response = await fetch(`/api/proposals/${uniqueUrl}`, {
-        method: 'PUT',
-        body: JSON.stringify(updatedProposal),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        if (response.status === 401) {
-          setError('Unauthorized: Please log in to update the proposal.');
-        } else {
-          setError('Error submitting proposal');
-        }
-        console.error('Error response:', response);
-        return;
-      }
-  
-      const json = await response.json();
-  
-      if (response.ok) {
-        setError(null);
-        setTitle('');
-        setDescription('');
-        setName('');
-        const votePageUrl = `/vote/${json.uniqueUrl}`;
-        navigate(votePageUrl);
-      }
-  
+      const response = await updateProposalAPI(uniqueUrl, updatedProposal);
+      setError(null);
+      setTitle('');
+      setDescription('');
+      setName('');
+      const votePageUrl = `/vote/${response.uniqueUrl}`;
+      navigate(votePageUrl);
     } catch (error) {
       setError(error.message);
     }
@@ -115,7 +85,7 @@ const EditProposal = () => {
               onChange={(e) => setReceiveNotifications(e.target.checked)}
               checked={receiveNotifications}
             />
-            <label>Receive response notifications at: {email}</label>
+            <label>Receive response notifications</label>
           </div>
 
           <button>Update Proposal</button>
@@ -127,5 +97,6 @@ const EditProposal = () => {
 };
 
 export default EditProposal;
+
 
 

@@ -9,6 +9,7 @@ export const authReducer = (state, action) => {
     case 'LOGOUT':
       return { user: null }; // Reset the user to null after logout
     case 'DELETE':
+      localStorage.removeItem('user'); // Clear user from localStorage
       return { user: null }; // Reset the user to null after deletion
     case 'UPDATE_EMAIL':
       return { ...state, user: { ...state.user, email: action.payload } };

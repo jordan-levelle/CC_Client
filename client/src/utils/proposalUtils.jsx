@@ -6,6 +6,7 @@
 
 
 
+
 /* Example Proposal Util Functions */
 export const handleExistingVoteUpdate = (index, newVoteValue, exampleProposal, setExampleProposal) => {
     if (!exampleProposal) {

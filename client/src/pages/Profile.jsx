@@ -1,30 +1,26 @@
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
-
 import ProposalList from '../components/ProposalList';
+import { fetchProposalsListAPI } from '../api/proposals';
 
 const Profile = () => {
   const { proposals, dispatch } = useProposalsContext();
   const { user } = useAuthContext();
 
-
   useEffect(() => {
-    const fetchProposals = async () => {
-      const response = await fetch('/api/proposals', {
-        headers: { 'Authorization': `Bearer ${user.token}` },
-      });
-      const json = await response.json();
-
-      if (response.ok) {
-        dispatch({ type: 'SET_PROPOSALS', payload: json });
+    const fetchData = async () => {
+      try {
+        if (user) {
+          const proposals = await fetchProposalsListAPI(user.token);
+          dispatch({ type: 'SET_PROPOSALS', payload: proposals });
+        }
+      } catch (error) {
+        console.error('Error fetching proposals:', error.message);
       }
     };
 
-    if (user) {
-      fetchProposals();
-    }
+    fetchData();
   }, [dispatch, user]);
 
   return (
@@ -46,5 +42,6 @@ const Profile = () => {
 };
 
 export default Profile;
+
 
 

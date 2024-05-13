@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
-import Footer from './components/Footer';
+// import Footer from './components/Footer';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Create from './pages/Create';
@@ -37,7 +37,7 @@ export default function App() {
         <Route path='/edit/:uniqueUrl' element={<EditProposal />} />
         <Route path='/example' element={<ExampleProposal />} />
       </Routes>
-      <Footer />
+      
     </BrowserRouter>
   );
 }

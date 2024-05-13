@@ -16,7 +16,6 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Call the signup function with email and password
     await signup(email, password);
   };
 

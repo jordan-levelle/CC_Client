@@ -3,6 +3,7 @@ import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { Link } from 'react-router-dom';
+import { deleteProposalAPI } from '../api/proposals';
 
 const ProposalList = ({ proposal }) => {
   const { dispatch } = useProposalsContext();
@@ -14,18 +15,8 @@ const ProposalList = ({ proposal }) => {
     }
 
     try {
-      const response = await fetch('/api/proposals/' + proposal._id, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${user.token}` }
-      });
-
-      if (response.ok) {
-        const json = await response.json();
-        dispatch({ type: 'DELETE_PROPOSAL', payload: json });
-      } else {
-        const errorMessage = await response.text();
-        throw new Error(`Failed to delete proposal: ${errorMessage}`);
-      }
+      await deleteProposalAPI(proposal._id, user.token);
+      dispatch({ type: 'DELETE_PROPOSAL', payload: proposal });
     } catch (error) {
       console.error('Error deleting proposal:', error);
     }
@@ -67,5 +58,6 @@ const ProposalList = ({ proposal }) => {
 };
 
 export default ProposalList;
+
 
 
