@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuthContext } from './useAuthContext';
+import { deleteAccountAPI, updateEmailAPI } from '../api/users'; // Import the API functions
 
 const useDeleteAccount = () => {
   const { user, dispatch } = useAuthContext();
@@ -8,26 +9,13 @@ const useDeleteAccount = () => {
 
   const deleteAccount = async (deleteProposals) => {
     try {
-      const response = await fetch('/api/user/delete', {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${user.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ deleteProposals }), // Pass deleteProposals to the server
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.json();
-        throw new Error(errorMessage.error);
-      }
-
+      const message = await deleteAccountAPI(user.token, deleteProposals);
       // After successful deletion, clear user data
       localStorage.removeItem('user');
       // Dispatch DELETE action to reset user to null
       dispatch({ type: 'DELETE' });
       // Set delete message
-      setDeleteMessage('Account deleted successfully');
+      setDeleteMessage(message);
       // Redirect to authentication page programmatically
       window.location.href = '/auth';
     } catch (error) {
@@ -45,24 +33,11 @@ const useUpdateAccount = () => {
 
   const updateEmail = async (newEmail) => {
     try {
-      const response = await fetch('/api/user/updateEmail', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${user.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: newEmail }),
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.json();
-        throw new Error(errorMessage.error);
-      }
-
+      const message = await updateEmailAPI(user.token, newEmail);
       // If update successful, update email in user object in context
       dispatch({ type: 'UPDATE_EMAIL', payload: newEmail });
       // Set update message
-      setUpdateMessage('Email updated successfully');
+      setUpdateMessage(message);
     } catch (error) {
       setUpdateError(error.message);
     }
