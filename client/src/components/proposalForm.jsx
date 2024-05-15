@@ -18,7 +18,7 @@ const ProposalForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    register("description", {required: true});
+    register("description", { required: true });
   }, [register]);
 
   const onEditorStateChange = (content) => {
@@ -55,14 +55,14 @@ const ProposalForm = () => {
           <label>Title:</label>
           <input type="text" {...register('title', { required: 'Title is required' })} />
           {errors.title && <span className="error">{errors.title.message}</span>}
-
+          
           <label>Description:</label>
           <ReactQuill 
             className="quill-editor"
             value={descriptionValue}
             onChange={onEditorStateChange}
           />
-          <p className='error'>{errors.description && "Description is required"}</p>
+          <div className='error'>{errors.description && "Description is required"}</div>
 
           <label>Proposed by:</label>
           <input type="text" placeholder="Your Name (Optional)" {...register('name')} />

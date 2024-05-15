@@ -104,7 +104,7 @@ const ProposalVote = () => {
     <div className="proposal-vote-container">
       <div className="proposal-info">
         <h2>{proposal.title}</h2>
-        <p>Proposed by: {proposal.name}</p>
+        {proposal.name && <p>Proposed by: {proposal.name}</p>}
         <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
       </div>
 
@@ -119,7 +119,7 @@ const ProposalVote = () => {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Vote</th>
+              <th>Opinion</th>
               <th>Comment</th>
             </tr>
           </thead>
@@ -130,6 +130,8 @@ const ProposalVote = () => {
                 <td>
                   <div className="vote-buttons">
                     {Object.keys(icons).map((voteType) => (
+                      <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
+                      data-tooltip-html={tooltips[voteType]}>
                       <div key={voteType}>
                         <button
                           type="button"
@@ -137,8 +139,10 @@ const ProposalVote = () => {
                           onClick={() => handleVoteUpdate(index, voteType)}
                         >
                           <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
+                          
                         </button>
-               
+                        <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
+                        </div>
                       </div>
                     ))}
                   </div>

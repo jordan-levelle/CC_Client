@@ -1,10 +1,3 @@
-/* Comments */
-/* 
-  Update May 9
-  
-  Refactored Beta Ready
-*/
-
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -87,7 +80,7 @@ const ExampleProposal = () => {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Vote</th>
+                <th>Opinion</th>
                 <th>Comment</th>
               </tr>
             </thead>
@@ -97,15 +90,23 @@ const ExampleProposal = () => {
                   <td>{vote.name}</td>
                   <td>
                     <div className="vote-buttons">
-                      {['Agree', 'Disagree', 'Neutral', 'Block'].map((voteOption) => (
+                      {['Agree', 'Neutral', 'Disagree', 'Block'].map((voteOption) => (
+                        <div
+                        key={voteOption}
+                        data-tooltip-id={`${voteOption.toLowerCase()}-tooltip`}
+                        data-tooltip-html={tooltips[voteOption]}
+                      >
                         <button
                           key={voteOption}
                           type="button"
                           className={vote.vote === voteOption ? 'selected' : ''}
                           onClick={() => updateVote(index, voteOption)}
+                          data-tip={tooltips[voteOption]} // Add data-tip attribute
                         >
                           <FontAwesomeIcon icon={icons[voteOption]} /> {voteOption}
                         </button>
+                        <Tooltip id={`${voteOption.toLowerCase()}-tooltip`} />
+                        </div>
                       ))}
                     </div>
                   </td>
@@ -133,7 +134,7 @@ const ExampleProposal = () => {
                 </td>
                 <td>
                   <div className="vote-buttons">
-                    {['Agree', 'Disagree', 'Neutral', 'Block'].map((voteOption) => (
+                    {['Agree', 'Neutral', 'Disagree', 'Block'].map((voteOption) => (
                       <div
                         key={voteOption}
                         data-tooltip-id={`${voteOption.toLowerCase()}-tooltip`}
@@ -143,6 +144,7 @@ const ExampleProposal = () => {
                           type="button"
                           className={newVote.vote === voteOption ? 'selected' : ''}
                           onClick={() => setNewVote({ ...newVote, vote: voteOption })}
+                          data-tip={tooltips[voteOption]} // Add data-tip attribute
                         >
                           <FontAwesomeIcon icon={icons[voteOption]} /> {voteOption}
                         </button>
@@ -173,6 +175,7 @@ const ExampleProposal = () => {
 };
 
 export default ExampleProposal;
+
 
 
 
