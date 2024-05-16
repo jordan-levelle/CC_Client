@@ -488,24 +488,67 @@ body {
 */
 .dashboard {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start; /* Align items to the top */
-  height: 100vh;
-  padding: 0 20px;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
 }
 
-.proposal-list-container {
-  margin-top: 5px;
-  max-height: calc(100vh - 40px); /* Account for padding and ensure it doesn't overflow */
-
+.proposals-container {
+  flex-direction: row;
 }
 
 .user-details {
   padding: 10px;
-  margin-top: 5px;
   background-color: #dddbdb;
   border-radius: 10px;
+  max-width: fit-content;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .dashboard {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100vh;
+    padding: 20px;
+  }
+
+  .proposal-list-container,
+  .proposal-participated-container {
+    max-height: calc(100vh - 40px);
+    max-width: fit-content;
+    margin-right: 20px;
+  }
+}
+
+/* Tablet to Desktop styles */
+@media (min-width: 768px) and (max-width: 1222px) {
+  .proposals-container {
+    flex-direction: column;
+  }
+
+  .proposal-participated-container {
+    margin-top: 20px;
+  }
+
+  .proposal-list-container,
+  .proposal-participated-container {
+    flex-direction: column;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .user-details {
+    order: -1; /* Move user details to the top */
+  }
+
+  .proposal-list-container,
+  .proposal-participated-container {
+    max-width: fit-content;
+  }
 }
 
 .proposal-details {

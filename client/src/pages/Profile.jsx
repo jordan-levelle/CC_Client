@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
-import ProposalList from '../components/ProposalList';
 import { fetchProposalsListAPI } from '../api/proposals';
+import ProposalList from '../components/ProposalList';
 
 const Profile = () => {
   const { proposals, dispatch } = useProposalsContext();
@@ -25,15 +25,18 @@ const Profile = () => {
 
   return (
     <div className="dashboard">
-      <div className="proposal-list-container">
-        <h4>Your Proposals</h4>
-        {proposals && proposals.map((proposal) => (
-          <ProposalList key={proposal._id} proposal={proposal} />
-        ))}
+      <div className="proposals-container">
+        <div className="proposal-list-container">
+          <h4>Your Proposals</h4>
+          {proposals && proposals.map((proposal) => (
+            <ProposalList key={proposal._id} proposal={proposal} />
+          ))}
+        </div>
+        <div className="proposal-participated-container">
+          <h4>Proposals Participated In</h4>
+        </div>
       </div>
-      <div className='proposal-participated-container'>
-        <h4>Proposal Participated In</h4>
-      </div>
+      
       <div className="user-details">
         <span className="email">{user.email}</span>
       </div>
