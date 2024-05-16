@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
+import { formatDate } from '../constants/HomeTextConstants';
 import {
   fetchProposalData,
   fetchSubmittedVotes,
@@ -21,6 +22,7 @@ const ProposalVote = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const nameInputRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,36 +44,37 @@ const ProposalVote = () => {
   const handleNewTableEntry = async () => {
     try {
       await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes, setNewVote, setError);
+      setNewVote({ name: '', vote: '', comment: '' });
     } catch (error) {
       setError('Error submitting new entry: ' + error.message);
     }
   };
 
-  const handleDeleteEntry = async (voteId) => {
+  const handleDeleteEntry = useCallback(async (voteId) => {
     try {
       await deleteTableEntry(voteId, setSubmittedVotes, submittedVotes, setError);
     } catch (error) {
       setError('Error deleting entry: ' + error.message);
     }
-  };
+  }, [submittedVotes]);
 
-  const handleVoteUpdate = async (index, newVoteValue) => {
+  const handleVoteUpdate = useCallback(async (index, newVoteValue) => {
     try {
       await updateVote(proposal._id, submittedVotes, setSubmittedVotes, index, newVoteValue);
     } catch (error) {
       setError('Error updating vote: ' + error.message);
     }
-  };
-  
-  const handleCommentUpdate = async (index, newComment) => {
+  }, [proposal, submittedVotes]);
+
+  const handleCommentUpdate = useCallback(async (index, newComment) => {
     try {
       await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
     } catch (error) {
       setError('Error updating comment: ' + error.message);
     }
-  };
-  
-  const handleNewVoteChange = (e) => { 
+  }, [proposal, submittedVotes]);
+
+  const handleNewVoteChange = (e) => {
     const { name, value } = e.target;
     setNewVote(prevVote => ({
       ...prevVote,
@@ -79,10 +82,31 @@ const ProposalVote = () => {
     }));
   };
 
+  const handleNewVoteButtonClick = async (voteType) => {
+    setNewVote(prevVote => ({
+      ...prevVote,
+      vote: voteType
+    }));
+    await handleNewTableEntry();
+  };
+
+  useLayoutEffect(() => {
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [newVote.name]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleNewTableEntry();
+    }
+  };
+
   const copyUrlToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
   };
+
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -99,11 +123,10 @@ const ProposalVote = () => {
       <div className="proposal-info">
         <h2>{proposal.title}</h2>
         {proposal.name && <p>Proposed by: {proposal.name}</p>}
-        <p>Proposed On: {new Date(proposal.createdAt).toLocaleString()}</p>
+        <p>Proposed On: {formatDate(proposal.createdAt)}</p>
         <div className='proposal-description'>
-        <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
+          <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
         </div>
-        
       </div>
 
       {proposal && (
@@ -135,14 +158,14 @@ const ProposalVote = () => {
                           className={submittedVotes[index].vote === voteType ? 'selected' : ''}
                           onClick={() => handleVoteUpdate(index, voteType)}
                         >
-                          <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}  
+                          <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
                         </button>
                         <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
                       </div>
                     ))}
                   </div>
                   <div>
-                    <small>{new Date(vote.createdAt).toLocaleString()}</small>
+                    <small>{formatDate(vote.createdAt)}</small>
                   </div>
                 </td>
                 <td>
@@ -164,6 +187,9 @@ const ProposalVote = () => {
                   name="name"
                   value={newVote.name}
                   onChange={handleNewVoteChange}
+                  onKeyDown={handleKeyDown}
+                  ref={nameInputRef}
+                  placeholder="Name"
                 />
               </td>
               <td>
@@ -174,7 +200,7 @@ const ProposalVote = () => {
                       <button
                         type="button"
                         className={newVote.vote === voteType ? 'selected' : ''}
-                        onClick={() => setNewVote({ ...newVote, vote: voteType })}
+                        onClick={() => handleNewVoteButtonClick(voteType)}
                       >
                         <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
                       </button>
@@ -189,10 +215,9 @@ const ProposalVote = () => {
                   name="comment"
                   value={newVote.comment}
                   onChange={handleNewVoteChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Explain your vote..."
                 />
-              </td>
-              <td>
-                <button onClick={handleNewTableEntry}>Save</button>
               </td>
             </tr>
           </tbody>
@@ -203,6 +228,7 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+
 
 
 

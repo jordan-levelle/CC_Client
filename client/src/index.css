@@ -521,6 +521,8 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+
+
 /* Desktop styles */
 @media (min-width: 768px) {
   .dashboard {
@@ -534,9 +536,10 @@ body {
   .proposal-list-container,
   .proposal-participated-container {
     max-height: calc(100vh - 40px);
-    max-width: fit-content;
+    width: 450px;
     margin-right: 20px;
   }
+
 }
 
 /* Tablet to Desktop styles */
@@ -586,6 +589,7 @@ body {
 .details-button, 
 .edit-button, 
 .delete-proposal-button {
+  max-width: fit-content;
   font-size: medium;
   padding: 8px 16px;
   margin: 5px;

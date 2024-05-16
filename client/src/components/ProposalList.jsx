@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { Link } from 'react-router-dom';
 import { deleteProposalAPI } from '../api/proposals';
+import { formatDate } from '../constants/HomeTextConstants';
 
 const ProposalList = ({ proposal }) => {
   const { dispatch } = useProposalsContext();
@@ -40,7 +40,7 @@ const ProposalList = ({ proposal }) => {
       <div className="proposal-details">
         <h4>{proposal.title}</h4>
         <p>
-          Created: {proposal.createdAt ? formatDistanceToNow(new Date(proposal.createdAt), { addSuffix: true }) : 'Invalid Date'}
+          Proposed on: {proposal.createdAt ? formatDate(proposal.createdAt) : 'Invalid Date'}
         </p>
         <div className="proposal-button-group">
           <Link to={`/vote/${proposal.uniqueUrl}`}>
