@@ -514,17 +514,21 @@ body {
   background-color: #dddbdb;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .proposal-button-group {
+  display: flex;
+  gap: 10px;
   justify-content: center;
 }
 
-.delete-proposal-button,
-.edit-button {
+.details-button, 
+.edit-button, 
+.delete-proposal-button {
   font-size: medium;
   padding: 8px 16px;
-  width: 120px;
   margin: 5px;
   border: none;
   border-radius: 5px;
@@ -532,31 +536,58 @@ body {
 }
 
 .details-button {
-  font-size: medium;
-  padding: 8px 16px;
   width: 160px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   background-color: #007bff; /* Blue background color */
   color: #ffffff;
-  
 }
 
 .delete-proposal-button {
+  width: 120px;
   background-color: #dddbdb;
   color: #dc3545;
 }
 
 .edit-button {
-  background-color: #a8a8a8; /* Blue background color */
+  width: 120px;
+  background-color: #a8a8a8; /* Grey background color */
   color: #ffffff;
 }
 
 .details-button:hover,
 .edit-button:hover {
-  background-color: #6d6d6d; /* Darker shade of blue for hover */
+  background-color: #6d6d6d; /* Darker shade of grey for hover */
+}
+
+.confirmation-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.confirmation-content {
+  text-align: center;
+}
+
+.confirmation-options {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.confirmation-options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.confirmation-options input[type="radio"] {
+  margin-right: 5px;
 }
 
 
