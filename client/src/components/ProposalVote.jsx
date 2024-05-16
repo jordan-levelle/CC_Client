@@ -1,7 +1,3 @@
-/* Comments */
-/* 
-
-*/
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
@@ -31,11 +27,10 @@ const ProposalVote = () => {
       try {
         const proposalData = await fetchProposalData(uniqueUrl);
         setProposal(proposalData);
-
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
       } catch (error) {
-        setError(error.message);
+        setError('Error fetching data: ' + error.message);
       } finally {
         setIsLoading(false);
       }
@@ -48,7 +43,7 @@ const ProposalVote = () => {
     try {
       await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes, setNewVote, setError);
     } catch (error) {
-      setError(error.message);
+      setError('Error submitting new entry: ' + error.message);
     }
   };
 
@@ -56,7 +51,7 @@ const ProposalVote = () => {
     try {
       await deleteTableEntry(voteId, setSubmittedVotes, submittedVotes, setError);
     } catch (error) {
-      setError(error.message);
+      setError('Error deleting entry: ' + error.message);
     }
   };
 
@@ -64,7 +59,7 @@ const ProposalVote = () => {
     try {
       await updateVote(proposal._id, submittedVotes, setSubmittedVotes, index, newVoteValue);
     } catch (error) {
-      setError(error.message);
+      setError('Error updating vote: ' + error.message);
     }
   };
   
@@ -72,7 +67,7 @@ const ProposalVote = () => {
     try {
       await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
     } catch (error) {
-      setError(error.message);
+      setError('Error updating comment: ' + error.message);
     }
   };
   
@@ -84,6 +79,10 @@ const ProposalVote = () => {
     }));
   };
 
+  const copyUrlToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -93,11 +92,6 @@ const ProposalVote = () => {
     return <div>Error: {error || 'No proposal found'}</div>;
   }
 
-  const copyUrlToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-  };
-
   const sanitizedProposal = DOMPurify.sanitize(proposal.description);
 
   return (
@@ -105,14 +99,18 @@ const ProposalVote = () => {
       <div className="proposal-info">
         <h2>{proposal.title}</h2>
         {proposal.name && <p>Proposed by: {proposal.name}</p>}
+        <p>Proposed On: {new Date(proposal.createdAt).toLocaleString()}</p>
+        <div className='proposal-description'>
         <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
+        </div>
+        
       </div>
 
       {proposal && (
-          <button onClick={copyUrlToClipboard}>
-            {copied ? "URL Copied!" : "Copy Proposal Link"}
-          </button>
-        )}
+        <button className='copy-link' onClick={copyUrlToClipboard}>
+          {copied ? "URL Copied!" : "Copy Proposal Link"}
+        </button>
+      )}
 
       <div className="submitted-votes-container">
         <table className="votes-table">
@@ -131,20 +129,20 @@ const ProposalVote = () => {
                   <div className="vote-buttons">
                     {Object.keys(icons).map((voteType) => (
                       <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
-                      data-tooltip-html={tooltips[voteType]}>
-                      <div key={voteType}>
+                        data-tooltip-html={tooltips[voteType]}>
                         <button
                           type="button"
                           className={submittedVotes[index].vote === voteType ? 'selected' : ''}
                           onClick={() => handleVoteUpdate(index, voteType)}
                         >
-                          <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
-                          
+                          <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}  
                         </button>
                         <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
-                        </div>
                       </div>
                     ))}
+                  </div>
+                  <div>
+                    <small>{new Date(vote.createdAt).toLocaleString()}</small>
                   </div>
                 </td>
                 <td>

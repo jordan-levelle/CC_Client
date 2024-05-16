@@ -385,11 +385,20 @@ body {
   *************Styles for Proposal Vote Component************* 
 */
 .proposal-vote-container {
-  margin: 20px;
+  margin: 20px auto; /* auto margin for vertical centering */
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
+  max-width: 89vw;
+}
+
+.proposal-description{
+  background-color: rgba(247, 241, 225, 0.4);
+  max-width: 79vw;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 .proposal-info {
@@ -458,11 +467,18 @@ body {
   border: 1px solid #007bff;
 }
 
-.shaded:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
+.copy-link {
+  margin-right: 10px;
+  margin-bottom: 10px; /* Add margin bottom for spacing */
+  padding: 10px 15px; /* Adjust padding for smaller screens */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #007bff;
+  
 }
-
 
 /* Example Proposal */
 .example-alert {
