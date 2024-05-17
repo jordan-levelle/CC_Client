@@ -76,6 +76,7 @@ const ProposalVote = () => {
     if (newVote.vote) {
       handleNewTableEntry();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newVote.vote]);
 
   const handleNewTableEntry = async () => {
