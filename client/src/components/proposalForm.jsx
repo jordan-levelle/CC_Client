@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useForm } from 'react-hook-form';
@@ -16,10 +16,27 @@ const ProposalForm = () => {
   const { setSelectedProposalId } = useVoteContext();
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const titleInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
 
   useEffect(() => {
     register("description", { required: true });
   }, [register]);
+
+  useEffect(() => {
+    if (titleInputRef.current) {
+      titleInputRef.current.focus(); // Focus on title input when component mounts
+    }
+  }, []);
+
+  const handleTitleKeyPress = (event) => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      if (descriptionInputRef.current) {
+        descriptionInputRef.current.focus(); // Focus on description input when Tab key is pressed
+      }
+    }
+  };
 
   const onEditorStateChange = (content) => {
     setValue("description", content);
@@ -53,14 +70,22 @@ const ProposalForm = () => {
       <form className="create" onSubmit={handleSubmit(onSubmit)}>
         <div className="proposal-form">
           <label>Title:</label>
-          <input type="text" {...register('title', { required: 'Title is required' })} />
+          <input 
+            type="text" 
+            autoFocus 
+            ref={titleInputRef} 
+            {...register('title', { required: 'Title is required' })}
+            onKeyDown={handleTitleKeyPress} // Listen for Tab key press on title input
+          />
           {errors.title && <span className="error">{errors.title.message}</span>}
           
           <label>Description:</label>
           <ReactQuill 
+            ref={descriptionInputRef}
             className="quill-editor"
             value={descriptionValue}
             onChange={onEditorStateChange}
+            tabIndex="0" // Ensure description input receives focus when using Tab key
           />
           <div className='error'>{errors.description && "Description is required"}</div>
 
@@ -87,6 +112,7 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
+
 
 
 

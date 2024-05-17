@@ -87,8 +87,10 @@ const ProposalVote = () => {
       ...prevVote,
       vote: voteType
     }));
+    // Call handleNewTableEntry after updating newVote
     await handleNewTableEntry();
   };
+  
 
   useLayoutEffect(() => {
     if (nameInputRef.current) {
