@@ -37,9 +37,46 @@ const ProposalVote = () => {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [uniqueUrl]);
+
+  useLayoutEffect(() => {
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [newVote.name]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleNewTableEntry();
+    }
+  };
+
+  const handleNewVoteChange = (e) => {
+    const { name, value } = e.target;
+    setNewVote(prevVote => ({
+      ...prevVote,
+      [name]: value
+    }));
+  };
+
+  const copyUrlToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+  };
+
+  const handleNewVoteButtonClick = (voteType) => {
+    setNewVote(prevVote => ({
+      ...prevVote,
+      vote: voteType
+    }));
+  };
+
+  useEffect(() => {
+    if (newVote.vote) {
+      handleNewTableEntry();
+    }
+  }, [newVote.vote]);
 
   const handleNewTableEntry = async () => {
     try {
@@ -73,42 +110,6 @@ const ProposalVote = () => {
       setError('Error updating comment: ' + error.message);
     }
   }, [proposal, submittedVotes]);
-
-  const handleNewVoteChange = (e) => {
-    const { name, value } = e.target;
-    setNewVote(prevVote => ({
-      ...prevVote,
-      [name]: value
-    }));
-  };
-
-  const handleNewVoteButtonClick = async (voteType) => {
-    setNewVote(prevVote => ({
-      ...prevVote,
-      vote: voteType
-    }));
-    // Call handleNewTableEntry after updating newVote
-    await handleNewTableEntry();
-  };
-  
-
-  useLayoutEffect(() => {
-    if (nameInputRef.current) {
-      nameInputRef.current.focus();
-    }
-  }, [newVote.name]);
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleNewTableEntry();
-    }
-  };
-
-  const copyUrlToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-  };
-
 
   if (isLoading) {
     return <div>Loading...</div>;
