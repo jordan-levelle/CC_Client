@@ -1,19 +1,13 @@
+// Library imports
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Profile from './pages/Profile';
-import Create from './pages/Create';
-import Basics from './pages/Basics';
-import Teams from './pages/Teams';
-import Settings from './pages/Settings';
-import AuthPage from './pages/Authentication';
-import VerificationPage from './pages/Verification';
-import Signup from './components/Signup';
-import ExampleProposal from './components/ExampleProposal';
-import ProposalVote from './components/ProposalVote';
-import EditProposal from './components/EditProposal';
+
+// Component imports
+import { Header, Footer } from './components';
+import { Signup, ExampleProposal, ProposalVote, EditProposal } from './components';
+import { Home, Profile, Create, Basics, Teams, Settings, AuthPage, VerificationPage } from './pages';
+
+// Hook imports
 import { useAuthContext } from './hooks/useAuthContext';
 
 export default function App() {

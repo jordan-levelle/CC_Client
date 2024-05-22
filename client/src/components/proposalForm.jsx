@@ -18,6 +18,8 @@ const ProposalForm = () => {
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+  const proposedByInputRef = useRef(null);
+  const emailInputRef = useRef(null);
 
   useEffect(() => {
     register("description", { required: true });
@@ -38,6 +40,15 @@ const ProposalForm = () => {
     }
   };
 
+  const handleDescriptionKeyPress = (event) => {
+    if (event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault();
+      if (proposedByInputRef.current) {
+        proposedByInputRef.current.focus(); // Focus on proposed by input when Tab key is pressed
+      }
+    }
+  };
+
   const onEditorStateChange = (content) => {
     setValue("description", content);
   };
@@ -50,7 +61,8 @@ const ProposalForm = () => {
 
       const currentUser = user || generateDummyUser();
       const uniqueUrl = nanoid(10);
-      const proposal = { ...data, uniqueUrl };
+      const proposal = { ...data, uniqueUrl, isFirstCreation: true };
+      console.log("State of isFirstCreation: ", proposal.isFirstCreation)
 
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
@@ -86,25 +98,38 @@ const ProposalForm = () => {
             value={descriptionValue}
             onChange={onEditorStateChange}
             tabIndex="0" // Ensure description input receives focus when using Tab key
+            onKeyDown={handleDescriptionKeyPress} // Listen for Tab key press on description input
           />
           <div className='error'>{errors.description && "Description is required"}</div>
 
           <label>Proposed by:</label>
-          <input type="text" placeholder="Your Name (Optional)" {...register('name')} />
+          <input 
+            type="text" 
+            placeholder="Your Name (Optional)" 
+            {...register('name')}
+            ref={proposedByInputRef} 
+            tabIndex="1"
+          />
 
           {user ? (
             <div>
-              <input type="checkbox" {...register('receiveNotifications')} />
+              <input type="checkbox" {...register('receiveNotifications')} tabIndex="2" />
               <label>Receive response notifications at: {user.email}</label>
             </div>
           ) : (
             <>
               <label>Send notifications of new responses to:</label>
-              <input type="email" placeholder="Your Email (Optional)" {...register('email')} />
+              <input 
+                type="email" 
+                placeholder="Your Email (Optional)" 
+                {...register('email')} 
+                ref={emailInputRef} 
+                tabIndex="3"
+              />
             </>
           )}
 
-          <button type="submit">Create Proposal</button>
+          <button type="submit" tabIndex="4">Create Proposal</button>
         </div>
       </form>
     </div>
@@ -112,6 +137,7 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
+
 
 
 
