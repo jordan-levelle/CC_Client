@@ -104,19 +104,22 @@ export const createProposal = async (proposalData, token) => {
     }
   };
 
-// GET Proposal Data API Call
-export const fetchProposalData = async (uniqueUrl) => {
-  try {
-    const proposalResponse = await fetch(`${PROP_URL}/${uniqueUrl}`);
-    if (!proposalResponse.ok) {
-      throw new Error('Failed to fetch proposal');
+  export const fetchProposalData = async (uniqueUrl) => {
+    try {
+      const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch proposal');
+      }
+      const data = await response.json();
+      const isFirstCreation = response.headers.get('isFirstCreation') === 'true';
+      // Get isFirstCreationShownAt from response headers
+      const isFirstCreationShownAt = response.headers.get('isFirstCreationShownAt');
+      return { proposal: data, isFirstCreation, isFirstCreationShownAt };
+    } catch (error) {
+      throw new Error(error.message);
     }
-    const proposalData = await proposalResponse.json();
-    return proposalData;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
+  };
+  
 
 // GET Proposal Submission Data API Call
 export const fetchSubmittedVotes = async (proposalId) => {
@@ -147,19 +150,14 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
       throw new Error('Error submitting vote');
     }
 
-    const votesResponse = await fetch(`${PROP_URL}/${proposalId}/votes`);
-    if (!votesResponse.ok) {
-      throw new Error('Failed to fetch submitted votes');
-    }
-    const votesData = await votesResponse.json();
-    setSubmittedVotes(votesData.votes);
-
+    const data = await fetchSubmittedVotes(proposalId);
+    setSubmittedVotes(data);
     setNewVote({ name: '', vote: '', comment: '' });
   } catch (error) {
     setError(error.message);
-    console.error('Error submitting vote:', error);
   }
 };
+
 
 // DELETE Table Entry API Call
 export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes, setError) => {
@@ -169,17 +167,16 @@ export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes
     });
 
     if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Error deleting vote: ${errorMessage}`);
+      throw new Error(`Error deleting vote: ${response.statusText}`);
     }
 
-    const updatedVotes = submittedVotes.filter(vote => vote._id !== voteId);
-    setSubmittedVotes(updatedVotes);
+    setSubmittedVotes(submittedVotes.filter(vote => vote._id !== voteId));
   } catch (error) {
     setError(error.message);
-    console.error('Error deleting vote:', error);
   }
 };
+
+
 
 // UPDATE Existing Table Entry API Call
 export const handleSubmittedVoteUpdate = async (proposalId, vote) => {
@@ -196,10 +193,8 @@ export const handleSubmittedVoteUpdate = async (proposalId, vote) => {
       throw new Error('Error updating vote');
     }
 
-    const responseData = await response.json();
-    console.log('Vote updated successfully:', responseData);
+    return response.json();
   } catch (error) {
-    console.error('Error updating vote:', error);
     throw new Error(error.message);
   }
 };
@@ -211,7 +206,6 @@ export const updateVote = async (proposalId, submittedVotes, setSubmittedVotes, 
     setSubmittedVotes(updatedVotes);
     await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
   } catch (error) {
-    console.error('Error updating vote:', error);
     throw new Error(error.message);
   }
 };
@@ -223,11 +217,10 @@ export const updateComment = async (proposalId, submittedVotes, setSubmittedVote
     setSubmittedVotes(updatedVotes);
     await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
   } catch (error) {
-    console.error('Error updating vote:', error);
     throw new Error(error.message);
   }
 };
-
+  
   
 
 

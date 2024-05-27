@@ -39,7 +39,7 @@ const ProposalList = ({ proposal }) => {
           Proposed on: {proposal.createdAt ? formatDate(proposal.createdAt) : 'Invalid Date'}
         </p>
         <div className="proposal-button-group">
-          <Link to={`/vote/${proposal.uniqueUrl}`}>
+          <Link to={`/${proposal.uniqueUrl}`}>
             <button className="details-button" onClick={() => handleProposalClick(proposal._id)}>View Proposal</button>
           </Link>
           <Link to={`/edit/${proposal.uniqueUrl}`}>
@@ -63,6 +63,7 @@ const ProposalList = ({ proposal }) => {
 };
 
 export default ProposalList;
+
 
 
 

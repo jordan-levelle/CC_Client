@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
@@ -22,13 +22,14 @@ const ProposalVote = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const nameInputRef = useRef(null);
+  const [showFirstCreationMessage, setShowFirstCreationMessage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const proposalData = await fetchProposalData(uniqueUrl);
+        const { proposal: proposalData, isFirstCreation } = await fetchProposalData(uniqueUrl);
         setProposal(proposalData);
+        setShowFirstCreationMessage(isFirstCreation);
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
       } catch (error) {
@@ -40,17 +41,12 @@ const ProposalVote = () => {
     fetchData();
   }, [uniqueUrl]);
 
-  useLayoutEffect(() => {
-    if (nameInputRef.current) {
-      nameInputRef.current.focus();
-    }
-  }, [newVote.name]);
-
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter') {
       handleNewTableEntry();
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newVote]);
 
   const handleNewVoteChange = (e) => {
     const { name, value } = e.target;
@@ -132,13 +128,19 @@ const ProposalVote = () => {
           <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
         </div>
       </div>
-
-      {proposal && (
+      <div className="copy-link-container">
         <button className='copy-link' onClick={copyUrlToClipboard}>
           {copied ? "URL Copied!" : "Copy Proposal Link"}
         </button>
+      </div>
+      {showFirstCreationMessage && (
+        <div className="first-creation-message">
+          <span>This is your first creation!</span>
+          {!proposal.isFirstCreationShownAt && (
+            <Link className="edit-proposal-button">Dismiss</Link>
+          )}
+        </div>
       )}
-
       <div className="submitted-votes-container">
         <table className="votes-table">
           <thead>
@@ -150,7 +152,7 @@ const ProposalVote = () => {
           </thead>
           <tbody>
             {submittedVotes.map((vote, index) => (
-              <tr key={index}>
+              <tr key={vote._id}>
                 <td>{vote.name}</td>
                 <td>
                   <div className="vote-buttons">
@@ -161,6 +163,7 @@ const ProposalVote = () => {
                           type="button"
                           className={submittedVotes[index].vote === voteType ? 'selected' : ''}
                           onClick={() => handleVoteUpdate(index, voteType)}
+                          aria-label={`Vote ${voteType}`}
                         >
                           <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
                         </button>
@@ -174,13 +177,13 @@ const ProposalVote = () => {
                 </td>
                 <td>
                   <textarea
-                    type="text"
                     value={vote.comment}
                     onChange={(e) => handleCommentUpdate(index, e.target.value)}
+                    aria-label="Comment"
                   />
                 </td>
                 <td>
-                  <button onClick={() => handleDeleteEntry(vote._id)}>Delete</button>
+                  <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">Delete</button>
                 </td>
               </tr>
             ))}
@@ -192,8 +195,8 @@ const ProposalVote = () => {
                   value={newVote.name}
                   onChange={handleNewVoteChange}
                   onKeyDown={handleKeyDown}
-                  ref={nameInputRef}
                   placeholder="Name"
+                  aria-label="Name"
                 />
               </td>
               <td>
@@ -205,6 +208,7 @@ const ProposalVote = () => {
                         type="button"
                         className={newVote.vote === voteType ? 'selected' : ''}
                         onClick={() => handleNewVoteButtonClick(voteType)}
+                        aria-label={`Vote ${voteType}`}
                       >
                         <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
                       </button>
@@ -215,13 +219,16 @@ const ProposalVote = () => {
               </td>
               <td>
                 <textarea
-                  type="text"
                   name="comment"
                   value={newVote.comment}
                   onChange={handleNewVoteChange}
                   onKeyDown={handleKeyDown}
                   placeholder="Explain your vote..."
+                  aria-label="Comment"
                 />
+              </td>
+              <td>
+                <button onClick={handleNewTableEntry} aria-label="Save Entry">Save</button>
               </td>
             </tr>
           </tbody>

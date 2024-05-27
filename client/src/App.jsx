@@ -28,7 +28,7 @@ export default function App() {
             <Route path='/basics' element={<Basics />} />
             <Route path='/teams' element={<Teams />} />
             <Route path='/settings' element={<Settings />} />
-            <Route path='/vote/:uniqueUrl' element={<ProposalVote />} />
+            <Route path='/:uniqueUrl' element={<ProposalVote />} />
             <Route path='/edit/:uniqueUrl' element={<EditProposal />} />
             <Route path='/example' element={<ExampleProposal />} />
           </Routes>
@@ -38,6 +38,8 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+
 
 
 
