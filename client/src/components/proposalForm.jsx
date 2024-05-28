@@ -38,6 +38,13 @@ const ProposalForm = () => {
     }
   }, []);
 
+  const handleDescriptionKeyPress = useCallback((event) => {
+    if (event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault();
+      document.getElementById('name')?.focus();
+    }
+  }, []);
+
   const onEditorStateChange = useCallback((content) => {
     setValue("description", content);
   }, [setValue]);
@@ -76,6 +83,7 @@ const ProposalForm = () => {
             autoFocus 
             ref={titleInputRef} 
             {...register('title', { required: 'Title is required' })}
+            tabIndex="1"
             onKeyDown={handleTitleKeyPress}
             aria-required="true"
             aria-label="Title"
@@ -88,9 +96,11 @@ const ProposalForm = () => {
             className="quill-editor"
             value={descriptionValue}
             onChange={onEditorStateChange}
-            tabIndex="0"
+            tabIndex="2" // Ensure tabIndex is set correctly
             aria-required="true"
             aria-label="Description"
+            onKeyDown={handleDescriptionKeyPress} // Add key down event handler
+            ref={descriptionInputRef}
           />
           <div className='error'>{errors.description && "Description is required"}</div>
 
@@ -100,12 +110,13 @@ const ProposalForm = () => {
             type="text" 
             placeholder="Your Name (Optional)" 
             {...register('name')}
+            tabIndex="3" // Ensure tabIndex is set correctly
             aria-label="Proposed by"
           />
 
           {user ? (
             <div>
-              <input type="checkbox" {...register('receiveNotifications')} tabIndex="1" />
+              <input type="checkbox" {...register('receiveNotifications')} tabIndex="4" />
               <label htmlFor="receiveNotifications">Receive response notifications at: {user.email}</label>
             </div>
           ) : (
@@ -116,13 +127,13 @@ const ProposalForm = () => {
                 type="email" 
                 placeholder="Your Email (Optional)" 
                 {...register('email')} 
-                tabIndex="2"
+                tabIndex="5"
                 aria-label="Email"
               />
             </>
           )}
 
-          <button type="submit" tabIndex="3">Create Proposal</button>
+          <button type="submit" tabIndex="6">Create Proposal</button>
         </div>
       </form>
     </div>
@@ -130,7 +141,6 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
-
 
 
 

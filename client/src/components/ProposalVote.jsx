@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
@@ -11,7 +11,8 @@ import {
   submitNewTableEntry,
   deleteTableEntry,
   updateComment,
-  updateVote
+  updateVote,
+  updateName
 } from '../api/proposals';
 
 const ProposalVote = () => {
@@ -22,14 +23,13 @@ const ProposalVote = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [showFirstCreationMessage, setShowFirstCreationMessage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { proposal: proposalData, isFirstCreation } = await fetchProposalData(uniqueUrl);
+        const { proposal: proposalData } = await fetchProposalData(uniqueUrl);
         setProposal(proposalData);
-        setShowFirstCreationMessage(isFirstCreation);
+
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
       } catch (error) {
@@ -108,6 +108,14 @@ const ProposalVote = () => {
     }
   }, [proposal, submittedVotes]);
 
+  const handleNameUpdate = useCallback(async (index, newName) => {
+    try {
+      await updateName(proposal._id, submittedVotes, setSubmittedVotes, index, newName);
+    } catch (error) {
+      setError('Error updating name: ' + error.message);
+    }
+  }, [proposal, submittedVotes, setSubmittedVotes]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -124,23 +132,16 @@ const ProposalVote = () => {
         <h2>{proposal.title}</h2>
         {proposal.name && <p>Proposed by: {proposal.name}</p>}
         <p>Proposed On: {formatDate(proposal.createdAt)}</p>
-        <div className='proposal-description'>
+        <div className="proposal-description">
           <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
         </div>
       </div>
       <div className="copy-link-container">
-        <button className='copy-link' onClick={copyUrlToClipboard}>
+        <button className="copy-link" onClick={copyUrlToClipboard}>
           {copied ? "URL Copied!" : "Copy Proposal Link"}
         </button>
       </div>
-      {showFirstCreationMessage && (
-        <div className="first-creation-message">
-          <span>This is your first creation!</span>
-          {!proposal.isFirstCreationShownAt && (
-            <Link className="edit-proposal-button">Dismiss</Link>
-          )}
-        </div>
-      )}
+
       <div className="submitted-votes-container">
         <table className="votes-table">
           <thead>
@@ -148,12 +149,21 @@ const ProposalVote = () => {
               <th>Name</th>
               <th>Opinion</th>
               <th>Comment</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {submittedVotes.map((vote, index) => (
               <tr key={vote._id}>
-                <td>{vote.name}</td>
+              <td>
+                <input
+                  type="text"
+                  value={vote.name}
+                  onChange={(e) => handleNameUpdate(index, e.target.value)}
+                  placeholder="Name"
+                  aria-label="Name"
+                />
+              </td>
                 <td>
                   <div className="vote-buttons">
                     {Object.keys(icons).map((voteType) => (
@@ -193,12 +203,12 @@ const ProposalVote = () => {
                   type="text"
                   name="name"
                   value={newVote.name}
-                  onChange={handleNewVoteChange}
+                  onChange={(e) => setNewVote({ ...newVote, name: e.target.value })}
                   onKeyDown={handleKeyDown}
                   placeholder="Name"
                   aria-label="Name"
                 />
-              </td>
+               </td>
               <td>
                 <div className="vote-buttons">
                   {Object.keys(icons).map((voteType) => (
@@ -228,7 +238,7 @@ const ProposalVote = () => {
                 />
               </td>
               <td>
-                <button onClick={handleNewTableEntry} aria-label="Save Entry">Save</button>
+                <button onClick={handleNewTableEntry} aria-label="Submit Entry">Submit</button>
               </td>
             </tr>
           </tbody>
@@ -239,10 +249,3 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
-
-
-
-
-
-
-

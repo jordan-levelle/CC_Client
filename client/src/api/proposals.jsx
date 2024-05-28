@@ -234,7 +234,7 @@ export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, 
 
 
 
-  
+
 
 
 

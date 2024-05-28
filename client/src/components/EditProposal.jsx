@@ -45,7 +45,7 @@ const EditProposal = () => {
       setTitle('');
       setDescription('');
       setName('');
-      const votePageUrl = `/vote/${response.uniqueUrl}`;
+      const votePageUrl = `/${response.uniqueUrl}`;
       navigate(votePageUrl);
     } catch (error) {
       setError(error.message);
@@ -97,6 +97,4 @@ const EditProposal = () => {
 };
 
 export default EditProposal;
-
-
 
