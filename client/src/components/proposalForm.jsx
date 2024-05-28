@@ -18,11 +18,11 @@ const ProposalForm = () => {
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
-  const proposedByInputRef = useRef(null);
-  const emailInputRef = useRef(null);
 
   useEffect(() => {
     register("description", { required: true });
+    register("email");
+    register("name");
   }, [register]);
 
   useEffect(() => {
@@ -35,13 +35,6 @@ const ProposalForm = () => {
     if (event.key === 'Tab') {
       event.preventDefault();
       descriptionInputRef.current?.focus();
-    }
-  }, []);
-
-  const handleDescriptionKeyPress = useCallback((event) => {
-    if (event.key === 'Tab' && !event.shiftKey) {
-      event.preventDefault();
-      proposedByInputRef.current?.focus();
     }
   }, []);
 
@@ -58,7 +51,6 @@ const ProposalForm = () => {
       const currentUser = user || generateDummyUser();
       const uniqueUrl = nanoid(10);
       const proposal = { ...data, uniqueUrl };
-
 
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
@@ -84,7 +76,7 @@ const ProposalForm = () => {
             autoFocus 
             ref={titleInputRef} 
             {...register('title', { required: 'Title is required' })}
-            onKeyDown={handleTitleKeyPress} // Listen for Tab key press on title input
+            onKeyDown={handleTitleKeyPress}
             aria-required="true"
             aria-label="Title"
           />
@@ -93,12 +85,10 @@ const ProposalForm = () => {
           <label htmlFor="description">Description:</label>
           <ReactQuill 
             id="description"
-            ref={descriptionInputRef}
             className="quill-editor"
             value={descriptionValue}
             onChange={onEditorStateChange}
-            tabIndex="0" // Ensure description input receives focus when using Tab key
-            onKeyDown={handleDescriptionKeyPress} // Listen for Tab key press on description input
+            tabIndex="0"
             aria-required="true"
             aria-label="Description"
           />
@@ -110,14 +100,12 @@ const ProposalForm = () => {
             type="text" 
             placeholder="Your Name (Optional)" 
             {...register('name')}
-            ref={proposedByInputRef} 
-            tabIndex="1"
             aria-label="Proposed by"
           />
 
           {user ? (
             <div>
-              <input type="checkbox" {...register('receiveNotifications')} tabIndex="2" />
+              <input type="checkbox" {...register('receiveNotifications')} tabIndex="1" />
               <label htmlFor="receiveNotifications">Receive response notifications at: {user.email}</label>
             </div>
           ) : (
@@ -128,14 +116,13 @@ const ProposalForm = () => {
                 type="email" 
                 placeholder="Your Email (Optional)" 
                 {...register('email')} 
-                ref={emailInputRef} 
-                tabIndex="3"
+                tabIndex="2"
                 aria-label="Email"
               />
             </>
           )}
 
-          <button type="submit" tabIndex="4">Create Proposal</button>
+          <button type="submit" tabIndex="3">Create Proposal</button>
         </div>
       </form>
     </div>

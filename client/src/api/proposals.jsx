@@ -111,10 +111,8 @@ export const createProposal = async (proposalData, token) => {
         throw new Error('Failed to fetch proposal');
       }
       const data = await response.json();
-      const isFirstCreation = response.headers.get('isFirstCreation') === 'true';
-      // Get isFirstCreationShownAt from response headers
-      const isFirstCreationShownAt = response.headers.get('isFirstCreationShownAt');
-      return { proposal: data, isFirstCreation, isFirstCreationShownAt };
+
+      return { proposal: data };
     } catch (error) {
       throw new Error(error.message);
     }
@@ -221,6 +219,21 @@ export const updateComment = async (proposalId, submittedVotes, setSubmittedVote
   }
 };
   
+export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, index, newName) => {
+  try {
+    const updatedVotes = [...submittedVotes];
+    updatedVotes[index].name = newName;
+    setSubmittedVotes(updatedVotes);
+    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+
+
   
 
 
