@@ -33,14 +33,14 @@ const ProposalList = ({ proposal }) => {
 
   return (
     <div className="proposal-list-container">
-      <div className="proposal-details">
+      <div className="proposal-item">
         <h4>{proposal.title}</h4>
         <p>
           Proposed on: {proposal.createdAt ? formatDate(proposal.createdAt) : 'Invalid Date'}
         </p>
         <div className="proposal-button-group">
           <Link to={`/${proposal.uniqueUrl}`}>
-            <button className="details-button" onClick={() => handleProposalClick(proposal._id)}>View Proposal</button>
+            <button className="view-proposal-button" onClick={() => handleProposalClick(proposal._id)}>View</button>
           </Link>
           <Link to={`/edit/${proposal.uniqueUrl}`}>
             <button className="edit-button" onClick={() => handleEditClick(proposal._id)}>Edit</button>
@@ -63,6 +63,7 @@ const ProposalList = ({ proposal }) => {
 };
 
 export default ProposalList;
+
 
 
 

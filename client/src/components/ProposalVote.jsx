@@ -141,110 +141,110 @@ const ProposalVote = () => {
           {copied ? "URL Copied!" : "Copy Proposal Link"}
         </button>
       </div>
-
       <div className="submitted-votes-container">
-        <table className="votes-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Opinion</th>
-              <th>Comment</th>
-            </tr>
-          </thead>
-          <tbody>
-            {submittedVotes.map((vote, index) => (
-              <tr key={vote._id}>
-              <td>
-                <input
-                  type="text"
-                  value={vote.name}
-                  onChange={(e) => handleNameUpdate(index, e.target.value)}
-                  placeholder="Name"
-                />
-              </td>
-                <td>
-                  <div className="vote-buttons">
-                    {Object.keys(icons).map((voteType) => (
-                      <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
-                        data-tooltip-html={tooltips[voteType]}>
-                        <button
-                          type="button"
-                          className={submittedVotes[index].vote === voteType ? 'selected' : ''}
-                          onClick={() => handleVoteUpdate(index, voteType)}
-                          aria-label={`Vote ${voteType}`}
-                        >
-                          <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
-                        </button>
-                        <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <small>{formatDate(vote.createdAt)}</small>
-                  </div>
-                </td>
-                <td>
-                  <textarea
-                    value={vote.comment}
-                    onChange={(e) => handleCommentUpdate(index, e.target.value)}
-                    aria-label="Comment"
-                  />
-                </td>
-                <td>
-                  <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">Delete</button>
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td>
-                <input
-                  type="text"
-                  name="name"
-                  value={newVote.name}
-                  onChange={(e) => setNewVote({ ...newVote, name: e.target.value })}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Name"
-                  aria-label="Name"
-                />
-               </td>
-              <td>
-                <div className="vote-buttons">
-                  {Object.keys(icons).map((voteType) => (
-                    <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
-                      data-tooltip-html={tooltips[voteType]}>
-                      <button
-                        type="button"
-                        className={newVote.vote === voteType ? 'selected' : ''}
-                        onClick={() => handleNewVoteButtonClick(voteType)}
-                        aria-label={`Vote ${voteType}`}
-                      >
-                        <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
-                      </button>
-                      <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
-                    </div>
-                  ))}
+  <table className="votes-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Opinion</th>
+        <th>Comment</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {submittedVotes.map((vote, index) => (
+        <tr key={vote._id}>
+          <td>
+            <input
+              type="text"
+              value={vote.name}
+              onChange={(e) => handleNameUpdate(index, e.target.value)}
+              placeholder="Name"
+            />
+          </td>
+          <td>
+            <div className="vote-buttons">
+              {Object.keys(icons).map((voteType, i) => (
+                <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
+                  data-tooltip-html={tooltips[voteType]}>
+                  <button
+                    type="button"
+                    className={submittedVotes[index].vote === voteType ? 'selected' : ''}
+                    onClick={() => handleVoteUpdate(index, voteType)}
+                    aria-label={`Vote ${voteType}`}
+                  >
+                    <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
+                  </button>
+                  <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
                 </div>
-              </td>
-              <td>
-                <textarea
-                  name="comment"
-                  value={newVote.comment}
-                  onChange={handleNewVoteChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Explain your vote..."
-                  aria-label="Comment"
-                />
-              </td>
-              <td>
-                <button onClick={handleNewTableEntry} aria-label="Submit Entry">Submit</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </div>
+            <div>
+              <small>{formatDate(vote.createdAt)}</small>
+            </div>
+          </td>
+          <td>
+            <textarea
+              value={vote.comment}
+              onChange={(e) => handleCommentUpdate(index, e.target.value)}
+              aria-label="Comment"
+            />
+          </td>
+          <td>
+            <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">Delete</button>
+          </td>
+        </tr>
+      ))}
+      <tr className="submit-section">
+        <td>
+          <input
+            type="text"
+            name="name"
+            value={newVote.name}
+            onChange={(e) => setNewVote({ ...newVote, name: e.target.value })}
+            onKeyDown={handleKeyDown}
+            placeholder="Name"
+            aria-label="Name"
+          />
+        </td>
+        <td>
+          <div className="vote-buttons">
+            {Object.keys(icons).map((voteType, i) => (
+              <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
+                data-tooltip-html={tooltips[voteType]}>
+                <button
+                  type="button"
+                  className={newVote.vote === voteType ? 'selected' : ''}
+                  onClick={() => handleNewVoteButtonClick(voteType)}
+                  aria-label={`Vote ${voteType}`}
+                >
+                  <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
+                </button>
+                <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
+              </div>
+            ))}
+          </div>
+        </td>
+        <td>
+          <textarea
+            name="comment"
+            value={newVote.comment}
+            onChange={handleNewVoteChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Explain your vote..."
+            aria-label="Comment"
+          />
+        </td>
+        <td>
+          <button onClick={handleNewTableEntry} aria-label="Submit Entry">Submit</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
     </div>
   );
 };
 
 export default ProposalVote;
-
