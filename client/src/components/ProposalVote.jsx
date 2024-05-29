@@ -114,7 +114,7 @@ const ProposalVote = () => {
     } catch (error) {
       setError('Error updating name: ' + error.message);
     }
-  }, [proposal, submittedVotes, setSubmittedVotes]);
+  }, [proposal, submittedVotes]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -149,7 +149,6 @@ const ProposalVote = () => {
               <th>Name</th>
               <th>Opinion</th>
               <th>Comment</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -161,7 +160,6 @@ const ProposalVote = () => {
                   value={vote.name}
                   onChange={(e) => handleNameUpdate(index, e.target.value)}
                   placeholder="Name"
-                  aria-label="Name"
                 />
               </td>
                 <td>
@@ -249,3 +247,4 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+

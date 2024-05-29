@@ -221,18 +221,23 @@ export const updateComment = async (proposalId, submittedVotes, setSubmittedVote
   
 export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, index, newName) => {
   try {
+    const voteToUpdate = submittedVotes[index];
     const updatedVotes = [...submittedVotes];
     updatedVotes[index].name = newName;
+
     setSubmittedVotes(updatedVotes);
-    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
+
+    await fetch(`${PROP_URL}/${proposalId}/vote`, {
+      method: 'PUT',
+      body: JSON.stringify({ ...voteToUpdate, newName, voteId: voteToUpdate._id }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error('Error updating vote: ' + error.message);
   }
 };
-
-
-
-
 
 
 
