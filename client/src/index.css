@@ -390,7 +390,7 @@ body {
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
-  max-width: 89vw;
+  max-width: 95vw;
 }
 
 .proposal-description{
@@ -475,13 +475,13 @@ body {
   background-color: #fff;
 }
 
-.vote-buttons {
+.opinion-buttons {
   margin-bottom: 10px; /* Reduce margin for smaller screens */
   display: flex; /* Ensure buttons are displayed in a row */
   flex-wrap: wrap; /* Allow buttons to wrap to next line on smaller screens */
 }
 
-.vote-buttons button {
+.opinion-buttons button {
   margin-right: 10px;
   margin-bottom: 10px; /* Add margin bottom for spacing */
   padding: 10px 15px; /* Adjust padding for smaller screens */
@@ -524,19 +524,19 @@ body {
     position: relative;
   }
 
-  .vote-buttons {
+  .opinion-buttons {
     display: flex;
     flex-wrap: wrap;
   }
 
-  .vote-buttons div {
+  .opinion-buttons div {
     flex: 0 0 48%; /* Ensure two buttons per row, adjust width for some spacing */
     display: flex;
     justify-content: center;
     margin-bottom: 5px;
   }
 
-  .vote-buttons button {
+  .opinion-buttons button {
     width: 100%;
     margin-right: 0;
   }

@@ -89,7 +89,7 @@ const ExampleProposal = () => {
                 <tr key={index}>
                   <td>{vote.name}</td>
                   <td>
-                    <div className="vote-buttons">
+                    <div className="opinion-buttons">
                       {['Agree', 'Neutral', 'Disagree', 'Block'].map((voteOption) => (
                         <div
                         key={voteOption}
@@ -133,7 +133,7 @@ const ExampleProposal = () => {
                   />
                 </td>
                 <td>
-                  <div className="vote-buttons">
+                  <div className="opinion-buttons">
                     {['Agree', 'Neutral', 'Disagree', 'Block'].map((voteOption) => (
                       <div
                         key={voteOption}
@@ -175,6 +175,7 @@ const ExampleProposal = () => {
 };
 
 export default ExampleProposal;
+
 
 
 

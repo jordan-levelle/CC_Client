@@ -197,10 +197,15 @@ export const handleSubmittedVoteUpdate = async (proposalId, vote) => {
   }
 };
 
+
 export const updateVote = async (proposalId, submittedVotes, setSubmittedVotes, index, newVoteValue) => {
   try {
     const updatedVotes = [...submittedVotes];
-    updatedVotes[index].vote = newVoteValue;
+    updatedVotes[index] = {
+      ...updatedVotes[index],
+      vote: newVoteValue,
+      updatedAt: new Date(), // Update the timestamp
+    };
     setSubmittedVotes(updatedVotes);
     await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
   } catch (error) {
@@ -238,9 +243,6 @@ export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, 
     throw new Error('Error updating vote: ' + error.message);
   }
 };
-
-
-
 
 
 
