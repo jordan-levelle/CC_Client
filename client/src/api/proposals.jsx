@@ -1,5 +1,9 @@
+// api/proposals.js
+
+// utils.js
 const PROP_URL = process.env.REACT_APP_PROPOSALS;
 
+// GET Selected Proposal to Edit API Call
 export const fetchEditProposalAPI = async (uniqueUrl) => {
   const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
   if (!response.ok) {
@@ -8,6 +12,7 @@ export const fetchEditProposalAPI = async (uniqueUrl) => {
   return response.json();
 };
 
+// PUT selected User Proposal API Call
 export const updateProposalAPI = async (uniqueUrl, updatedProposal, token) => {
   const response = await fetch(`${PROP_URL}/${uniqueUrl}`, {
     method: 'PUT',
@@ -27,6 +32,7 @@ export const updateProposalAPI = async (uniqueUrl, updatedProposal, token) => {
   return response.json();
 };
 
+// DELETE User Proposal API Call
 export const deleteProposalAPI = async (proposalId, token) => {
   const response = await fetch(`${PROP_URL}/${proposalId}`, {
     method: 'DELETE',
@@ -41,6 +47,7 @@ export const deleteProposalAPI = async (proposalId, token) => {
   return response.json();
 };
 
+// GET User Proposal List API Call
 export const fetchProposalsListAPI = async (token) => {
   const response = await fetch(`${PROP_URL}`, {
     headers: { 'Authorization': `Bearer ${token}` },
@@ -53,71 +60,97 @@ export const fetchProposalsListAPI = async (token) => {
   return response.json();
 };
 
+// GET Example* Proposal API Call
 export const fetchExampleProposal = async () => {
-  const response = await fetch(`${PROP_URL}/example`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch example proposal');
+  try {
+    const response = await fetch(`${PROP_URL}/example`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch example proposal');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching example proposal:', error);
+    throw error;
   }
-  return response.json();
 };
 
+// POST Create New Proposal API Call
 export const createProposal = async (proposalData, token) => {
-  const response = await fetch(`${PROP_URL}`, {
-    method: 'POST',
-    body: JSON.stringify(proposalData),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-  });
+    try {
+      const response = await fetch(`${PROP_URL}`, {
+        method: 'POST',
+        body: JSON.stringify(proposalData),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to create proposal');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Error creating proposal:', error);
+      throw error;
+    }
+  };
 
-  if (!response.ok) {
-    throw new Error('Failed to create proposal');
-  }
-  return response.json();
-};
-
+// GET Proposal Data API Call
 export const fetchProposalData = async (uniqueUrl) => {
-  const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch proposal');
-  }
-  const data = await response.json();
+    try {
+      const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch proposal');
+      }
+      const data = await response.json();
 
-  return { proposal: data };
-};
+      return { proposal: data };
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
 
+// GET Proposal Submission Data API Call
 export const fetchSubmittedVotes = async (proposalId) => {
-  const votesResponse = await fetch(`${PROP_URL}/${proposalId}/votes`);
-  if (!votesResponse.ok) {
-    throw new Error('Failed to fetch submitted votes');
+  try {
+    const votesResponse = await fetch(`${PROP_URL}/${proposalId}/votes`);
+    if (!votesResponse.ok) {
+      throw new Error('Failed to fetch submitted votes');
+    }
+    const votesData = await votesResponse.json();
+    return votesData.votes;
+  } catch (error) {
+    throw new Error(error.message);
   }
-  const votesData = await votesResponse.json();
-  return votesData.votes;
 };
 
+// POST New Proposal Table Entry API Call
 export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, setNewVote, setError) => {
   try {
+    // Retrieve token from local storage
     const token = localStorage.getItem('token');
 
     const headers = {
       'Content-Type': 'application/json',
     };
 
+    // Check if token exists
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers['Authorization'] = `Bearer ${token}`; // Include token in Authorization header
     }
 
     const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
       method: 'POST',
       body: JSON.stringify(newVote),
-      headers: headers,
+      headers: headers, // Include headers in the request
     });
 
     if (!response.ok) {
       throw new Error('Error submitting vote');
     }
 
+    // Assuming fetchSubmittedVotes is a function that correctly retrieves the updated list of votes
     const data = await fetchSubmittedVotes(proposalId);
     setSubmittedVotes(data);
     setNewVote({ name: '', vote: '', comment: '' });
@@ -126,6 +159,8 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
   }
 };
 
+
+// DELETE Table Entry API Call
 export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes, setError) => {
   try {
     const response = await fetch(`${PROP_URL}/votes/${voteId}`, {
@@ -142,20 +177,25 @@ export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes
   }
 };
 
+// UPDATE Existing Table Entry API Call
 export const handleSubmittedVoteUpdate = async (proposalId, vote) => {
-  const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
-    method: 'PUT',
-    body: JSON.stringify(vote),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
+      method: 'PUT',
+      body: JSON.stringify(vote),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error('Error updating vote');
+    if (!response.ok) {
+      throw new Error('Error updating vote');
+    }
+
+    return response.json();
+  } catch (error) {
+    throw new Error(error.message);
   }
-
-  return response.json();
 };
 
 export const updateVote = async (proposalId, submittedVotes, setSubmittedVotes, index, newVoteValue) => {
@@ -164,7 +204,7 @@ export const updateVote = async (proposalId, submittedVotes, setSubmittedVotes, 
     updatedVotes[index] = {
       ...updatedVotes[index],
       vote: newVoteValue,
-      updatedAt: new Date(),
+      updatedAt: new Date(), // Update the timestamp
     };
     setSubmittedVotes(updatedVotes);
     await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
@@ -183,7 +223,7 @@ export const updateComment = async (proposalId, submittedVotes, setSubmittedVote
     throw new Error(error.message);
   }
 };
-
+  
 export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, index, newName) => {
   try {
     const voteToUpdate = submittedVotes[index];

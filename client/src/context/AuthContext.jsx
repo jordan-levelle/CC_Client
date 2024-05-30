@@ -8,10 +8,10 @@ export const authReducer = (state, action) => {
       return { user: action.payload };
     case 'LOGOUT':
       localStorage.removeItem('token');
-      return { user: null };
+      return { user: null }; // Reset the user to null after logout
     case 'DELETE':
-      localStorage.removeItem('user');
-      return { user: null };
+      localStorage.removeItem('user'); // Clear user from localStorage
+      return { user: null }; // Reset the user to null after deletion
     case 'UPDATE_EMAIL':
       return { ...state, user: { ...state.user, email: action.payload } };
     default:
@@ -29,13 +29,16 @@ export const AuthContextProvider = ({ children }) => {
     const user = JSON.parse(localStorage.getItem('user'));
   
     if (token) {
+      // Dispatch a login action with the token payload
       dispatch({ type: 'LOGIN', payload: { token } });
     }
   
     if (user) {
+      // Dispatch a login action with the user payload
       dispatch({ type: 'LOGIN', payload: user });
     }
   }, []);
+  
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>

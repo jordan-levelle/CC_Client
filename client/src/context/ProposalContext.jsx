@@ -17,12 +17,12 @@ export const proposalsReducer = (state, action) => {
     case 'DELETE_PROPOSAL':
       return {
         ...state,
-        proposals: state.proposals.filter(proposal => proposal._id !== action.payload._id),
+        proposals: state.proposals.filter((proposal) => proposal._id !== action.payload._id),
       };
     case 'EDIT_PROPOSAL':
       return {
         ...state,
-        proposals: state.proposals.map(proposal =>
+        proposals: state.proposals.map((proposal) =>
           proposal._id === action.payload._id ? action.payload : proposal
         ),
       };
@@ -45,7 +45,7 @@ export const ProposalsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(proposalsReducer, {
     proposals: [],
     selectedProposalId: null,
-    participatedProposals: [],
+    participatedProposals: [], // Initialize participated proposals
   });
 
   return (
