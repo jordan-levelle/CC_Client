@@ -6,26 +6,35 @@ export const proposalsReducer = (state, action) => {
   switch (action.type) {
     case 'SET_PROPOSALS':
       return {
-        proposals: action.payload
+        ...state,
+        proposals: action.payload,
       };
     case 'CREATE_PROPOSAL':
       return {
-        proposals: [action.payload] // Ensure state.proposals is an array before spreading
+        ...state,
+        proposals: [action.payload, ...state.proposals],
       };
     case 'DELETE_PROPOSAL':
       return {
-        proposals: state.proposals.filter((proposal) => proposal._id !== action.payload._id)
+        ...state,
+        proposals: state.proposals.filter(proposal => proposal._id !== action.payload._id),
       };
     case 'EDIT_PROPOSAL':
       return {
-        proposals: state.proposals.map((proposal) =>
+        ...state,
+        proposals: state.proposals.map(proposal =>
           proposal._id === action.payload._id ? action.payload : proposal
-        )
+        ),
       };
     case 'SELECT_PROPOSAL':
       return {
         ...state,
-        selectedProposalId: action.payload
+        selectedProposalId: action.payload,
+      };
+    case 'SET_PARTICIPATED_PROPOSALS':
+      return {
+        ...state,
+        participatedProposals: action.payload,
       };
     default:
       return state;
@@ -34,8 +43,9 @@ export const proposalsReducer = (state, action) => {
 
 export const ProposalsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(proposalsReducer, {
-    proposals: [], // Initialize as an empty array
-    selectedProposalId: null
+    proposals: [],
+    selectedProposalId: null,
+    participatedProposals: [],
   });
 
   return (
@@ -44,4 +54,3 @@ export const ProposalsContextProvider = ({ children }) => {
     </ProposalsContext.Provider>
   );
 };
-

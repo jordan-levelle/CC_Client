@@ -2,18 +2,23 @@ import React, { useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { fetchProposalsListAPI } from '../api/proposals';
+import { fetchParticipatedProposalsAPI } from '../api/users';
 import ProposalList from '../components/ProposalList';
+import ParticipatedProposalList from '../components/ParticipatedProposalList';
 
 const Profile = () => {
-  const { proposals, dispatch } = useProposalsContext();
+  const { proposals, participatedProposals, dispatch } = useProposalsContext();
   const { user } = useAuthContext();
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (user) {
-          const proposals = await fetchProposalsListAPI(user.token);
-          dispatch({ type: 'SET_PROPOSALS', payload: proposals });
+          const userProposals = await fetchProposalsListAPI(user.token);
+          dispatch({ type: 'SET_PROPOSALS', payload: userProposals });
+
+          const participated = await fetchParticipatedProposalsAPI(user.token);
+          dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participated });
         }
       } catch (error) {
         console.error('Error fetching proposals:', error.message);
@@ -34,9 +39,11 @@ const Profile = () => {
         </div>
         <div className="proposal-participated-container">
           <h4>Proposals Participated In</h4>
+          {participatedProposals && participatedProposals.map((proposal) => (
+            <ParticipatedProposalList key={proposal._id} proposal={proposal} />
+          ))}
         </div>
       </div>
-      
       <div className="user-details">
         <span className="email">{user.email}</span>
       </div>
@@ -45,6 +52,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-
-

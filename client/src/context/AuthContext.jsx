@@ -7,10 +7,11 @@ export const authReducer = (state, action) => {
     case 'LOGIN':
       return { user: action.payload };
     case 'LOGOUT':
-      return { user: null }; // Reset the user to null after logout
+      localStorage.removeItem('token');
+      return { user: null };
     case 'DELETE':
-      localStorage.removeItem('user'); // Clear user from localStorage
-      return { user: null }; // Reset the user to null after deletion
+      localStorage.removeItem('user');
+      return { user: null };
     case 'UPDATE_EMAIL':
       return { ...state, user: { ...state.user, email: action.payload } };
     default:
@@ -24,8 +25,13 @@ export const AuthContextProvider = ({ children }) => {
   });
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
-
+  
+    if (token) {
+      dispatch({ type: 'LOGIN', payload: { token } });
+    }
+  
     if (user) {
       dispatch({ type: 'LOGIN', payload: user });
     }
