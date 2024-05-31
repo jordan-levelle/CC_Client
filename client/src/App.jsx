@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 // Component imports
 import { Header, Footer } from './components';
 import { Signup, ExampleProposal, ProposalVote, EditProposal } from './components';
-import { Home, Profile, Create, Basics, Teams, Settings, AuthPage, VerificationPage } from './pages';
+import { Home, Profile, Create, Basics, Teams, Settings, AuthPage } from './pages';
 
 // Hook imports
 import { useAuthContext } from './hooks/useAuthContext';
@@ -22,7 +22,6 @@ export default function App() {
             <Route path='/' element={<Home />} />
             <Route path='/profile' element={user ? <Profile /> : <Navigate to='/auth' />} />
             <Route path='/auth' element={!user ? <AuthPage /> : <Navigate to='/profile' />} />
-            <Route path='/verify/:token' element={<VerificationPage />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/create' element={<Create />} />
             <Route path='/basics' element={<Basics />} />

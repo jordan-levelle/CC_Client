@@ -97,4 +97,3 @@ const EditProposal = () => {
 };
 
 export default EditProposal;
-

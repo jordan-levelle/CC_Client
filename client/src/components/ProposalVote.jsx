@@ -12,7 +12,8 @@ import {
   deleteTableEntry,
   updateComment,
   updateVote,
-  updateName
+  updateName,
+  checkFirstRender
 } from '../api/proposals';
 
 const ProposalVote = () => {
@@ -23,15 +24,23 @@ const ProposalVote = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('Fetching proposal data');
         const { proposal: proposalData } = await fetchProposalData(uniqueUrl);
+        console.log('Fetching votes data');
         setProposal(proposalData);
-
+  
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
+  
+        console.log('Checking first render');
+        const firstRender = await checkFirstRender(proposalData._id);
+        setShowFirstRenderMessage(firstRender); // This should be a boolean
+        console.log(firstRender);
       } catch (error) {
         setError('Error fetching data: ' + error.message);
       } finally {
@@ -40,6 +49,8 @@ const ProposalVote = () => {
     };
     fetchData();
   }, [uniqueUrl]);
+  
+  
 
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter') {
@@ -134,6 +145,16 @@ const ProposalVote = () => {
   const sanitizedProposal = DOMPurify.sanitize(proposal.description);
 
   return (
+    <section>
+      <div>
+      {showFirstRenderMessage && 
+        <div className="first-render-message">
+          <p>Welcome! Your Proposal has been created</p>
+          <p>Send this link to the respondents: </p>
+          <p>Use this link to edit your proposal: </p>
+          <p>IMPORTANT: Save the edit link for your records! You won't see it again!</p>
+        </div>}
+      </div>
     <div className="proposal-vote-container">
       <div className="proposal-info">
         <h2>{proposal.title}</h2>
@@ -250,6 +271,7 @@ const ProposalVote = () => {
         </table>
       </div>
     </div>
+    </section>
   );
 };
 

@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createProposal } from "../api/proposals";
 import { useProposalsContext } from "../hooks/useProposalContext";
@@ -9,6 +7,9 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from 'react-router-dom'; 
 import { nanoid } from 'nanoid';
 import { generateDummyUser } from '../utils/authUtils'; 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import Captcha from '../components/Captcha'; // Import the Captcha component
 
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
@@ -18,6 +19,8 @@ const ProposalForm = () => {
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+  const [captchaToken, setCaptchaToken] = useState('');
+  const siteKey = process.env.REACT_APP_hCAPTCHA_SITEKEY; // Adjusted to use the environment variable
 
   useEffect(() => {
     register("description", { required: true });
@@ -53,6 +56,10 @@ const ProposalForm = () => {
     try {
       if (!data.title.trim() || !data.description.trim()) {
         throw new Error('Title and description are required');
+      }
+
+      if (!captchaToken) {
+        throw new Error('Please complete the captcha');
       }
 
       const currentUser = user || generateDummyUser();
@@ -133,6 +140,11 @@ const ProposalForm = () => {
             </>
           )}
 
+          <Captcha
+            siteKey={siteKey} // Use environment variable for site key
+            onVerify={(token) => setCaptchaToken(token)}
+          />
+
           <button type="submit" tabIndex="6">Create Proposal</button>
         </div>
       </form>
@@ -141,7 +153,6 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
-
 
 
 

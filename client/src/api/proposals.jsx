@@ -12,7 +12,7 @@ export const fetchEditProposalAPI = async (uniqueUrl) => {
   return response.json();
 };
 
-// PUT selected User Proposal API Call
+// PUT Selected Proposal o Update API Call
 export const updateProposalAPI = async (uniqueUrl, updatedProposal, token) => {
   const response = await fetch(`${PROP_URL}/${uniqueUrl}`, {
     method: 'PUT',
@@ -110,6 +110,21 @@ export const fetchProposalData = async (uniqueUrl) => {
       throw new Error(error.message);
     }
   };
+
+// GET Check First Render API Call
+export const checkFirstRender = async (proposalId) => {
+  try {
+    const response = await fetch(`${PROP_URL}/${proposalId}/firstRender`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch first render');
+    }
+    const data = await response.json();
+    return data.firstRender; // Ensure we return the correct field
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 
 // GET Proposal Submission Data API Call
 export const fetchSubmittedVotes = async (proposalId) => {
