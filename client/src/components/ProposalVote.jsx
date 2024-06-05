@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
@@ -15,9 +15,13 @@ import {
   updateName,
   checkFirstRender
 } from '../api/proposals';
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
+
   const [proposal, setProposal] = useState(null);
   const [submittedVotes, setSubmittedVotes] = useState([]);
   const [newVote, setNewVote] = useState({ name: '', vote: '', comment: '' });
@@ -29,18 +33,18 @@ const ProposalVote = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching proposal data');
+        
         const { proposal: proposalData } = await fetchProposalData(uniqueUrl);
-        console.log('Fetching votes data');
+       
         setProposal(proposalData);
   
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
   
-        console.log('Checking first render');
+  
         const firstRender = await checkFirstRender(proposalData._id);
         setShowFirstRenderMessage(firstRender); // This should be a boolean
-        console.log(firstRender);
+       
       } catch (error) {
         setError('Error fetching data: ' + error.message);
       } finally {
@@ -50,8 +54,6 @@ const ProposalVote = () => {
     fetchData();
   }, [uniqueUrl]);
   
-  
-
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter') {
       handleNewTableEntry();
@@ -134,6 +136,10 @@ const ProposalVote = () => {
     }
   }, [proposal, submittedVotes]);
 
+  const handleEditButtonClick = () => {
+    navigate(`/edit/${uniqueUrl}`);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -147,47 +153,98 @@ const ProposalVote = () => {
   return (
     <section>
       <div>
-      {showFirstRenderMessage && 
-        <div className="first-render-message">
-          <p>Welcome! Your Proposal has been created</p>
-          <div className="copy-link-container">
-            <p>Copy this link to send to Respondents: </p>
-            <button className="copy-link" onClick={copyUrlToClipboard}>
-            {copied ? "URL Copied!" : "Copy Proposal Link"}
-            </button>
+        {showFirstRenderMessage && 
+          <div className="first-render-message">
+            <p>Welcome! Your Proposal has been created</p>
+            <div className="copy-link-container">
+              <p>Copy this link to send to Respondents: 
+                <button className="copy-proposal-button" onClick={copyUrlToClipboard}>
+                  {copied ? "URL Copied!" : "Copy Proposal Link"}
+                </button>
+              </p>
+            </div>
+            <p>Use this link to edit your proposal: 
+              <button className="edit-proposal-button" onClick={handleEditButtonClick}>
+                Edit Proposal  
+              </button>
+            </p>
+            {!user && <p>IMPORTANT: Save the edit link for your records! You won't see it again!</p>}
           </div>
-          <p>Use this link to edit your proposal: </p>
-          <p>IMPORTANT: Save the edit link for your records! You won't see it again!</p>
-        </div>}
+        }
       </div>
-    <div className="proposal-vote-container">
-      <div className="proposal-info">
-        <h2>{proposal.title}</h2>
-        {proposal.name && <p>Proposed by: {proposal.name}</p>}
-        <p>Proposed On: {formatDate(proposal.createdAt)}</p>
-        <div className="proposal-description">
-          <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
+      <div className="proposal-vote-container">
+        <div className="proposal-info">
+          <h2>{proposal.title}</h2>
+          {proposal.name && <p>Proposed by: {proposal.name}</p>}
+          <p>Proposed On: {formatDate(proposal.createdAt)}</p>
+          <div className="proposal-description">
+            <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
+          </div>
         </div>
-      </div>
-      <div className="submitted-votes-container">
-        <table className="votes-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Opinion</th>
-              <th>Comment</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {submittedVotes.map((vote, index) => (
-              <tr key={vote._id}>
+        <div className="submitted-votes-container">
+          <table className="votes-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Opinion</th>
+                <th>Comment</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submittedVotes.map((vote, index) => (
+                <tr key={vote._id}>
+                  <td>
+                    <input
+                      type="text"
+                      value={vote.name}
+                      onChange={(e) => handleNameUpdate(index, e.target.value)}
+                      placeholder="Name"
+                    />
+                  </td>
+                  <td>
+                    <div className="opinion-buttons">
+                      {Object.keys(icons).map((voteType, i) => (
+                        <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
+                          data-tooltip-html={tooltips[voteType]}>
+                          <button
+                            type="button"
+                            className={submittedVotes[index].vote === voteType ? 'selected' : ''}
+                            onClick={() => handleVoteUpdate(index, voteType)}
+                            aria-label={`Vote ${voteType}`}
+                          >
+                            <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
+                          </button>
+                          <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
+                    </div>
+                  </td>
+                  <td>
+                    <textarea
+                      value={vote.comment}
+                      onChange={(e) => handleCommentUpdate(index, e.target.value)}
+                      aria-label="Comment"
+                    />
+                  </td>
+                  <td>
+                    <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">Delete</button>
+                  </td>
+                </tr>
+              ))}
+              <tr className="submit-section">
                 <td>
                   <input
                     type="text"
-                    value={vote.name}
-                    onChange={(e) => handleNameUpdate(index, e.target.value)}
+                    name="name"
+                    value={newVote.name}
+                    onChange={(e) => setNewVote({ ...newVote, name: e.target.value })}
+                    onKeyDown={handleKeyDown}
                     placeholder="Name"
+                    aria-label="Name"
                   />
                 </td>
                 <td>
@@ -197,8 +254,8 @@ const ProposalVote = () => {
                         data-tooltip-html={tooltips[voteType]}>
                         <button
                           type="button"
-                          className={submittedVotes[index].vote === voteType ? 'selected' : ''}
-                          onClick={() => handleVoteUpdate(index, voteType)}
+                          className={newVote.vote === voteType ? 'selected' : ''}
+                          onClick={() => handleNewVoteButtonClick(voteType)}
                           aria-label={`Vote ${voteType}`}
                         >
                           <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
@@ -207,70 +264,25 @@ const ProposalVote = () => {
                       </div>
                     ))}
                   </div>
-                  <div>
-                    <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
-                  </div>
                 </td>
                 <td>
                   <textarea
-                    value={vote.comment}
-                    onChange={(e) => handleCommentUpdate(index, e.target.value)}
+                    name="comment"
+                    value={newVote.comment}
+                    onChange={handleNewVoteChange}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Comment"
                     aria-label="Comment"
                   />
                 </td>
                 <td>
-                  <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">Delete</button>
+                  <button onClick={handleNewTableEntry} aria-label="Submit New Entry">Submit</button>
                 </td>
               </tr>
-            ))}
-            <tr className="submit-section">
-              <td>
-                <input
-                  type="text"
-                  name="name"
-                  value={newVote.name}
-                  onChange={(e) => setNewVote({ ...newVote, name: e.target.value })}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Name"
-                  aria-label="Name"
-                />
-              </td>
-              <td>
-                <div className="opinion-buttons">
-                  {Object.keys(icons).map((voteType, i) => (
-                    <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
-                      data-tooltip-html={tooltips[voteType]}>
-                      <button
-                        type="button"
-                        className={newVote.vote === voteType ? 'selected' : ''}
-                        onClick={() => handleNewVoteButtonClick(voteType)}
-                        aria-label={`Vote ${voteType}`}
-                      >
-                        <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
-                      </button>
-                      <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
-                    </div>
-                  ))}
-                </div>
-              </td>
-              <td>
-                <textarea
-                  name="comment"
-                  value={newVote.comment}
-                  onChange={handleNewVoteChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Comment"
-                  aria-label="Comment"
-                />
-              </td>
-              <td>
-                <button onClick={handleNewTableEntry} aria-label="Submit New Entry">Submit</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </section>
   );
 };
