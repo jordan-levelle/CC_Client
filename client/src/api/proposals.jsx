@@ -3,6 +3,17 @@
 // utils.js
 const PROP_URL = process.env.REACT_APP_PROPOSALS;
 
+// Helper function to get the headers with the optional authorization token
+const getHeaders = (token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+};
+
 // GET Selected Proposal to Edit API Call
 export const fetchEditProposalAPI = async (uniqueUrl) => {
   const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
@@ -12,25 +23,22 @@ export const fetchEditProposalAPI = async (uniqueUrl) => {
   return response.json();
 };
 
-// PUT Selected Proposal o Update API Call
-export const updateProposalAPI = async (uniqueUrl, updatedProposal, token) => {
+// PUT Selected Proposal to Update API Call
+export const updateProposalAPI = async (uniqueUrl, updatedProposal, token = null) => {
   const response = await fetch(`${PROP_URL}/${uniqueUrl}`, {
     method: 'PUT',
     body: JSON.stringify(updatedProposal),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
+    headers: getHeaders(token),
   });
   if (!response.ok) {
-    if (response.status === 401) {
-      throw new Error('Unauthorized: Please log in to update the proposal.');
-    } else {
-      throw new Error('Error submitting proposal');
-    }
+    const errorMessage = response.status === 401
+      ? 'Unauthorized: Please log in to update the proposal.'
+      : 'Error updating proposal';
+    throw new Error(errorMessage);
   }
   return response.json();
 };
+
 
 // DELETE User Proposal API Call
 export const deleteProposalAPI = async (proposalId, token) => {

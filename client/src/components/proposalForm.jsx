@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 import { generateDummyUser } from '../utils/authUtils'; 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import Captcha from '../components/Captcha'; // Import the Captcha component
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
@@ -19,14 +19,16 @@ const ProposalForm = () => {
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
-  const [captchaToken, setCaptchaToken] = useState('');
-  const siteKey = process.env.REACT_APP_hCAPTCHA_SITEKEY; // Adjusted to use the environment variable
+  const [captchaInput, setCaptchaInput] = useState('');
 
   useEffect(() => {
+    if (!user) {
+      loadCaptchaEnginge(6);
+    }
     register("description", { required: true });
     register("email");
     register("name");
-  }, [register]);
+  }, [register, user]);
 
   useEffect(() => {
     if (titleInputRef.current) {
@@ -58,13 +60,17 @@ const ProposalForm = () => {
         throw new Error('Title and description are required');
       }
 
-      if (!captchaToken) {
-        throw new Error('Please complete the captcha');
+      if (!user && !validateCaptcha(captchaInput)) {
+        throw new Error('Invalid CAPTCHA');
       }
 
       const currentUser = user || generateDummyUser();
       const uniqueUrl = nanoid(10);
-      const proposal = { ...data, uniqueUrl };
+      const proposal = { 
+        ...data, 
+        uniqueUrl,
+        email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email, // Use the email based on the checkbox or input field
+      };
 
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
@@ -123,8 +129,14 @@ const ProposalForm = () => {
 
           {user ? (
             <div>
-              <input type="checkbox" {...register('receiveNotifications')} tabIndex="4" />
-              <label htmlFor="receiveNotifications">Receive response notifications at: {user.email}</label>
+              <input 
+                type="checkbox" 
+                {...register('receiveNotifications')} 
+                tabIndex="4" 
+              />
+              <label htmlFor="receiveNotifications">
+                Receive response notifications at: {user.email}
+              </label>
             </div>
           ) : (
             <>
@@ -140,12 +152,22 @@ const ProposalForm = () => {
             </>
           )}
 
-          <Captcha
-            siteKey={siteKey} // Use environment variable for site key
-            onVerify={(token) => setCaptchaToken(token)}
-          />
+          {!user && (
+            <>
+              <LoadCanvasTemplate />
+              <input
+                type="text"
+                placeholder="Enter CAPTCHA"
+                value={captchaInput}
+                onChange={(e) => setCaptchaInput(e.target.value)}
+                tabIndex="6"
+                aria-label="CAPTCHA"
+              />
+              {errors.captcha && <span className="error">CAPTCHA is required</span>}
+            </>
+          )}
 
-          <button type="submit" tabIndex="6">Create Proposal</button>
+          <button type="submit" tabIndex="7">Create Proposal</button>
         </div>
       </form>
     </div>

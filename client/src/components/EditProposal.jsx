@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { fetchEditProposalAPI, updateProposalAPI } from "../api/proposals";
 import ReactQuill from 'react-quill'; 
 import 'react-quill/dist/quill.snow.css'; 
-import { fetchEditProposalAPI, updateProposalAPI } from "../api/proposals";
+import { useAuthContext } from "../hooks/useAuthContext";
+
 const EditProposal = () => {
-  const { uniqueUrl } = useParams(); // Get unique URL parameter
+  const { uniqueUrl } = useParams(); 
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [receiveNotifications, setReceiveNotifications] = useState(false);
   const [error, setError] = useState(null);
 
@@ -20,7 +24,8 @@ const EditProposal = () => {
         setTitle(proposalData.title || '');
         setDescription(proposalData.description || '');
         setName(proposalData.name || '');
-        setReceiveNotifications(proposalData.receiveNotifications || false);
+        setEmail(proposalData.email || '');
+        setReceiveNotifications(!!proposalData.email); // If there's an email, set notifications to true
       } catch (error) {
         setError(error.message);
       }
@@ -36,7 +41,7 @@ const EditProposal = () => {
       title,
       description,
       name,
-      receiveNotifications
+      email: receiveNotifications ? (user ? user.email : email) : null
     };
 
     try {
@@ -79,14 +84,27 @@ const EditProposal = () => {
             value={name}
           />
 
-          <div>
-            <input
-              type="checkbox"
-              onChange={(e) => setReceiveNotifications(e.target.checked)}
-              checked={receiveNotifications}
-            />
-            <label>Receive response notifications</label>
-          </div>
+          {user ? (
+            <div>
+              <input
+                type="checkbox"
+                onChange={(e) => setReceiveNotifications(e.target.checked)}
+                checked={receiveNotifications}
+              />
+              <label>Receive response notifications at: {user.email}</label>
+            </div>
+          ) : (
+            <div>
+              <label htmlFor="email">Send notifications of new responses to:</label>
+              <input 
+                id="email"
+                type="email" 
+                placeholder="Your Email (Optional)" 
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+              />
+            </div>
+          )}
 
           <button>Update Proposal</button>
           {error && <div className="error">{error}</div>}
@@ -97,3 +115,4 @@ const EditProposal = () => {
 };
 
 export default EditProposal;
+

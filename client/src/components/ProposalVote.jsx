@@ -150,7 +150,12 @@ const ProposalVote = () => {
       {showFirstRenderMessage && 
         <div className="first-render-message">
           <p>Welcome! Your Proposal has been created</p>
-          <p>Send this link to the respondents: </p>
+          <div className="copy-link-container">
+            <p>Copy this link to send to Respondents: </p>
+            <button className="copy-link" onClick={copyUrlToClipboard}>
+            {copied ? "URL Copied!" : "Copy Proposal Link"}
+            </button>
+          </div>
           <p>Use this link to edit your proposal: </p>
           <p>IMPORTANT: Save the edit link for your records! You won't see it again!</p>
         </div>}
@@ -163,11 +168,6 @@ const ProposalVote = () => {
         <div className="proposal-description">
           <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
         </div>
-      </div>
-      <div className="copy-link-container">
-        <button className="copy-link" onClick={copyUrlToClipboard}>
-          {copied ? "URL Copied!" : "Copy Proposal Link"}
-        </button>
       </div>
       <div className="submitted-votes-container">
         <table className="votes-table">
