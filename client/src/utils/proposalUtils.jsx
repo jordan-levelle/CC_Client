@@ -1,5 +1,3 @@
-
-
 /* Example Proposal Util Functions */
 export const handleExistingVoteUpdate = (index, newVoteValue, exampleProposal, setExampleProposal) => {
   if (!exampleProposal) {
@@ -48,17 +46,3 @@ export const handleNewSubmission = (exampleProposal, newVote, setExampleProposal
   }));
   setNewVote({ name: '', vote: '', comment: '' });
 };
-
-
-
-
-
-  
-
-
-
-
-
-  
-  
-  

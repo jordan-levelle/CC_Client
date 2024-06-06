@@ -1,6 +1,3 @@
-// api/proposals.js
-
-// utils.js
 const PROP_URL = process.env.REACT_APP_PROPOSALS;
 
 // Helper function to get the headers with the optional authorization token
@@ -133,7 +130,6 @@ export const checkFirstRender = async (proposalId) => {
   }
 }
 
-
 // GET Proposal Submission Data API Call
 export const fetchSubmittedVotes = async (proposalId) => {
   try {
@@ -181,7 +177,6 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     setError(error.message);
   }
 };
-
 
 // DELETE Table Entry API Call
 export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes, setError) => {

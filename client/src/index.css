@@ -793,6 +793,17 @@ body {
   cursor: pointer;
 }
 
+.forgot-password {
+  margin-top: 10px;
+  text-align: center;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
 
 
 

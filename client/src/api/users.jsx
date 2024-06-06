@@ -1,6 +1,4 @@
-// utils.js
 const USER_URL = process.env.REACT_APP_USERS;
-
 
 export const deleteAccountAPI = async (token, deleteProposals) => {
   const response = await fetch(`${USER_URL}/delete`, {
@@ -9,7 +7,7 @@ export const deleteAccountAPI = async (token, deleteProposals) => {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ deleteProposals }), // Pass deleteProposals to the server
+    body: JSON.stringify({ deleteProposals }), 
   });
 
   if (!response.ok) {
@@ -37,7 +35,6 @@ export const updateEmailAPI = async (token, newEmail) => {
 
   return 'Email updated successfully';
 };
-
 
 export const signupAPI = async (email, password) => {
   try {
@@ -86,7 +83,6 @@ export const loginAPI = async (email, password) => {
     throw error;
   }
 };
-
 
 export const fetchParticipatedProposalsAPI = async (token) => {
   const response = await fetch(`${USER_URL}/participatedProposals`, {
