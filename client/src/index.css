@@ -627,7 +627,7 @@ body {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    height: 100vh;
+    min-height: 100vh;
     padding: 20px;
   }
 
