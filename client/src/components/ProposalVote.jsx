@@ -43,7 +43,7 @@ const ProposalVote = () => {
   
         const firstRender = await checkFirstRender(proposalData._id);
         setShowFirstRenderMessage(firstRender); // This should be a boolean
-        // console.log(firstRender);
+        console.log(firstRender);
       } catch (error) {
         setError('Error fetching data: ' + error.message);
       } finally {
