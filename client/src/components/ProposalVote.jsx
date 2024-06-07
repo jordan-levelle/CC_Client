@@ -32,8 +32,7 @@ const ProposalVote = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        
+      try {  
         const { proposal: proposalData } = await fetchProposalData(uniqueUrl);
        
         setProposal(proposalData);
@@ -44,7 +43,7 @@ const ProposalVote = () => {
   
         const firstRender = await checkFirstRender(proposalData._id);
         setShowFirstRenderMessage(firstRender); // This should be a boolean
-       
+        // console.log(firstRender);
       } catch (error) {
         setError('Error fetching data: ' + error.message);
       } finally {

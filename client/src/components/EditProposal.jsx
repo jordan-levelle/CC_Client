@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchEditProposalAPI, updateProposalAPI } from "../api/proposals";
+import { useAuthContext } from "../hooks/useAuthContext";
 import ReactQuill from 'react-quill'; 
 import 'react-quill/dist/quill.snow.css'; 
-import { useAuthContext } from "../hooks/useAuthContext";
 
 const EditProposal = () => {
   const { uniqueUrl } = useParams(); 
-  const navigate = useNavigate();
   const { user } = useAuthContext();
-
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [name, setName] = useState('');
@@ -25,12 +24,11 @@ const EditProposal = () => {
         setDescription(proposalData.description || '');
         setName(proposalData.name || '');
         setEmail(proposalData.email || '');
-        setReceiveNotifications(!!proposalData.email); // If there's an email, set notifications to true
+        setReceiveNotifications(!!proposalData.email);
       } catch (error) {
         setError(error.message);
       }
     };
-
     fetchData();
   }, [uniqueUrl]);
 
@@ -41,17 +39,13 @@ const EditProposal = () => {
       title,
       description,
       name,
-      email: receiveNotifications ? (user ? user.email : email) : null
+      email: receiveNotifications ? (user ? user.email : email) : email // Ensure email is always set
     };
 
     try {
       const response = await updateProposalAPI(uniqueUrl, updatedProposal);
       setError(null);
-      setTitle('');
-      setDescription('');
-      setName('');
-      const votePageUrl = `/${response.uniqueUrl}`;
-      navigate(votePageUrl);
+      navigate(`/${response.uniqueUrl}`);
     } catch (error) {
       setError(error.message);
     }
@@ -115,4 +109,3 @@ const EditProposal = () => {
 };
 
 export default EditProposal;
-

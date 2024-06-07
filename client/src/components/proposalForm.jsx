@@ -6,7 +6,6 @@ import { useVoteContext } from "../hooks/useVoteContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from 'react-router-dom'; 
 import { nanoid } from 'nanoid';
-import { generateDummyUser } from '../utils/authUtils'; 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
@@ -32,9 +31,14 @@ const ProposalForm = () => {
 
   useEffect(() => {
     if (titleInputRef.current) {
-      titleInputRef.current.focus(); // Focus on title input when component mounts
+      titleInputRef.current.focus(); 
     }
   }, []);
+
+  const generateDummyUser = () => ({
+    _id: process.env.REACT_APP_NON_AUTH_USER,
+    token: process.env.REACT_APP_NON_AUTH_TOKEN
+  });
 
   const handleTitleKeyPress = useCallback((event) => {
     if (event.key === 'Tab') {
@@ -175,9 +179,3 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
-
-
-
-
-
-
