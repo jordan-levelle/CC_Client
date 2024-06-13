@@ -54,9 +54,8 @@ export const signupAPI = async (email, password) => {
     return response.json();
   } catch (error) {
     console.error('Error sign up:', error);
-      throw error;
+    throw error;
   }
-  
 };
 
 export const loginAPI = async (email, password) => {
@@ -75,8 +74,7 @@ export const loginAPI = async (email, password) => {
   
     // Store token in local storage upon successful login
     localStorage.setItem('token', json.token);
-    console.log('Token stored in local storage:', json.token); // Add this line
-  
+   
     return json;
   } catch (error) {
     console.error('Error log in:', error);
@@ -96,4 +94,34 @@ export const fetchParticipatedProposalsAPI = async (token) => {
     throw new Error(data.error || 'Could not fetch participated proposals');
   }
   return data;
+};
+
+export const checkVerificationStatusAPI = async (verificationToken) => {
+  try {
+    let verified = false;
+
+    while (!verified) {
+      const response = await fetch(`${process.env.REACT_APP_USERS}/verify/status/${verificationToken}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        verified = data.verified;
+        if (verified) {
+          return { verified: true, user: data.user };
+        }
+      } else {
+        const error = await response.json();
+        throw new Error(error.error);
+      }
+
+      // Poll every 2 seconds
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  } catch (error) {
+    console.error('Error checking verification status:', error);
+    throw error;
+  }
 };

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSignup } from '../hooks/useSignup';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import { Navigate } from 'react-router-dom';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
-  const { signup, error, isLoading } = useSignup();
-
+  const { signup, verificationPending, error, isLoading } = useSignup();
 
   useEffect(() => {
     loadCaptchaEnginge(6);
@@ -26,7 +26,6 @@ const Signup = () => {
     setConfirmPassword(e.target.value);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -35,11 +34,21 @@ const Signup = () => {
     }
 
     if (!validateCaptcha(captchaInput)) {
-      throw new Error('Invalid CAPTCHA');
+      alert('Invalid CAPTCHA');
+      return;
     }
 
-    await signup(email, password);
+    try {
+      await signup(email, password);
+    } catch (error) {
+      console.error('Error signing up:', error);
+    }
   };
+
+  if (verificationPending) {
+    const verificationToken = localStorage.getItem('verificationToken');
+    return <Navigate to={`/verify-loading/${verificationToken}`} />;
+  }
 
   return (
     <div className='auth-container'>
@@ -47,41 +56,26 @@ const Signup = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
+          <input type="email" value={email} onChange={handleEmailChange} required />
         </div>
         <div>
           <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
+          <input type="password" value={password} onChange={handlePasswordChange} required />
         </div>
         <div>
           <label>Confirm Password:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={handleConfirmPassword}
-            required
-          />
+          <input type="password" value={confirmPassword} onChange={handleConfirmPassword} required />
         </div>
         <div>
-        <LoadCanvasTemplate />
-              <input
-                type="text"
-                placeholder="Enter CAPTCHA"
-                value={captchaInput}
-                onChange={(e) => setCaptchaInput(e.target.value)}
-                tabIndex="6"
-                aria-label="CAPTCHA"
-              />
+          <LoadCanvasTemplate />
+          <input
+            type="text"
+            placeholder="Enter CAPTCHA"
+            value={captchaInput}
+            onChange={(e) => setCaptchaInput(e.target.value)}
+            tabIndex="6"
+            aria-label="CAPTCHA"
+          />
         </div>
         <button type="submit" disabled={isLoading}>Sign up</button>
         {error && <div className="error">{error}</div>}

@@ -605,66 +605,110 @@ body {
   flex-direction: column;
   padding: 20px;
   gap: 20px;
+  min-height: 100vh; /* Ensure the dashboard takes full height */
 }
-
-.proposals-container {
-  flex-direction: row;
-}
-
-.user-details {
-  padding: 10px;
-  background-color: #dddbdb;
-  border-radius: 10px;
-  max-width: fit-content;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
 
 /* Desktop styles */
-@media (min-width: 768px) {
+@media (min-width: 1140px) {
   .dashboard {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    min-height: 100vh;
-    padding: 20px;
+  }
+
+  .proposals-container {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    flex: 1; /* Take up remaining space */
   }
 
   .proposal-list-container,
   .proposal-participated-container {
-    max-height: calc(100vh - 40px);
-    width: 450px;
-    margin-right: 20px;
+    width: 420px;
+    max-width: none; /* No max-width restrictions */
+    box-sizing: border-box; /* Include padding and border in width */
+    margin: 0; /* No extra margin */
   }
 
+  .user-details {
+    width: fit-content; /* Ensure user details takes up space on the right */
+    max-width: 300px; /* Set a maximum width */
+    padding: 10px; /* Padding inside the box */
+    background-color: #f0f0f0; /* Light gray background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border: 1px solid #ccc; /* Light border */
+    align-self: flex-start; /* Align to the top of the flex container */
+    text-align: center;
+    box-sizing: border-box; /* Include padding and border in width */
+  }
 }
 
 /* Tablet to Desktop styles */
-@media (min-width: 768px) and (max-width: 1222px) {
-  .proposals-container {
+@media (min-width: 876px) and (max-width: 1140px) {
+  .dashboard {
     flex-direction: column;
   }
 
-  .proposal-participated-container {
-    margin-top: 20px;
+  .proposals-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 auto;
+    gap: 50px;
   }
 
   .proposal-list-container,
   .proposal-participated-container {
-    flex-direction: column;
+    width: 400px; /* Full width for each container */
+    max-width: none;
+    margin-bottom: 20px; /* Space between containers */
+    
+  }
+
+  .user-details {
+    width: 50%; /* Full width */
+    margin: 0 auto;
+    order: -1; /* Move to the top */
+    margin-bottom: 20px; /* Space below */
+    padding: 10px;
+    background-color: #f0f0f0; /* Light gray background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border: 1px solid #ccc; /* Light border */
+    text-align: center;
   }
 }
 
 /* Mobile styles */
-@media (max-width: 767px) {
-  .user-details {
-    order: -1; /* Move user details to the top */
+@media (max-width: 876px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .proposals-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
   }
 
   .proposal-list-container,
   .proposal-participated-container {
-    max-width: fit-content;
+    width: fit-content;
+  }
+
+  .user-details {
+    order: -1; /* Move to the top */
+    width: 80%; /* Full width */
+    margin: 0 auto;
+    margin-bottom: 20px; /* Space below */
+    padding: 10px;
+    background-color: #f0f0f0; /* Light gray background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border: 1px solid #ccc; /* Light border */
+    text-align: center;
   }
 }
 
@@ -682,36 +726,36 @@ body {
   display: flex;
   justify-content: center;
   max-width: fit-content;
+  flex-wrap: wrap; /* Allow buttons to wrap to next line */
+  gap: 10px; /* Add some space between buttons */
 }
 
 .view-proposal-button, 
 .edit-button, 
 .delete-proposal-button {
   font-size: medium;
-  padding: 8px 16px;
+  padding: 10px 20px;
   margin: 5px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition for hover */
 }
 
 .view-proposal-button {
-  width: 120px;
-  max-width: 130px;
+  width: auto; /* Allow button to expand with text */
   background-color: #007bff; /* Blue background color */
   color: #ffffff;
 }
 
 .delete-proposal-button {
-  width: 120px;
-  max-width: 130px;
+  width: auto; /* Allow button to expand with text */
   background-color: #dddbdb;
   color: #dc3545;
 }
 
 .edit-button {
-  width: 120px;
-  max-width: 130px;
+  width: auto; /* Allow button to expand with text */
   background-color: #a8a8a8; /* Grey background color */
   color: #ffffff;
 }
@@ -752,7 +796,6 @@ body {
 .confirmation-options input[type="radio"] {
   margin-right: 5px;
 }
-
 
 
 
@@ -968,46 +1011,106 @@ ul, ol {
   margin-left: 20px;
 }
 
-/************ Styles For Pricing/Upgrade Page ***************/
 
-.price-innerdetail h5 {
-  font-weight: 400;
-  letter-spacing: 2px;
-  font-size: 15px;
+
+/* 
+  *************Styles for Teams Component*************** 
+*/
+
+#price-section {
+  padding: 60px 0;
 }
 
-.price-innerdetail p {
-  font-size: 50px;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
-.detail-pricing {
-  border-bottom: 1px solid;
-  padding: 30px 0 30px 0;
+.title-big {
+  padding-bottom: 20px; /* Matches the previous pb-3 */
+  margin-bottom: 20px; /* Matches the previous mb-3 */
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
-.detail-pricing .float-left {
-  padding: 0 0 0 40px;
+.description-p {
+  font-size: 1rem;
+  color: #6c757d;
+  padding-right: 0; /* Matches pe-0 */
+  line-height: 1.5;
 }
 
-.detail-pricing .float-left i {
-  position: absolute;
-  left: 0;
-  font-size: 20px;
+.gapsectionsecond {
+  margin-bottom: 40px;
 }
 
-.detail-pricing span {
-  display: inline-block;
-  position: relative;
-  font-weight: 400;
+.row {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .wrap-price {
-  background: rgba(32, 33, 36, .1);
-  padding: 50px 20px 50px;
+  background: rgba(32, 33, 36, 0.1);
+  padding: 50px 20px;
   border-radius: 10px;
+  margin-bottom: 30px; /* Matches the previous pb-5 */
 }
 
 .center-wrap {
   background: #070707;
   color: #fff;
+}
+
+.price-innerdetail {
+  text-align: center;
+}
+
+.price-innerdetail h5 {
+  font-weight: 400;
+  letter-spacing: 2px;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.price-innerdetail p {
+  font-size: 50px;
+  margin-bottom: 30px;
+}
+
+.detail-pricing {
+  border-bottom: 1px solid;
+  padding: 30px 0;
+}
+
+.pricing-detail-item {
+  display: block;
+  text-align: left;
+  padding-left: 40px;
+  position: relative;
+  font-weight: 400;
+}
+
+.pricing-detail-item i {
+  position: absolute;
+  left: 0;
+  font-size: 20px;
+}
+
+.btn {
+  margin-top: 30px;
+  font-size: medium;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background-color: #565e64;
 }
