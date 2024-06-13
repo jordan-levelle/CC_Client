@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { checkVerificationStatusAPI } from 'src/api/users'; // Adjust the import path as needed
+import { checkVerificationStatusAPI } from '../api/users'; // Adjust the import path as needed
 
 const VerifyLoadingPage = () => {
   const [verificationStatus, setVerificationStatus] = useState(null);
