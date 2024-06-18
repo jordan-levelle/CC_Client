@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useDeleteAccount, useUpdateAccount } from '../hooks/useAccountUpdate';
 import { useAuthContext } from '../hooks/useAuthContext';
+// import { useResetPassword } from '../hooks/useForgotPassword';
 
 const EditProfile = () => {
     const { user } = useAuthContext();
     const { deleteAccount, deleteMessage, deleteError } = useDeleteAccount();
     const { updateEmail, updateMessage, updateError } = useUpdateAccount();
+    // TODO
+    // const { resetPassword, resetPasswordError } = useResetPassword();
 
     const [email, setEmail] = useState(user.email);
     const [error, setError] = useState(null);
@@ -37,6 +40,12 @@ const EditProfile = () => {
         setShowConfirmation(false); // Hide the confirmation popup after deletion
     };
 
+    const handleResetPassword = async (e) => {
+       alert('Consensus Check is developing this feature');
+    };
+
+
+
     return (
         <div className='settings-container'>
             <h3>Account Settings</h3>
@@ -50,6 +59,14 @@ const EditProfile = () => {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <button onClick={handleEmailChange}>Update</button>
+                    {error && <div className='error'>{error}</div>}
+                    {updateMessage && <p>{updateMessage}</p>}
+                    {updateError && <p>{updateError}</p>}
+                </div>
+                <div className="edit-email-row">
+                    <p>Reset Password:</p>
+                    
+                    <button onClick={handleResetPassword}>Reset</button>
                     {error && <div className='error'>{error}</div>}
                     {updateMessage && <p>{updateMessage}</p>}
                     {updateError && <p>{updateError}</p>}

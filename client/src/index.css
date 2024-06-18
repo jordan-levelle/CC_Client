@@ -384,6 +384,17 @@ body {
 /* 
   *************Styles for Proposal Vote Component************* 
 */
+/* Example Alert for Example Proposal */
+.example-alert {
+  color: #c09853;
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+}
+/*                                    */
+
 .first-render-message {
   background-color: rgba(144, 238, 144, 0.8); /* Semi-transparent light lime green background */
   color: #333; /* Ensure text is readable on light background */
@@ -420,50 +431,10 @@ body {
   background-color: #0056b3; /* Darker background on hover */
 }
 
-.copy-link:focus {
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Custom focus outline */
-}
-
-
-.proposal-vote-container {
-  margin: 20px auto; /* auto margin for vertical centering */
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  max-width: 95vw;
-}
-
-.proposal-description{
-  background-color: rgba(247, 241, 225, 0.4);
-  max-width: 89vw;
-  margin: 2px auto;
-  padding: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.proposal-info {
-  margin-bottom: 20px; /* Add more margin between the title and description */
-}
-
-.proposal-info h2 {
-  margin-bottom: 10px; /* Keep existing margin for the title */
-}
-
-.proposal-info p {
-  margin-bottom: 20px; /* Keep existing margin for the description */
-}
-
-.proposal-vote-container textarea {
-  width: 100%; /* Adjust width for smaller screens */
-}
-
 .copy-link {
   margin-right: 10px;
-  margin-bottom: 10px; /* Add margin bottom for spacing */
-  padding: 10px 15px; /* Adjust padding for smaller screens */
+  margin-bottom: 10px; 
+  padding: 10px 15px; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -473,24 +444,46 @@ body {
   
 }
 
-/* Example Proposal */
-.example-alert {
-  color: #c09853;
-  padding: 8px 35px 8px 14px;
-  margin-bottom: 20px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
-  background-color: #fcf8e3;
-  border: 1px solid #fbeed5;
-}
-
 .alert-block {
   padding-top: 14px;
   padding-bottom: 14px;
 }
 
+.copy-link:focus {
+  outline: none; 
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); 
+}
+.proposal-vote-container {
+  margin: 15px auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  max-width: 90vw;
+}
+
+.proposal-description {
+  background-color: rgba(247, 241, 225, 0.4);
+  max-width: 93vw;
+  margin: 2px auto;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.proposal-info,
+.proposal-info h2,
+.proposal-info p {
+  margin-bottom: 20px; 
+}
+
+.proposal-vote-container textarea {
+  width: 100%; 
+}
+
 .submitted-votes-container {
   margin: 5px auto;
-  overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+  overflow-x: auto; 
 }
 
 .votes-table {
@@ -501,7 +494,6 @@ body {
 .votes-table th,
 .votes-table td {
   padding: 8px;
-  border: 1px solid #ddd;
 }
 
 .votes-table th {
@@ -517,16 +509,18 @@ body {
   background-color: #fff;
 }
 
-.opinion-buttons {
-  margin-bottom: 10px; /* Reduce margin for smaller screens */
-  display: flex; /* Ensure buttons are displayed in a row */
-  flex-wrap: wrap; /* Allow buttons to wrap to next line on smaller screens */
+.opinion-buttons,
+.new-opinion-buttons {
+  margin-bottom: 10px; 
+  display: flex; 
+  flex-wrap: wrap; 
 }
 
-.opinion-buttons button {
+.opinion-buttons button,
+.new-opinion-buttons button {
   margin-right: 10px;
-  margin-bottom: 10px; /* Add margin bottom for spacing */
-  padding: 10px 15px; /* Adjust padding for smaller screens */
+  margin-bottom: 10px; 
+  padding: 10px 15px; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -538,57 +532,123 @@ body {
   border: 1px solid #007bff;
 }
 
-/* Separate the submit section with margin or border */
 .submit-section {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 2px solid #ddd;
 }
 
+/* Toggle comment button styles */
+.toggle-comment-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.toggle-comment-button svg {
+  font-size: 16px;
+}
+
+/* Hidden comments container */
+.comment-container {
+  display: block; /* Display comment container by default */
+}
+
+.comment-container.mobile {
+  display: none; /* Hide comment container on mobile */
+}
+
+/* Visible comments container */
+.comment-container.visible {
+  display: block; /* Display comment container when visible */
+}
+
+/* Hide toggle comment button on screens wider than mobile */
+@media (min-width: 769px) {
+  .toggle-comment-button {
+    display: none;
+  }
+}
+
 /* Responsive styles for mobile */
 @media (max-width: 768px) {
-  .votes-table, .votes-table thead, .votes-table tbody, .votes-table th, .votes-table td, .votes-table tr {
+  .votes-table {
     display: block;
+    border-radius: 5px;
+    border: 1px solid #ccc;
     width: 100%;
   }
-  
-  .votes-table thead tr {
-    display: none; /* Hide the table header on mobile */
+
+  .votes-table thead {
+    display: none;
   }
 
   .votes-table tr {
+    border: 3px #007bff;
+  }
+
+  .votes-table tbody,
+  .votes-table tr {
+    display: block;
+    width: 100%;
+    padding: 2px;
     margin-bottom: 15px;
-    border-bottom: 2px solid #ddd;
   }
 
   .votes-table td {
+    display: flex;
+    align-items: center;
     padding: 10px 5px;
-    position: relative;
   }
 
-  .opinion-buttons {
+  .votes-table td:before {
+    flex: 1;
+    font-weight: bold;
+  }
+
+  .new-opinion-buttons {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 65%;
   }
 
-  .opinion-buttons div {
-    flex: 0 0 48%; /* Ensure two buttons per row, adjust width for some spacing */
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5px;
+  .new-opinion-buttons button {
+    flex: 1;
+    min-width: 60px;
+    padding: 8px;
   }
 
-  .opinion-buttons button {
-    width: 100%;
-    margin-right: 0;
+  .submitted-votes-date {
+    padding-left: 10px;
   }
 }
 
-/* Styles for input and textarea to make them responsive */
-.votes-table input[type="text"], .votes-table textarea {
-  width: 100%;
-  box-sizing: border-box;
+
+/* Add styles for screens 627px or less */
+@media (max-width: 556px) {
+  .submitted-votes-container .opinion-buttons {
+    display: none; /* Hide buttons */
+  }
+  .submitted-votes-container .dropdown-opinion {
+    display: block; /* Show dropdown */
+  }
 }
+
+@media (min-width: 555px) {
+  .submitted-votes-container .opinion-buttons {
+    display: flex; /* Show buttons */
+  }
+  .submitted-votes-container .dropdown-opinion {
+    display: none; /* Hide dropdown */
+  }
+}
+
+
+
+
 
 
 
@@ -796,8 +856,6 @@ body {
 .confirmation-options input[type="radio"] {
   margin-right: 5px;
 }
-
-
 
 
 

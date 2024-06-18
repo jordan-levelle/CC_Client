@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
+const USER_URL = process.env.REACT_APP_USERS;
 
 export const useResetPassword = () => {
   const { dispatch } = useContext(AuthContext);
@@ -12,7 +13,7 @@ export const useResetPassword = () => {
 
     try {
       // Replace this with your actual API call for resetting the password
-      const response = await fetch('', {
+      const response = await fetch(`${USER_URL}/resetPassword`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
