@@ -191,65 +191,65 @@ const ProposalVote = () => {
               </tr>
             </thead>
             <tbody>
-              {submittedVotes.map((vote, index) => (
-                <tr key={vote._id}>
-                  <td>
-                    <input
-                      type="text"
-                      value={vote.name}
-                      onChange={(e) => handleNameUpdate(index, e.target.value)}
-                      placeholder="Name"
-                    />
-                  </td>
-                  <td>
-                    {isDropdown ? (
-                      <select 
-                        value={vote.opinion} // Changed from vote.vote to vote.opinion
-                        onChange={(e) => handleOpinionUpdate(index, e.target.value)}
-                      >
-                        {Object.keys(icons).map((opinionType) => ( // Changed voteType to opinionType
-                          <option key={opinionType} value={opinionType}>
-                            {opinionType}
-                          </option>
-                          
-                        ))}
-                      </select>
-                    ) : (
-                      <div className="opinion-buttons">
-                        {Object.keys(icons).map((opinionType) => ( // Changed voteType to opinionType
-                          <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
-                            data-tooltip-html={tooltips[opinionType]}>
-                            <button
-                              type="button"
-                              className={vote.opinion === opinionType ? 'selected' : ''} // Changed vote.vote to vote.opinion
-                              onClick={() => handleOpinionUpdate(index, opinionType)}
-                              aria-label={`Vote ${opinionType}`}
-                            >
-                              <FontAwesomeIcon icon={icons[opinionType]} /> {' '}{opinionType}
-                            </button>
-                            <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <div className='submitted-votes-date'>
-                      <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="comment-container" id={`comment-${index}`}>
-                      <textarea
-                        value={vote.comment}
-                        onChange={(e) => handleCommentUpdate(index, e.target.value)}
-                        aria-label="Comment"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">Delete</button>
-                  </td>
-                </tr>
-              ))}
+            {submittedVotes.map((vote, index) => (
+  <tr key={vote._id}>
+    <td>
+      <input
+        type="text"
+        value={vote.name}
+        onChange={(e) => handleNameUpdate(index, e.target.value)}
+        placeholder="Name"
+      />
+    </td>
+    <td>
+      {isDropdown ? (
+        <select 
+          value={vote.opinion} // Changed from vote.vote to vote.opinion
+          onChange={(e) => handleOpinionUpdate(index, e.target.value)}
+        >
+          {Object.keys(icons).map((opinionType) => ( // Changed voteType to opinionType
+            <option key={opinionType} value={opinionType}>
+              {opinionType}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <div className="opinion-buttons">
+          {Object.keys(icons).map((opinionType) => ( // Changed voteType to opinionType
+            <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+              data-tooltip-html={tooltips[opinionType]}>
+              <button
+                type="button"
+                className={vote.opinion === opinionType ? 'selected' : ''} // Changed vote.vote to vote.opinion
+                onClick={() => handleOpinionUpdate(index, opinionType)}
+                aria-label={`Vote ${opinionType}`}
+              >
+                <FontAwesomeIcon icon={icons[opinionType]} /> {' '}{opinionType}
+              </button>
+              <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
+            </div>
+          ))}
+        </div>
+      )}
+      <div className='submitted-votes-date'>
+        <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
+      </div>
+    </td>
+    <td>
+      <div className="comment-container" id={`comment-${index}`}>
+        <textarea
+          value={vote.comment}
+          onChange={(e) => handleCommentUpdate(index, e.target.value)}
+          aria-label="Comment"
+        />
+      </div>
+    </td>
+    <td>
+      <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">Delete</button>
+    </td>
+  </tr>
+))}
+
               <tr className="submit-section">
                 <td>
                   <input

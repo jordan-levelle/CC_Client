@@ -172,7 +172,7 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     // Assuming fetchSubmittedVotes is a function that correctly retrieves the updated list of votes
     const data = await fetchSubmittedVotes(proposalId);
     setSubmittedVotes(data);
-    setNewVote({ name: '', vote: '', comment: '' });
+    setNewVote({ name: '', opinion: '', comment: '' });
   } catch (error) {
     setError(error.message);
   }
@@ -263,3 +263,6 @@ export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, 
     console.error('Error updating name:', error.message);
   }
 };
+
+
+
