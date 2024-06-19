@@ -11,7 +11,7 @@ import {
   submitNewTableEntry,
   deleteTableEntry,
   updateComment,
-  updateVote,
+  updateOpinion,
   updateName,
   checkFirstRender
 } from '../api/proposals';
@@ -24,7 +24,7 @@ const ProposalVote = () => {
 
   const [proposal, setProposal] = useState(null);
   const [submittedVotes, setSubmittedVotes] = useState([]);
-  const [newVote, setNewVote] = useState({ name: '', vote: '', comment: '' });
+  const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -33,18 +33,13 @@ const ProposalVote = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {  
+      try {
         const { proposal: proposalData } = await fetchProposalData(uniqueUrl);
-       
         setProposal(proposalData);
-  
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
-  
-  
         const firstRender = await checkFirstRender(proposalData._id);
-        setShowFirstRenderMessage(firstRender); // This should be a boolean
-
+        setShowFirstRenderMessage(firstRender);
       } catch (error) {
         setError('Error fetching data: ' + error.message);
       } finally {
@@ -58,14 +53,17 @@ const ProposalVote = () => {
     const handleResize = () => {
       setIsDropdown(window.innerWidth <= 768); // Example width, adjust as necessary
     };
-
     handleResize(); // Initial check
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const copyUrlToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+  };
   
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter') {
@@ -82,29 +80,24 @@ const ProposalVote = () => {
     }));
   };
 
-  const copyUrlToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-  };
-
-  const handleNewVoteButtonClick = (voteType) => {
+  const handleOpinionButtonClick = (opinionType) => {
     setNewVote(prevVote => ({
       ...prevVote,
-      vote: voteType
+      opinion: opinionType
     }));
   };
 
   useEffect(() => {
-    if (newVote.vote) {
+    if (newVote.opinion) {
       handleNewTableEntry();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newVote.vote]);
+  }, [newVote.opinion]);
 
   const handleNewTableEntry = async () => {
     try {
       await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes, setNewVote, setError);
-      setNewVote({ name: '', vote: '', comment: '' });
+      setNewVote({ name: '', opinion: '', comment: '' });
     } catch (error) {
       setError('Error submitting new entry: ' + error.message);
     }
@@ -118,21 +111,14 @@ const ProposalVote = () => {
     }
   }, [submittedVotes]);
 
-  const handleVoteUpdate = useCallback(async (index, newVoteValue) => {
+  const handleOpinionUpdate = useCallback(async (index, newOpinionValue) => {
     try {
-      const updatedVotes = [...submittedVotes];
-      updatedVotes[index] = {
-        ...updatedVotes[index],
-        vote: newVoteValue,
-        updatedAt: new Date(), // Update the timestamp
-      };
-
-      await updateVote(proposal._id, updatedVotes, setSubmittedVotes, index, newVoteValue);
+      await updateOpinion(proposal._id, submittedVotes, setSubmittedVotes, index, newOpinionValue);
     } catch (error) {
-      setError('Error updating vote: ' + error.message);
+      setError('Error updating opinion: ' + error.message);
     }
   }, [proposal, submittedVotes]);
-
+  
   const handleCommentUpdate = useCallback(async (index, newComment) => {
     try {
       await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
@@ -140,7 +126,7 @@ const ProposalVote = () => {
       setError('Error updating comment: ' + error.message);
     }
   }, [proposal, submittedVotes]);
-
+  
   const handleNameUpdate = useCallback(async (index, newName) => {
     try {
       await updateName(proposal._id, submittedVotes, setSubmittedVotes, index, newName);
@@ -218,36 +204,37 @@ const ProposalVote = () => {
                   <td>
                     {isDropdown ? (
                       <select 
-                        value={submittedVotes[index].vote}
-                        onChange={(e) => handleVoteUpdate(index, e.target.value)}
+                        value={vote.opinion} // Changed from vote.vote to vote.opinion
+                        onChange={(e) => handleOpinionUpdate(index, e.target.value)}
                       >
-                        {Object.keys(icons).map((voteType) => (
-                          <option key={voteType} value={voteType}>
-                            {voteType}
+                        {Object.keys(icons).map((opinionType) => ( // Changed voteType to opinionType
+                          <option key={opinionType} value={opinionType}>
+                            {opinionType}
                           </option>
+                          
                         ))}
                       </select>
                     ) : (
                       <div className="opinion-buttons">
-                        {Object.keys(icons).map((voteType) => (
-                          <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
-                            data-tooltip-html={tooltips[voteType]}>
+                        {Object.keys(icons).map((opinionType) => ( // Changed voteType to opinionType
+                          <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                            data-tooltip-html={tooltips[opinionType]}>
                             <button
                               type="button"
-                              className={submittedVotes[index].vote === voteType ? 'selected' : ''}
-                              onClick={() => handleVoteUpdate(index, voteType)}
-                              aria-label={`Vote ${voteType}`}
+                              className={vote.opinion === opinionType ? 'selected' : ''} // Changed vote.vote to vote.opinion
+                              onClick={() => handleOpinionUpdate(index, opinionType)}
+                              aria-label={`Vote ${opinionType}`}
                             >
-                              <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
+                              <FontAwesomeIcon icon={icons[opinionType]} /> {' '}{opinionType}
                             </button>
-                            <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
+                            <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                           </div>
                         ))}
                       </div>
                     )}
                     <div className='submitted-votes-date'>
-                    <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
-                    </div>        
+                      <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
+                    </div>
                   </td>
                   <td>
                     <div className="comment-container" id={`comment-${index}`}>
@@ -277,18 +264,18 @@ const ProposalVote = () => {
                 </td>
                 <td>
                   <div className="new-opinion-buttons">
-                    {Object.keys(icons).map((voteType, i) => (
-                      <div key={voteType} data-tooltip-id={`${voteType.toLowerCase()}-tooltip`}
-                        data-tooltip-html={tooltips[voteType]}>
+                    {Object.keys(icons).map((opinionType, i) => ( // Changed voteType to opinionType
+                      <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                        data-tooltip-html={tooltips[opinionType]}>
                         <button
                           type="button"
-                          className={newVote.vote === voteType ? 'selected' : ''}
-                          onClick={() => handleNewVoteButtonClick(voteType)}
-                          aria-label={`Vote ${voteType}`}
+                          className={newVote.opinion === opinionType ? 'selected' : ''} // Changed newVote.vote to newVote.opinion
+                          onClick={() => handleOpinionButtonClick(opinionType)}
+                          aria-label={`Vote ${opinionType}`}
                         >
-                          <FontAwesomeIcon icon={icons[voteType]} /> {' '}{voteType}
+                          <FontAwesomeIcon icon={icons[opinionType]} /> {' '}{opinionType}
                         </button>
-                        <Tooltip id={`${voteType.toLowerCase()}-tooltip`} />
+                        <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                       </div>
                     ))}
                   </div>

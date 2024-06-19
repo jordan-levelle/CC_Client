@@ -196,68 +196,70 @@ export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes
 };
 
 // UPDATE Existing Table Entry API Call
-export const handleSubmittedVoteUpdate = async (proposalId, vote) => {
+export const handleSubmittedVoteUpdate = async (proposalId, voteId, voteData) => {
   try {
-    const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
+    const response = await fetch(`${PROP_URL}/${proposalId}/votes/${voteId}`, {
       method: 'PUT',
-      body: JSON.stringify(vote),
+      body: JSON.stringify(voteData),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Error updating vote');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error updating vote');
     }
 
-    return response.json();
+    const responseData = await response.json();
+    return responseData;
   } catch (error) {
+    console.error('API call error:', error.message);
     throw new Error(error.message);
   }
 };
 
-export const updateVote = async (proposalId, submittedVotes, setSubmittedVotes, index, newVoteValue) => {
+export const updateOpinion = async (proposalId, submittedVotes, setSubmittedVotes, index, newOpinionValue) => {
   try {
     const updatedVotes = [...submittedVotes];
     updatedVotes[index] = {
       ...updatedVotes[index],
-      vote: newVoteValue,
-      updatedAt: new Date(), // Update the timestamp
+      opinion: newOpinionValue,
+      updatedAt: new Date(),
     };
     setSubmittedVotes(updatedVotes);
-    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
+    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]._id, updatedVotes[index]);
   } catch (error) {
-    throw new Error(error.message);
+    console.error('Error updating opinion:', error.message);
   }
 };
 
 export const updateComment = async (proposalId, submittedVotes, setSubmittedVotes, index, newComment) => {
   try {
     const updatedVotes = [...submittedVotes];
-    updatedVotes[index].comment = newComment;
+    updatedVotes[index] = {
+      ...updatedVotes[index],
+      comment: newComment,
+      updatedAt: new Date(),
+    };
     setSubmittedVotes(updatedVotes);
-    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]);
+    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]._id, updatedVotes[index]);
   } catch (error) {
-    throw new Error(error.message);
+    console.error('Error updating comment:', error.message);
   }
 };
-  
+
 export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, index, newName) => {
   try {
-    const voteToUpdate = submittedVotes[index];
     const updatedVotes = [...submittedVotes];
-    updatedVotes[index].name = newName;
-
+    updatedVotes[index] = {
+      ...updatedVotes[index],
+      name: newName,
+      updatedAt: new Date(),
+    };
     setSubmittedVotes(updatedVotes);
-
-    await fetch(`${PROP_URL}/${proposalId}/vote`, {
-      method: 'PUT',
-      body: JSON.stringify({ ...voteToUpdate, newName, voteId: voteToUpdate._id }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]._id, updatedVotes[index]);
   } catch (error) {
-    throw new Error('Error updating vote: ' + error.message);
+    console.error('Error updating name:', error.message);
   }
 };
