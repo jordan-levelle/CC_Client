@@ -538,38 +538,6 @@ body {
   border-top: 2px solid #ddd;
 }
 
-/* Toggle comment button styles */
-.toggle-comment-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.toggle-comment-button svg {
-  font-size: 16px;
-}
-
-/* Hidden comments container */
-.comment-container {
-  display: block; /* Display comment container by default */
-}
-
-.comment-container.mobile {
-  display: none; /* Hide comment container on mobile */
-}
-
-/* Visible comments container */
-.comment-container.visible {
-  display: block; /* Display comment container when visible */
-}
-
-/* Hide toggle comment button on screens wider than mobile */
-@media (min-width: 769px) {
-  .toggle-comment-button {
-    display: none;
-  }
-}
 
 /* Responsive styles for mobile */
 @media (max-width: 768px) {
@@ -625,6 +593,26 @@ body {
     padding-left: 10px;
   }
 }
+
+.tooltip {
+  position: fixed;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+}
+
+.tooltip h3 {
+  margin-top: 0;
+}
+
+.tooltip p {
+  margin-bottom: 0.5rem;
+}
+
+
 
 
 /* Add styles for screens 627px or less */
@@ -932,7 +920,7 @@ body {
   margin-top: 30px;
 }
 
-.edit-email-row {
+.edit-userInfo-rows {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
@@ -942,7 +930,7 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.edit-email-row p {
+.edit-userInfo-rows p {
   margin-right: 20px;
   font-weight: bold;
   font-size: 1.1em;
@@ -958,7 +946,7 @@ input.email {
   margin-right: 10px;
 }
 
-.edit-email-row button {
+.edit-userInfo-buttons {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -969,7 +957,7 @@ input.email {
   margin-left: 10px;
 }
 
-.edit-email-row button:hover {
+.edit-userInfo-buttons:hover {
   background-color: #0056b3;
 }
 
@@ -1035,6 +1023,85 @@ input.email {
   }
 }
 
+
+/* Row for password reset */
+.edit-password-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+
+/* Message and error styling */
+.message {
+  color: #28a745;
+}
+
+.error {
+  color: #dc3545;
+}
+
+/* Popup styling */
+.reset-password-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Close button styling */
+.close-button {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Label and input styling */
+.password-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.password-input {
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.password-input:focus {
+  border-color: #80bdff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Confirm button styling */
+.confirm-button {
+  padding: 10px 15px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background-color: #218838;
+}
 
 
 
@@ -1172,3 +1239,4 @@ ul, ol {
 .btn-secondary:hover {
   background-color: #565e64;
 }
+
