@@ -41,4 +41,3 @@ export const useSignup = () => {
 
   return { signup, checkVerificationStatus, isLoading, error, verificationPending };
 };
-

@@ -1,7 +1,52 @@
 const USER_URL = process.env.REACT_APP_USERS;
 
+export const resetPasswordAPI = async (token, oldPassword, newPassword) => {
+  try {
+    const response = await fetch(`${USER_URL}/resetPassword`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ oldPassword, newPassword })
+    });
+    
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to reset password');
+    }
+
+    return data.message; // Assuming the response contains a message field
+  } catch (error) {
+    throw new Error(error.message || 'An error occurred');
+  }
+};
+
+export const sendForgotPasswordLinkAPI = async (email) => {
+  try {
+    const response = await fetch(`${USER_URL}/forgotPassword`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send reset link');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
 export const deleteAccountAPI = async (token, deleteProposals) => {
-  const response = await fetch(`${USER_URL}/delete`, {
+  const response = await fetch(`${USER_URL}/deleteUser`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,

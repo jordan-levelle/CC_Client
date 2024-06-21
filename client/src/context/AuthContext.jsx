@@ -13,9 +13,6 @@ export const authReducer = (state, action) => {
       return { user: null };
     case 'UPDATE_EMAIL':
       return { ...state, user: { ...state.user, email: action.payload } };
-    case 'RESET_PASSWORD':
-        // No state change needed for password reset
-        return state;
     default:
       return state;
   }

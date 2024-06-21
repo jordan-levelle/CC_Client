@@ -1,6 +1,25 @@
 import { useState } from 'react';
 import { useAuthContext } from './useAuthContext';
-import { deleteAccountAPI, updateEmailAPI } from '../api/users'; // Import the API functions
+import { deleteAccountAPI, updateEmailAPI, resetPasswordAPI } from '../api/users'; // Import the API functions
+
+
+const useResetPassword = () => {
+  const { user } = useAuthContext();
+  const [resetPasswordMessage, setResetPasswordMessage] = useState('');
+  const [resetPasswordError, setResetPasswordError] = useState('');
+
+  const resetPassword = async (oldPassword, newPassword) => {
+    try {
+      const message = await resetPasswordAPI(user.token, oldPassword, newPassword);
+      setResetPasswordMessage(message);
+    } catch (error) {
+      setResetPasswordError(error.message);
+    }
+  };
+
+  return { resetPassword, resetPasswordMessage, resetPasswordError };
+};
+
 
 const useDeleteAccount = () => {
   const { user, dispatch } = useAuthContext();
@@ -46,7 +65,7 @@ const useUpdateAccount = () => {
   return { updateEmail, updateMessage, updateError };
 };
 
-export { useDeleteAccount, useUpdateAccount };
+export { useDeleteAccount, useUpdateAccount, useResetPassword };
 
 
 

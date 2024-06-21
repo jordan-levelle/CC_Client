@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { useDeleteAccount, useUpdateAccount } from '../hooks/useAccountUpdate';
+import { useDeleteAccount, useUpdateAccount, useResetPassword } from '../hooks/useAccountUpdate';
 import { useAuthContext } from '../hooks/useAuthContext';
-// import { useResetPassword } from '../hooks/useForgotPassword';
+
 
 const EditProfile = () => {
     const { user } = useAuthContext();
     const { deleteAccount, deleteMessage, deleteError } = useDeleteAccount();
     const { updateEmail, updateMessage, updateError } = useUpdateAccount();
-    // TODO
-    // const { resetPassword, resetPasswordError } = useResetPassword();
+    const { resetPassword, resetPasswordMessage, resetPasswordError } = useResetPassword();
 
     const [email, setEmail] = useState(user.email);
     const [error, setError] = useState(null);
-    const [showConfirmation, setShowConfirmation] = useState(false); // State to control visibility of confirmation popup
-    const [deleteProposals, setDeleteProposals] = useState(false); // State to store checkbox value
+    const [showConfirmation, setShowConfirmation] = useState(false); 
+    const [deleteProposals, setDeleteProposals] = useState(false); 
+    const [showResetPassword, setShowResetPassword] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
 
     const handleEmailChange = async (e) => {
         e.preventDefault();
@@ -27,30 +29,41 @@ const EditProfile = () => {
     };
 
     const confirmDeleteAccount = () => {
-        setShowConfirmation(true); // Show the confirmation popup
+        setShowConfirmation(true); 
     };
 
     const cancelDeleteAccount = () => {
-        setShowConfirmation(false); // Hide the confirmation popup
+        setShowConfirmation(false); 
     };
 
     const proceedToDeleteAccount = () => {
-        // Pass deleteProposals to deleteAccount function
         deleteAccount(deleteProposals);
-        setShowConfirmation(false); // Hide the confirmation popup after deletion
+        setShowConfirmation(false); 
     };
 
     const handleResetPassword = async (e) => {
-       alert('Consensus Check is developing this feature');
+        e.preventDefault();
+        try {
+            await resetPassword(oldPassword, newPassword);
+            setShowResetPassword(false);
+            setOldPassword('');
+            setNewPassword('');
+        } catch (error) {
+            setError(error.message);
+        }
     };
 
-
+    const cancelResetPassword = () => {
+        setShowResetPassword(false);
+        setOldPassword('');
+        setNewPassword('');
+    };
 
     return (
         <div className='settings-container'>
             <h3>Account Settings</h3>
             <div className='edit-profile'>
-                <div className="edit-email-row">
+                <div className="edit-userInfo-rows">
                     <p>Update Email:</p>
                     <input
                         className="email"
@@ -58,19 +71,44 @@ const EditProfile = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <button onClick={handleEmailChange}>Update</button>
-                    {error && <div className='error'>{error}</div>}
-                    {updateMessage && <p>{updateMessage}</p>}
-                    {updateError && <p>{updateError}</p>}
-                </div>
-                <div className="edit-email-row">
-                    <p>Reset Password:</p>
+                    <button className="edit-userInfo-buttons" onClick={handleEmailChange}>Update</button>
                     
-                    <button onClick={handleResetPassword}>Reset</button>
-                    {error && <div className='error'>{error}</div>}
-                    {updateMessage && <p>{updateMessage}</p>}
-                    {updateError && <p>{updateError}</p>}
                 </div>
+
+                <div className="edit-userInfo-rows">
+                <p>Reset Password:</p>
+                <button className="edit-userInfo-buttons" onClick={() => setShowResetPassword(true)}>Reset</button>
+                    {resetPasswordMessage && <p>{resetPasswordMessage}</p>}
+                    {resetPasswordError && <p>{resetPasswordError}</p>}
+                    {showResetPassword && (
+                        <div className="reset-password-popup">
+                            <button className="close-button" onClick={cancelResetPassword}>X</button>
+                            <label className="password-label">
+                                <p>Please Enter Your Old Password: </p>
+                                <input
+                                    className="password-input"
+                                    type="password"
+                                    value={oldPassword}
+                                    onChange={(e) => setOldPassword(e.target.value)}
+                                />
+                            </label>
+                            <label className="password-label">
+                                <p>Please Enter Your New Password: </p>
+                                <input
+                                    className="password-input"
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                />
+                            </label>
+                            {error && <div className='error'>{error}</div>}
+                            {updateMessage && <p>{updateMessage}</p>}
+                            {updateError && <p>{updateError}</p>}
+                            <button className="confirm-button" onClick={handleResetPassword}>Reset Password</button>
+                        </div>
+                    )}
+                </div>
+
                 <button className='delete-button' onClick={confirmDeleteAccount}>Delete Account</button>
                 {deleteMessage && <p>{deleteMessage}</p>}
                 {deleteError && <p>{deleteError}</p>}

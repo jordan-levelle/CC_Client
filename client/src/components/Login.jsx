@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
-// import { useNavigate } from 'react-router-dom'; // Assuming you're using react-router-dom
+import { sendForgotPasswordLinkAPI } from 'src/api/users';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isLinkSent, setIsLinkSent] = useState(false);
+  const [apiError, setApiError] = useState(null); // State for API errors
   const { login, error, isLoading } = useLogin();
-  // const navigate = useNavigate();
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -18,16 +22,33 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password);
+    if (isForgotPassword) {
+      setIsLinkSent(true);
+      setEmail('');
+
+      try {
+        await sendForgotPasswordLinkAPI(email);
+        setApiError(null); // Reset any previous errors
+      } catch (error) {
+        setApiError('Failed to send reset link. Please try again.');
+      }
+      
+
+      
+    } else {
+      await login(email, password);
+      setPassword('');
+    }
   };
 
   const handleForgotPassword = () => {
-    alert('This feature is in testing.')
+    setIsForgotPassword(true);
+    setIsLinkSent(false); // Reset the link sent state when switching to forgot password
   };
 
   return (
     <div className="auth-container">
-      <h2>Login</h2>
+      <h2>{isForgotPassword ? 'Forgot Password' : 'Login'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
@@ -38,23 +59,35 @@ const Login = () => {
             required
           />
         </div>
+        {!isForgotPassword && (
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+          </div>
+        )}
         <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <div>
-          <button disabled={isLoading}>Log in</button>
+          <button type="submit" disabled={isLoading}>
+            {isForgotPassword ? 'Send Reset Link' : 'Log in'}
+          </button>
         </div>
         {error && <div className="error">{error}</div>}
+        {apiError && <div className="error">{apiError}</div>}
       </form>
-      <div className="forgot-password" onClick={handleForgotPassword}>
-        Forgot password
-      </div>
+      {!isForgotPassword && (
+        <div className="forgot-password" onClick={handleForgotPassword}>
+          Forgot password
+        </div>
+      )}
+      {isForgotPassword && isLinkSent && (
+        <div className="confirmation-message">
+          Check your email for the reset link.
+        </div>
+      )}
     </div>
   );
 };
