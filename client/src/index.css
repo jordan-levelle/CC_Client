@@ -192,6 +192,7 @@ body {
 }
 
 
+
 /************************* Styles for Footer *************************/
 .footer {
   margin-top: auto;
@@ -483,7 +484,7 @@ body {
 
 .submitted-votes-container {
   margin: 5px auto;
-  overflow-x: auto; 
+  overflow-x: auto;
 }
 
 .votes-table {
@@ -511,16 +512,16 @@ body {
 
 .opinion-buttons,
 .new-opinion-buttons {
-  margin-bottom: 10px; 
-  display: flex; 
-  flex-wrap: wrap; 
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .opinion-buttons button,
 .new-opinion-buttons button {
   margin-right: 10px;
-  margin-bottom: 10px; 
-  padding: 10px 15px; 
+  margin-bottom: 10px;
+  padding: 10px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -538,9 +539,71 @@ body {
   border-top: 2px solid #ddd;
 }
 
+.toggle-button {
+  display: none; /* Show toggle button on mobile */
+}
 
-/* Responsive styles for mobile */
+.details-row {
+  background-color: #f0f0f0;
+}
+
+.expanded-details {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.opinion-mobile {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* Hide elements on desktop */
+
+.show-mobile {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .show-mobile {
+    display: inline-block;
+  }
+
+  .votes-table th.hide-mobile, 
+  .votes-table td.hide-mobile {
+    display: none;
+  }
+
+  .details-row .expanded-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-name-opinion-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .opinion-label {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .details-row .opinion-buttons {
+    margin-bottom: 10px;
+  }
+
+  .details-row .submitted-votes-date {
+    margin-bottom: 10px;
+  }
+
+  .toggle-button {
+    display: block; /* Show toggle button on mobile */
+  }
+
   .votes-table {
     display: block;
     border-radius: 5px;
@@ -575,7 +638,7 @@ body {
     font-weight: bold;
   }
 
-  .new-opinion-buttons {
+  .opinion-buttons {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -583,16 +646,18 @@ body {
     width: 65%;
   }
 
-  .new-opinion-buttons button {
+  .opinion-buttons button {
     flex: 1;
     min-width: 60px;
     padding: 8px;
   }
 
   .submitted-votes-date {
+    display: flex;
     padding-left: 10px;
   }
 }
+
 
 .tooltip {
   position: fixed;
@@ -611,31 +676,6 @@ body {
 .tooltip p {
   margin-bottom: 0.5rem;
 }
-
-
-
-
-/* Add styles for screens 627px or less */
-@media (max-width: 556px) {
-  .submitted-votes-container .opinion-buttons {
-    display: none; /* Hide buttons */
-  }
-  .submitted-votes-container .dropdown-opinion {
-    display: block; /* Show dropdown */
-  }
-}
-
-@media (min-width: 555px) {
-  .submitted-votes-container .opinion-buttons {
-    display: flex; /* Show buttons */
-  }
-  .submitted-votes-container .dropdown-opinion {
-    display: none; /* Hide dropdown */
-  }
-}
-
-
-
 
 
 
@@ -671,8 +711,7 @@ body {
     flex: 1; /* Take up remaining space */
   }
 
-  .proposal-list-container,
-  .proposal-participated-container {
+  .proposal-list-container {
     width: 420px;
     max-width: none; /* No max-width restrictions */
     box-sizing: border-box; /* Include padding and border in width */
@@ -681,7 +720,6 @@ body {
 
   .user-details {
     width: fit-content; /* Ensure user details takes up space on the right */
-    max-width: 300px; /* Set a maximum width */
     padding: 10px; /* Padding inside the box */
     background-color: #f0f0f0; /* Light gray background */
     border-radius: 10px; /* Rounded corners */
@@ -707,8 +745,7 @@ body {
     gap: 50px;
   }
 
-  .proposal-list-container,
-  .proposal-participated-container {
+  .proposal-list-container {
     width: 400px; /* Full width for each container */
     max-width: none;
     margin-bottom: 20px; /* Space between containers */
@@ -716,7 +753,7 @@ body {
   }
 
   .user-details {
-    width: 50%; /* Full width */
+    width: fit-content; /* Full width */
     margin: 0 auto;
     order: -1; /* Move to the top */
     margin-bottom: 20px; /* Space below */
@@ -741,14 +778,14 @@ body {
     margin: 0 auto;
   }
 
-  .proposal-list-container,
-  .proposal-participated-container {
-    width: fit-content;
+  .proposal-list-container {
+    max-width: 370px;
+    width: 80vw;
   }
 
   .user-details {
     order: -1; /* Move to the top */
-    width: 80%; /* Full width */
+    width: fit-content; /* Full width */
     margin: 0 auto;
     margin-bottom: 20px; /* Space below */
     padding: 10px;
@@ -826,13 +863,6 @@ body {
 
 .confirmation-content {
   text-align: center;
-}
-
-.confirmation-options {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 10px;
 }
 
 .confirmation-options label {

@@ -53,8 +53,8 @@ const ProposalList = ({ proposal }) => {
         <div className="confirmation-popup">
           <div className="confirmation-content">
             <p>Are you sure you want to delete this proposal? This will delete all responses.</p>
-            <button className="confirm-button" onClick={handleDeleteClick}>Yes</button>
-            <button className="cancel-button" onClick={() => setShowConfirmBox(false)}>Cancel</button>
+            <button className="" onClick={handleDeleteClick}>Yes</button>
+            <button className="" onClick={() => setShowConfirmBox(false)}>Cancel</button>
           </div>
         </div>
       )}
