@@ -483,7 +483,7 @@ body {
 }
 
 .submitted-votes-container {
-  margin: 5px auto;
+  margin: 2px auto;
   overflow-x: auto;
 }
 
@@ -548,14 +548,14 @@ body {
 }
 
 .expanded-details {
-  padding: 10px;
+  padding: 2px;
   display: flex;
   flex-direction: column;
 }
 
 .opinion-mobile {
   display: inline-block;
-  margin-left: 10px;
+  margin-left: 5px;
   vertical-align: middle;
 }
 
@@ -600,6 +600,10 @@ body {
     margin-bottom: 10px;
   }
 
+  .comment-container {
+    width: fit-content;
+  }
+
   .toggle-button {
     display: block; /* Show toggle button on mobile */
   }
@@ -623,14 +627,14 @@ body {
   .votes-table tr {
     display: block;
     width: 100%;
-    padding: 2px;
+    
     margin-bottom: 15px;
   }
 
   .votes-table td {
     display: flex;
     align-items: center;
-    padding: 10px 5px;
+    
   }
 
   .votes-table td:before {

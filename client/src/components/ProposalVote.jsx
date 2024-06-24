@@ -303,10 +303,11 @@ const ProposalVote = () => {
                               onChange={(e) => handleCommentUpdate(index, e.target.value)}
                               aria-label="Comment"
                             />
-                          </div>
-                          <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">
+                            <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">
                             Delete
                           </button>
+                          </div>
+                          
                         </div>
                       </td>
                     </tr>
