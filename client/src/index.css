@@ -510,15 +510,13 @@ body {
   background-color: #fff;
 }
 
-.opinion-buttons,
-.new-opinion-buttons {
+.opinion-buttons {
   margin-bottom: 10px;
   display: flex;
   flex-wrap: wrap;
 }
 
-.opinion-buttons button,
-.new-opinion-buttons button {
+.opinion-buttons button {
   margin-right: 10px;
   margin-bottom: 10px;
   padding: 10px 15px;
@@ -601,7 +599,7 @@ body {
   }
 
   .comment-container {
-    width: fit-content;
+    width: 95%;
   }
 
   .toggle-button {

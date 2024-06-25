@@ -192,6 +192,8 @@ const ProposalVote = () => {
               {submittedVotes.map((vote, index) => (
                 <React.Fragment key={vote._id}>
                   <tr>
+
+                    {/* Name */}
                     <td className="mobile-name-opinion-row">
                       <div className="name-container">
                         {vote.name ? (
@@ -217,6 +219,9 @@ const ProposalVote = () => {
                           />
                         )}
                       </div>
+
+
+                      {/* Opinion Label*/}
                       <div className="opinion-container">
                         <span className="show-mobile">
                           {vote.opinion && (
@@ -226,7 +231,14 @@ const ProposalVote = () => {
                           )}
                         </span>
                       </div>
+                      <td className="toggle-button show-mobile">
+                      <button onClick={() => toggleDetails(vote._id)} aria-label="Toggle Details">
+                        {expandedRows[vote._id] ? 'Hide Details' : 'Show Details'}
+                      </button>
                     </td>
+                    </td>
+
+                    {/* Opinion Buttons */}
                     <td className="hide-mobile">
                       <div className="opinion-buttons">
                         {Object.keys(icons).map((opinionType) => (
@@ -251,6 +263,9 @@ const ProposalVote = () => {
                         <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
                       </div>
                     </td>
+
+
+                    {/* Comment */}
                     <td className="hide-mobile">
                       <div className="comment-container">
                         <textarea
@@ -265,12 +280,9 @@ const ProposalVote = () => {
                         Delete
                       </button>
                     </td>
-                    <td className="toggle-button show-mobile">
-                      <button onClick={() => toggleDetails(vote._id)} aria-label="Toggle Details">
-                        {expandedRows[vote._id] ? 'Hide Details' : 'Show Details'}
-                      </button>
-                    </td>
                   </tr>
+
+                  {/* Expanded Mobile Details */}
                   {expandedRows[vote._id] && (
                     <tr className="details-row show-mobile">
                       <td colSpan="5">
