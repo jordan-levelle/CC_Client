@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Header, Footer } from './components';
-import { ExampleProposal, ProposalVote, EditProposal } from './components';
+import { ExampleProposal, ProposalVote, EditProposal, ForgotPassword} from './components';
 import { Home, Profile, Create, Basics, Teams, Settings, AuthPage, Verification, VerifyLoadingPage } from './pages';
 import { useAuthContext } from './hooks/useAuthContext';
+
 
 export default function App() {
   const { user } = useAuthContext();
@@ -27,6 +28,8 @@ export default function App() {
             <Route path='/edit/:uniqueUrl' element={user ? <EditProposal /> : <Navigate to='/auth' />} />
             {/* Authenticated Route for Profile Settings */}
             <Route path='/settings' element={user ? <Settings /> : <Navigate to='/auth' />} />
+            {/*  */}
+            <Route path='/reset/:token' element={<ForgotPassword />} />
             {/* Public Routes */}
             <Route path='/create' element={<Create />} />
             <Route path='/basics' element={<Basics />} />

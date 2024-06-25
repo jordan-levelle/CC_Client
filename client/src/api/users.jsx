@@ -45,6 +45,26 @@ export const sendForgotPasswordLinkAPI = async (email) => {
   }
 };
 
+export const resetForgotPassword = async (token, newPassword) => {
+  try {
+    const response = await fetch(`${USER_URL}/resetForgotPassword`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token, newPassword })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'An error occurred while resetting your password.');
+    }
+    return await response.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const deleteAccountAPI = async (token, deleteProposals) => {
   const response = await fetch(`${USER_URL}/deleteUser`, {
     method: 'DELETE',
