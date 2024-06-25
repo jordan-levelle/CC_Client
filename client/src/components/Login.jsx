@@ -25,16 +25,12 @@ const Login = () => {
     if (isForgotPassword) {
       setIsLinkSent(true);
       setEmail('');
-
       try {
         await sendForgotPasswordLinkAPI(email);
         setApiError(null); // Reset any previous errors
       } catch (error) {
         setApiError('Failed to send reset link. Please try again.');
       }
-      
-
-      
     } else {
       await login(email, password);
       setPassword('');
@@ -48,7 +44,7 @@ const Login = () => {
 
   return (
     <div className="auth-container">
-      <h2>{isForgotPassword ? 'Forgot Password' : 'Login'}</h2>
+      <h2>{isForgotPassword ? 'Reset Password': 'Login'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
