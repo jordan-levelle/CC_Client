@@ -30,7 +30,7 @@ const ProposalVote = () => {
   const [copied, setCopied] = useState(false);
   const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
   const [expandedRows, setExpandedRows] = useState({});
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Initial check
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -192,15 +192,16 @@ const ProposalVote = () => {
               {submittedVotes.map((vote, index) => (
                 <React.Fragment key={vote._id}>
                   <tr>
-
                     {/* Name */}
                     <td className="mobile-name-opinion-row">
                       <div className="name-container">
                         {vote.name ? (
-                          <span>{vote.name}</span>
+                          <span id={`vote-name-${vote._id}`}>{vote.name}</span>
                         ) : (
                           <input
                             type="text"
+                            id={`vote-localName-${vote._id}`}
+                            name="localName"
                             value={vote.localName || ''}
                             onChange={(e) => {
                               const { value } = e.target;
@@ -220,8 +221,7 @@ const ProposalVote = () => {
                         )}
                       </div>
 
-
-                      {/* Opinion Label*/}
+                      {/* Opinion Label */}
                       <div className="opinion-container">
                         <span className="show-mobile">
                           {vote.opinion && (
@@ -231,13 +231,12 @@ const ProposalVote = () => {
                           )}
                         </span>
                       </div>
-                      <td className="toggle-button show-mobile">
-                      <button onClick={() => toggleDetails(vote._id)} aria-label="Toggle Details">
-                        {expandedRows[vote._id] ? 'Hide Details' : 'Show Details'}
-                      </button>
+                      <div className="toggle-button show-mobile">
+                        <button onClick={() => toggleDetails(vote._id)} aria-label="Toggle Details">
+                          {expandedRows[vote._id] ? 'Hide Details' : 'Details'}
+                        </button>
+                      </div>
                     </td>
-                    </td>
-
                     {/* Opinion Buttons */}
                     <td className="hide-mobile">
                       <div className="opinion-buttons">
@@ -264,11 +263,12 @@ const ProposalVote = () => {
                       </div>
                     </td>
 
-
                     {/* Comment */}
                     <td className="hide-mobile">
                       <div className="comment-container">
                         <textarea
+                          id={`vote-comment-${vote._id}`}
+                          name="comment"
                           value={vote.comment}
                           onChange={(e) => handleCommentUpdate(index, e.target.value)}
                           aria-label="Comment"
@@ -311,15 +311,16 @@ const ProposalVote = () => {
                           </div>
                           <div className="comment-container">
                             <textarea
+                              id={`vote-comment-mobile-${vote._id}`}
+                              name="comment"
                               value={vote.comment}
                               onChange={(e) => handleCommentUpdate(index, e.target.value)}
                               aria-label="Comment"
                             />
                             <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">
-                            Delete
-                          </button>
+                              Delete
+                            </button>
                           </div>
-                          
                         </div>
                       </td>
                     </tr>
@@ -330,6 +331,7 @@ const ProposalVote = () => {
                 <td>
                   <input
                     type="text"
+                    id="new-vote-name"
                     name="name"
                     value={newVote.name}
                     onChange={handleNewVoteChange}
@@ -361,6 +363,7 @@ const ProposalVote = () => {
                 </td>
                 <td>
                   <textarea
+                    id="new-vote-comment"
                     name="comment"
                     value={newVote.comment}
                     onChange={handleNewVoteChange}
@@ -384,3 +387,5 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+
+

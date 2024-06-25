@@ -511,7 +511,8 @@ body {
 }
 
 .opinion-buttons {
-  margin-bottom: 10px;
+  padding-top: 5px;
+  margin-bottom: 5px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -532,9 +533,10 @@ body {
 }
 
 .submit-section {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid #ddd;
+  align-items: center;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 3px solid #a7cdf7;
 }
 
 .toggle-button {
@@ -580,14 +582,29 @@ body {
 
   .mobile-name-opinion-row {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-between; /* Pushes items to the edges */
+    align-items: center; /* Vertically centers items */
+    padding: 0.5rem; /* Adds some padding for better spacing */
   }
 
+  .name-container {
+    flex: 1;
+
+  }
+
+  .name-container input {
+    max-width: 120px;
+  }
+  /* Opinion container styling */
+  .opinion-container {
+    flex-shrink: 0; /* Prevents shrinking */
+    text-align: right; /* Aligns text to the right */
+    margin-left: auto; /* Pushes it to the right */
+  }
+  
+  /* Adds a margin to the opinion label */
   .opinion-label {
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
+    margin-right: 1rem; /* Space between opinion and toggle button */
   }
 
   .details-row .opinion-buttons {
@@ -599,11 +616,12 @@ body {
   }
 
   .comment-container {
-    width: 95%;
+    width: 94%;
   }
 
   .toggle-button {
     display: block; /* Show toggle button on mobile */
+    margin-left: 0.5rem;
   }
 
   .votes-table {
@@ -651,7 +669,7 @@ body {
   .opinion-buttons button {
     flex: 1;
     min-width: 60px;
-    padding: 8px;
+    padding: 5px;
   }
 
   .submitted-votes-date {
@@ -678,7 +696,6 @@ body {
 .tooltip p {
   margin-bottom: 0.5rem;
 }
-
 
 
 
