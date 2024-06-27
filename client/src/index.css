@@ -511,8 +511,7 @@ body {
 }
 
 .opinion-buttons {
-  padding-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -533,10 +532,9 @@ body {
 }
 
 .submit-section {
-  align-items: center;
-  margin-top: 30px;
-  padding-top: 30px;
-  border-top: 3px solid #a7cdf7;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #ddd;
 }
 
 .toggle-button {
@@ -616,7 +614,7 @@ body {
   }
 
   .comment-container {
-    width: 94%;
+    width: 95%;
   }
 
   .toggle-button {
@@ -669,7 +667,7 @@ body {
   .opinion-buttons button {
     flex: 1;
     min-width: 60px;
-    padding: 5px;
+    padding: 8px;
   }
 
   .submitted-votes-date {
@@ -696,6 +694,7 @@ body {
 .tooltip p {
   margin-bottom: 0.5rem;
 }
+
 
 
 
@@ -831,14 +830,14 @@ body {
   justify-content: center;
   max-width: fit-content;
   flex-wrap: wrap; /* Allow buttons to wrap to next line */
-  gap: 10px; /* Add some space between buttons */
+  gap: 5px; /* Add some space between buttons */
 }
 
 .view-proposal-button, 
 .edit-button, 
 .delete-proposal-button {
   font-size: medium;
-  padding: 10px 20px;
+  padding: 5px 10px;
   margin: 5px;
   border: none;
   border-radius: 5px;

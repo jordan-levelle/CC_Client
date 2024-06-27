@@ -24,13 +24,20 @@ const EditProposal = () => {
         setDescription(proposalData.description || '');
         setName(proposalData.name || '');
         setEmail(proposalData.email || '');
-        setReceiveNotifications(!!proposalData.email);
+        setReceiveNotifications(!!proposalData.email); // Set receiveNotifications based on whether email is present
       } catch (error) {
         setError(error.message);
       }
     };
     fetchData();
   }, [uniqueUrl]);
+
+  // Update receiveNotifications state based on changes in email and user authentication
+  useEffect(() => {
+    if (user) {
+      setReceiveNotifications(!!email); // Set to true if user has an email or if email is being input
+    }
+  }, [email, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +46,7 @@ const EditProposal = () => {
       title,
       description,
       name,
-      email: receiveNotifications ? (user ? user.email : email) : email // Ensure email is always set
+      email: receiveNotifications ? (user ? user.email : email) : '', // Set email based on receiveNotifications and user status
     };
 
     try {
@@ -49,6 +56,12 @@ const EditProposal = () => {
     } catch (error) {
       setError(error.message);
     }
+  };
+
+  // Function to handle non-authenticated user's email input
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setReceiveNotifications(!!e.target.value); // Update receiveNotifications based on email input
   };
 
   return (
@@ -94,7 +107,7 @@ const EditProposal = () => {
                 id="email"
                 type="email" 
                 placeholder="Your Email (Optional)" 
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange} // Handle email input for non-authenticated users
                 value={email}
               />
             </div>

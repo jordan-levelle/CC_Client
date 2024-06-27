@@ -26,6 +26,8 @@ export default function App() {
             <Route path='/verify-loading/:token' element={<VerifyLoadingPage />} />
             {/* Authenticated Route for Edit Proposal */}
             <Route path='/edit/:uniqueUrl' element={user ? <EditProposal /> : <Navigate to='/auth' />} />
+            {/* Non Auth User Route for Edit Proposal */}
+            <Route path='/edit/:uniqueToken/:uniqueUrl' element={<EditProposal />} />
             {/* Authenticated Route for Profile Settings */}
             <Route path='/settings' element={user ? <Settings /> : <Navigate to='/auth' />} />
             {/*  */}
