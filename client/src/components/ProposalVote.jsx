@@ -327,6 +327,12 @@ const ProposalVote = () => {
                 )}
               </React.Fragment>
             ))}
+            <tr className="new-entry-title-row">
+                <td colSpan="1" className="new-entry-title">
+                  Submit New Entry 
+                </td>
+              </tr>
+
             <tr className="submit-section">
               <td>
                 <input

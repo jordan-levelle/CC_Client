@@ -532,9 +532,24 @@ body {
 }
 
 .submit-section {
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 15px;
+  padding-top: 15px;
   border-top: 2px solid #ddd;
+}
+
+.new-entry-title-row {
+  text-align:left;
+  font-weight: bold;
+  color: #212222; /* Green text color */
+}
+
+.new-entry-title {
+  padding: 2px;
+   /* Green border to separate from the new entry row */
+}
+
+.new-entry-row {
+  background-color: #f9f9f9; /* Light background color for the new entry row */
 }
 
 .toggle-button {
@@ -558,7 +573,6 @@ body {
 }
 
 /* Hide elements on desktop */
-
 .show-mobile {
   display: none;
 }
@@ -587,7 +601,6 @@ body {
 
   .name-container {
     flex: 1;
-
   }
 
   .name-container input {
@@ -615,11 +628,6 @@ body {
 
   .comment-container {
     width: 95%;
-  }
-
-  .toggle-button {
-    display: block; /* Show toggle button on mobile */
-    margin-left: 0.5rem;
   }
 
   .votes-table {
