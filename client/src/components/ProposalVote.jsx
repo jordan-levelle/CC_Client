@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComment } from '@fortawesome/free-solid-svg-icons'; // Import comment icon
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
@@ -20,7 +21,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
-  const navigate = useNavigate();
   const { user } = useAuthContext();
 
   const [proposal, setProposal] = useState(null);
@@ -28,7 +28,8 @@ const ProposalVote = () => {
   const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
+  const [copiedProposalLink, setCopiedProposalLink] = useState(false);
+  const [copiedEditLink, setCopiedEditLink] = useState(false);
   const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
   const [expandedRows, setExpandedRows] = useState({});
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Initial check
@@ -70,19 +71,21 @@ const ProposalVote = () => {
     }
   }, [isDesktop]);
 
-  const copyUrlToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-  };
-
-  const handleEditButtonClick = () => {
-    if (user) {
-      navigate(`/edit/${uniqueUrl}`);
-    } else {
-      const uniqueToken = uuidv4(); // Generate a unique token
-      navigate(`/edit/${uniqueToken}/${uniqueUrl}`); // Navigate to the unique URL
+  const copyUrlToClipboard = (urlType, url) => {
+    navigator.clipboard.writeText(url);
+    if (urlType === 'proposal') {
+      setCopiedProposalLink(true);
+    } else if (urlType === 'edit') {
+      setCopiedEditLink(true);
     }
   };
+
+   // Define the links
+   const proposalLink = `${window.location.origin}/${uniqueUrl}`;
+   const editLink = user
+     ? `${window.location.origin}/edit/${uniqueUrl}`
+     : `${window.location.origin}/edit/${uuidv4()}/${uniqueUrl}`; // Generate a new UUIDv4 token for non-authenticated users
+ 
 
   const toggleDetails = (voteId) => {
     setExpandedRows((prev) => ({ ...prev, [voteId]: !prev[voteId] }));
@@ -156,26 +159,38 @@ const ProposalVote = () => {
 
   return (
     <section>
-      {showFirstRenderMessage && (
-        <div className="first-render-message">
+     {showFirstRenderMessage && (
+     <div className="first-render-message" style={{ marginTop: '20px', fontSize: '14px' }}>
           <p>Welcome! Your Proposal has been created</p>
           <div className="copy-link-container">
             <p>
-              Copy this link to send to Respondents:
-              <button className="copy-proposal-button" onClick={copyUrlToClipboard}>
-                {copied ? 'URL Copied!' : 'Copy Proposal Link'}
-              </button>
+              Copy this link to send to Respondents:{' '}
+              <button className="copy-proposal-button" onClick={() => copyUrlToClipboard('proposal', proposalLink)} style={{ marginLeft: '10px' }}>
+                {copiedProposalLink ? 'URL Copied!' : 'Copy Proposal Link'}
+              </button>{' '}
+              <span className="proposal-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
+                <a href={proposalLink} target="_blank" rel="noopener noreferrer">{proposalLink}</a>
+              </span>{' '}
+              {/* Display the proposal link */}
             </p>
           </div>
-          <p>
-            Use this link to edit your proposal:
-            <button className="edit-proposal-button" onClick={handleEditButtonClick}>
-              Edit Proposal
-            </button>
+          <p style={{ marginTop: '10px' }}>
+            Use this link to edit your proposal:{' '}
+            <button className="edit-proposal-button" onClick={() => copyUrlToClipboard('edit', editLink)} style={{ marginLeft: '10px' }}>
+              {copiedEditLink ? 'URL Copied!' : 'Copy Edit Link'}
+            </button>{' '}
+            <span className="edit-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
+              <a href={editLink} target="_blank" rel="noopener noreferrer">{editLink}</a>
+            </span>{' '}
+            {/* Display the edit link */}
           </p>
-          {!user && <p>IMPORTANT: Save the edit link for your records! You won't see it again!</p>}
+          <p style={{ marginTop: '10px', fontWeight: 'bold' }}>
+            IMPORTANT: Save the edit link for your records! You won't see it again!
+          </p>
         </div>
-      )}
+
+     )}
+
       <div className="proposal-vote-container">
         <div className="proposal-info">
           <h2>{proposal.title}</h2>
@@ -225,7 +240,7 @@ const ProposalVote = () => {
                       )}
                     </div>
 
-                    {/* Opinion Label */}
+                    {/* Opinion Text Label */}
                     <div className="opinion-container">
                       <span className="show-mobile">
                         {vote.opinion && (
@@ -235,11 +250,32 @@ const ProposalVote = () => {
                         )}
                       </span>
                     </div>
-                    <div className="toggle-button show-mobile">
-                    <button  onClick={() => toggleDetails(vote._id)} aria-label="Toggle Details">
+                    {/* Conditional rendering of the comment icon */}
+                    {vote.comment && (
+                      <div className="comment-tooltip show-mobile">
+                        <FontAwesomeIcon
+                          icon={faComment}
+                          className="comment-icon"
+                          data-tip={vote.comment}
+                          data-for={`tooltip-comment-${vote._id}`}
+                        />
+                        <Tooltip
+                          id={`tooltip-comment-${vote._id}`}
+                          place="top"
+                          effect="solid"
+                          className="custom-tooltip"
+                        >
+                          <span>{vote.comment}</span>
+                        </Tooltip>
+                      </div>
+                    )}
+                    <div className="toggle-button-container show-mobile">
+                    
+                    <button onClick={() => toggleDetails(vote._id)} aria-label="Toggle Details">
                       {expandedRows[vote._id] ? 'Hide Details' : 'Details'}
                     </button>
-                    </div>
+                  </div>
+
                   </td>
                   {/* Opinion Buttons */}
                   <td className="hide-mobile">
@@ -327,7 +363,7 @@ const ProposalVote = () => {
                 )}
               </React.Fragment>
             ))}
-            <tr className="new-entry-title-row">
+            <tr className="new-entry-title-row show-mobile">
                 <td colSpan="1" className="new-entry-title">
                   Submit New Entry 
                 </td>

@@ -63,7 +63,7 @@ export const resetForgotPassword = async (token, newPassword) => {
   } catch (error) {
     throw new Error(error.message);
   }
-};
+}
 
 export const deleteAccountAPI = async (token, deleteProposals) => {
   const response = await fetch(`${USER_URL}/deleteUser`, {
@@ -147,19 +147,28 @@ export const loginAPI = async (email, password) => {
   }
 };
 
+
 export const fetchParticipatedProposalsAPI = async (token) => {
-  const response = await fetch(`${USER_URL}/participatedProposals`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`
+  try {
+    const response = await fetch(`${USER_URL}/getParticipatedProposals`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Could not fetch participated proposals');
     }
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error || 'Could not fetch participated proposals');
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching participated proposals:', error.message);
+    throw new Error(error.message);
   }
-  return data;
 };
+
 
 export const checkVerificationStatusAPI = async (verificationToken) => {
   try {

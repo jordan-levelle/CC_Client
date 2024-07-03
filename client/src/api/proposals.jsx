@@ -1,4 +1,5 @@
 const PROP_URL = process.env.REACT_APP_PROPOSALS;
+const USER_URL = process.env.REACT_APP_USERS;
 
 // Helper function to get the headers with the optional authorization token
 const getHeaders = (token) => {
@@ -35,7 +36,6 @@ export const updateProposalAPI = async (uniqueUrl, updatedProposal, token = null
   }
   return response.json();
 };
-
 
 // DELETE User Proposal API Call
 export const deleteProposalAPI = async (proposalId, token) => {
@@ -147,33 +147,50 @@ export const fetchSubmittedVotes = async (proposalId) => {
 // POST New Proposal Table Entry API Call
 export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, setNewVote, setError) => {
   try {
-    // Retrieve token from local storage
     const token = localStorage.getItem('token');
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-
-    // Check if token exists
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; // Include token in Authorization header
-    }
-
+    // Submit the vote
     const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
       method: 'POST',
       body: JSON.stringify(newVote),
-      headers: headers, // Include headers in the request
+      headers,
     });
 
     if (!response.ok) {
       throw new Error('Error submitting vote');
     }
 
-    // Assuming fetchSubmittedVotes is a function that correctly retrieves the updated list of votes
-    const data = await fetchSubmittedVotes(proposalId);
-    setSubmittedVotes(data);
+    // Fetch the updated list of votes for the proposal
+    const fetchedVotes = await fetchSubmittedVotes(proposalId);
+
+    setSubmittedVotes(fetchedVotes);
     setNewVote({ name: '', opinion: '', comment: '' });
+
+    if (token) {
+      // Extract voteId from fetchedVotes
+      const voteId = fetchedVotes[0]._id; // Assuming fetchedVotes is an array with one vote object
+
+      const userResponseUpdate = await fetch(`${USER_URL}/setParticipatedProposal`, {
+        method: 'POST',
+        body: JSON.stringify({
+          proposalId,
+          voteId
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (!userResponseUpdate.ok) {
+        console.error('Error response from /setParticipatedProposal:', userResponseUpdate);
+        throw new Error('Error updating user participated proposals');
+      }
+    }
   } catch (error) {
+    console.error('Error in submitNewTableEntry:', error.message);
     setError(error.message);
   }
 };
@@ -198,12 +215,19 @@ export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes
 // UPDATE Existing Table Entry API Call
 export const handleSubmittedVoteUpdate = async (proposalId, voteId, voteData) => {
   try {
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; // Include token in Authorization header
+    }
+
     const response = await fetch(`${PROP_URL}/${proposalId}/votes/${voteId}`, {
       method: 'PUT',
       body: JSON.stringify(voteData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
     });
 
     if (!response.ok) {
@@ -218,6 +242,7 @@ export const handleSubmittedVoteUpdate = async (proposalId, voteId, voteData) =>
     throw new Error(error.message);
   }
 };
+
 
 export const updateOpinion = async (proposalId, submittedVotes, setSubmittedVotes, index, newOpinionValue) => {
   try {
@@ -263,7 +288,3 @@ export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, 
     console.error('Error updating name:', error.message);
   }
 };
-
-
-
-

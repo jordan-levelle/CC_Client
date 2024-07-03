@@ -2,7 +2,13 @@ import React, { createContext, useReducer } from 'react';
 
 export const ProposalsContext = createContext();
 
-export const proposalsReducer = (state, action) => {
+const initialState = {
+  proposals: [],
+  selectedProposalId: null,
+  participatedProposals: []
+};
+
+const proposalsReducer = (state, action) => {
   switch (action.type) {
     case 'SET_PROPOSALS':
       return {
@@ -42,11 +48,7 @@ export const proposalsReducer = (state, action) => {
 };
 
 export const ProposalsContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(proposalsReducer, {
-    proposals: [],
-    selectedProposalId: null,
-    participatedProposals: [], // Initialize participated proposals
-  });
+  const [state, dispatch] = useReducer(proposalsReducer, initialState);
 
   return (
     <ProposalsContext.Provider value={{ ...state, dispatch }}>

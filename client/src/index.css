@@ -552,8 +552,20 @@ body {
   background-color: #f9f9f9; /* Light background color for the new entry row */
 }
 
-.toggle-button {
-  display: none; /* Show toggle button on mobile */
+.toggle-button-container {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+}
+
+.comment-tooltip {
+  display: flex;
+  align-items: center;
+  margin-right: 10px; /* Adjust spacing between the icon and button */
+}
+
+.comment-icon {
+  margin-right: 5px; /* Space the icon slightly from the tooltip text */
 }
 
 .details-row {
