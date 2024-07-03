@@ -9,7 +9,7 @@ import ParticipatedProposalList from '../components/ParticipatedProposalList';
 const Profile = () => {
   const { proposals, participatedProposals, dispatch } = useProposalsContext();
   const { user } = useAuthContext();
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,10 +18,16 @@ const Profile = () => {
           dispatch({ type: 'SET_PROPOSALS', payload: userProposals });
 
           const participated = await fetchParticipatedProposalsAPI(user.token);
-          dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participated });
+          if (Array.isArray(participated)) {
+            dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participated });
+          }
         }
       } catch (error) {
         console.error('Error fetching proposals:', error.message);
+        if (error.message.includes('JWT malformed')) {
+          localStorage.removeItem('token');
+          // Optionally, redirect user to login page or show an error message
+        }
       }
     };
 
@@ -39,9 +45,7 @@ const Profile = () => {
         </div>
         <div className="proposal-participated-container">
           <h4>Proposals Participated In</h4>
-          {participatedProposals && participatedProposals.map((proposal) => (
-            <ParticipatedProposalList key={proposal._id} proposal={proposal} />
-          ))}
+          <ParticipatedProposalList proposals={participatedProposals} />
         </div>
       </div>
       <div className="user-details">
