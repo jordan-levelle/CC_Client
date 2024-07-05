@@ -19,6 +19,7 @@ const ProposalForm = () => {
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
 
   useEffect(() => {
     if (!user) {
@@ -65,7 +66,10 @@ const ProposalForm = () => {
       }
 
       if (!user && !validateCaptcha(captchaInput)) {
-        throw new Error('Invalid CAPTCHA');
+        setCaptchaError('Invalid CAPTCHA');
+        return; // Exit early if CAPTCHA is invalid
+      } else {
+        setCaptchaError(''); // Clear error if CAPTCHA is valid
       }
 
       const currentUser = user || generateDummyUser();
@@ -79,7 +83,7 @@ const ProposalForm = () => {
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
       setSelectedProposalId(json._id);
-      
+
       navigate(`/${json.uniqueUrl}`);
       reset();
     } catch (error) {
@@ -104,6 +108,7 @@ const ProposalForm = () => {
             onKeyDown={handleTitleKeyPress}
             aria-required="true"
             aria-label="Title"
+            name="title" // Add name attribute
           />
           {errors.title && <span className="error">{errors.title.message}</span>}
           
@@ -122,44 +127,46 @@ const ProposalForm = () => {
           <div className='error'>{errors.description && "Description is required"}</div>
 
           <label htmlFor="name">Proposed by:</label>
-          <input 
-            id="name"
-            type="text" 
-            placeholder="Your Name (Optional)" 
-            {...register('name')}
-            tabIndex="3" // Ensure tabIndex is set correctly
-            aria-label="Proposed by"
-          />
-
-          {user ? (
-            <div>
-              <input 
-                type="checkbox" 
-                {...register('receiveNotifications')} 
-                tabIndex="4" 
-              />
-              <label htmlFor="receiveNotifications">
-                Receive response notifications at: {user.email}
-              </label>
-            </div>
-          ) : (
+            <input 
+              id="name"
+              type="text" 
+              placeholder="Your Name (Optional)" 
+              {...register('name')}
+              tabIndex="3"
+              aria-label="Proposed by"
+              name="name" // Add name attribute if `name` is used in `register`
+            />
+            {user ? (
+              <div>
+                <input 
+                  type="checkbox" 
+                  {...register('receiveNotifications')} 
+                  tabIndex="4" 
+                />
+                <label htmlFor="receiveNotifications">
+                  Receive response notifications at: {user.email}
+                </label>
+              </div>
+            ) : (
             <>
               <label htmlFor="email">Send notifications of new responses to:</label>
-              <input 
-                id="email"
-                type="email" 
-                placeholder="Your Email (Optional)" 
-                {...register('email')} 
-                tabIndex="5"
-                aria-label="Email"
-              />
-            </>
-          )}
+                <input 
+                  id="email"
+                  type="email" 
+                  placeholder="Your Email (Optional)" 
+                  {...register('email')} 
+                  tabIndex="5"
+                  aria-label="Email"
+                  name="email" // Add name attribute
+                />
+              </>
+            )}
 
-          {!user && (
+            {!user && (
             <>
               <LoadCanvasTemplate />
               <input
+                id="captcha"
                 type="text"
                 placeholder="Enter CAPTCHA"
                 value={captchaInput}
@@ -167,7 +174,7 @@ const ProposalForm = () => {
                 tabIndex="6"
                 aria-label="CAPTCHA"
               />
-              {errors.captcha && <span className="error">CAPTCHA is required</span>}
+              {captchaError && <span className="error">{captchaError}</span>}
             </>
           )}
 

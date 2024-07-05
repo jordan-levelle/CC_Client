@@ -10,7 +10,7 @@ import {
   handleExistingSubmissionDelete,
   handleNewSubmission,
   handleNewTableEntry
-} from '../utils/proposalUtils';
+} from '../api/proposals';
 
 const ExampleProposal = () => {
   const [exampleProposal, setExampleProposal] = useState(null);

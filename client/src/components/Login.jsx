@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
 import { sendForgotPasswordLinkAPI } from 'src/api/users';
 
-
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +9,6 @@ const Login = () => {
   const [isLinkSent, setIsLinkSent] = useState(false);
   const [apiError, setApiError] = useState(null); // State for API errors
   const { login, error, isLoading } = useLogin();
-
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -47,22 +45,28 @@ const Login = () => {
       <h2>{isForgotPassword ? 'Reset Password': 'Login'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
+            id="email"
+            name="email"
             value={email}
             onChange={handleEmailChange}
             required
+            autoComplete="email"
           />
         </div>
         {!isForgotPassword && (
           <div>
-            <label>Password:</label>
+            <label htmlFor="password">Password:</label>
             <input
               type="password"
+              id="password"
+              name="password"
               value={password}
               onChange={handlePasswordChange}
               required
+              autoComplete="current-password"
             />
           </div>
         )}
