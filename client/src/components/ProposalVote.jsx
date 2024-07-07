@@ -83,8 +83,8 @@ const ProposalVote = () => {
    // Define the links
    const proposalLink = `${window.location.origin}/${uniqueUrl}`;
    const editLink = user
-     ? `${window.location.origin}edit/${uniqueUrl}`
-     : `${window.location.origin}edit/${uuidv4()}/${uniqueUrl}`; // Generate a new UUIDv4 token for non-authenticated users
+     ? `${window.location.origin}/edit/${uniqueUrl}`
+     : `${window.location.origin}/edit/${uuidv4()}/${uniqueUrl}`; // Generate a new UUIDv4 token for non-authenticated users
  
 
   const toggleDetails = (voteId) => {
