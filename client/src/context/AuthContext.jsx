@@ -1,16 +1,16 @@
-import { createContext, useEffect, useReducer } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import React, { createContext, useEffect, useReducer, useState } from 'react';
+import {jwtDecode} from 'jwt-decode';
 
 export const AuthContext = createContext();
 
 export const authReducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN':
-      return { user: action.payload };
+      return { ...state, user: action.payload };
     case 'LOGOUT':
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      return { user: null };
+      return { ...state, user: null };
     case 'UPDATE_EMAIL':
       return { ...state, user: { ...state.user, email: action.payload } };
     default:
@@ -22,6 +22,7 @@ export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, {
     user: null,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -30,35 +31,18 @@ export const AuthContextProvider = ({ children }) => {
     if (token) {
       const decodedToken = jwtDecode(token);
 
-      // Check if the token has expired
       if (decodedToken.exp * 1000 < Date.now()) {
         dispatch({ type: 'LOGOUT' });
-        window.location.href = '/auth'; // Redirect to login page
       } else {
-        dispatch({ type: 'LOGIN', payload: { token } });
+        dispatch({ type: 'LOGIN', payload: user });
       }
     }
 
-    if (user) {
-      dispatch({ type: 'LOGIN', payload: user });
-    }
-
-    // Check token expiry every minute
-    const interval = setInterval(() => {
-      if (token) {
-        const decodedToken = jwtDecode(token);
-        if (decodedToken.exp * 1000 < Date.now()) {
-          dispatch({ type: 'LOGOUT' });
-          window.location.href = '/auth'; // Redirect to login page
-        }
-      }
-    }, 60000);
-
-    return () => clearInterval(interval);
+    setIsLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ ...state, dispatch, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

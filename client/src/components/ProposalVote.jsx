@@ -83,8 +83,9 @@ const ProposalVote = () => {
    // Define the links
    const proposalLink = `${window.location.origin}/${uniqueUrl}`;
    const editLink = user
-     ? `${window.location.origin}/edit/${uniqueUrl}`
-     : `${window.location.origin}/edit/${uuidv4()}/${uniqueUrl}`; // Generate a new UUIDv4 token for non-authenticated users
+  ? `${window.location.origin}/edit/${uniqueUrl}` 
+  : `${window.location.origin}/edit/${uuidv4()}/${uniqueUrl}`; 
+
  
 
   const toggleDetails = (voteId) => {
@@ -161,35 +162,34 @@ const ProposalVote = () => {
     <section>
      {showFirstRenderMessage && (
      <div className="first-render-message" style={{ marginTop: '20px', fontSize: '14px' }}>
-          <p>Welcome! Your Proposal has been created</p>
-          <div className="copy-link-container">
-            <p>
-              Copy this link to send to Respondents:{' '}
-              <button className="copy-proposal-button" onClick={() => copyUrlToClipboard('proposal', proposalLink)} style={{ marginLeft: '10px' }}>
-                {copiedProposalLink ? 'URL Copied!' : 'Copy Proposal Link'}
-              </button>{' '}
-              <span className="proposal-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
-                <a href={proposalLink} target="_blank" rel="noopener noreferrer">{proposalLink}</a>
-              </span>{' '}
-              {/* Display the proposal link */}
-            </p>
-          </div>
-          <p style={{ marginTop: '10px' }}>
-            Use this link to edit your proposal:{' '}
-            <button className="edit-proposal-button" onClick={() => copyUrlToClipboard('edit', editLink)} style={{ marginLeft: '10px' }}>
-              {copiedEditLink ? 'URL Copied!' : 'Copy Edit Link'}
-            </button>{' '}
-            <span className="edit-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
-              <a href={editLink} target="_blank" rel="noopener noreferrer">{editLink}</a>
-            </span>{' '}
-            {/* Display the edit link */}
-          </p>
-          <p style={{ marginTop: '10px', fontWeight: 'bold' }}>
-            IMPORTANT: Save the edit link for your records! You won't see it again!
+        <p>Welcome! Your Proposal has been created</p>
+        <div className="copy-link-container">
+          <p>
+            Copy this link to send to Respondents: 
+            <span className="proposal-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
+              <a href={proposalLink} target="_blank" rel="noopener noreferrer">{proposalLink}</a>
+            </span>
+            <button className="copy-proposal-button" onClick={() => copyUrlToClipboard('proposal', proposalLink)} style={{ marginLeft: '10px' }}>
+              {copiedProposalLink ? 'URL Copied!' : 'Copy Proposal Link'}
+            </button>
           </p>
         </div>
+        <p style={{ marginTop: '10px' }}>
+          Use this link to edit your proposal:
+          <span className="edit-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
+            <a href={editLink} target="_blank" rel="noopener noreferrer">{editLink}</a>
+          </span>
+          <button className="edit-proposal-button" onClick={() => copyUrlToClipboard('edit', editLink)} style={{ marginLeft: '10px' }}>
+            {copiedEditLink ? 'URL Copied!' : 'Copy Edit Link'}
+          </button>
+        </p>
+        <p style={{ marginTop: '10px', fontWeight: 'bold' }}>
+          IMPORTANT: Save the edit link for your records! You won't see it again!
+        </p>
+      </div>
 
-     )}
+
+      )} 
 
       <div className="proposal-vote-container">
         <div className="proposal-info">

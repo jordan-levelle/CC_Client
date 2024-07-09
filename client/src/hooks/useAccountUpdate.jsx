@@ -66,6 +66,3 @@ const useUpdateAccount = () => {
 };
 
 export { useDeleteAccount, useUpdateAccount, useResetPassword };
-
-
-
