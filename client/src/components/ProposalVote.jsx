@@ -183,9 +183,11 @@ const ProposalVote = () => {
             {copiedEditLink ? 'URL Copied!' : 'Copy Edit Link'}
           </button>
         </p>
+        {!user && (
         <p style={{ marginTop: '10px', fontWeight: 'bold' }}>
           IMPORTANT: Save the edit link for your records! You won't see it again!
         </p>
+      )}
       </div>
 
 

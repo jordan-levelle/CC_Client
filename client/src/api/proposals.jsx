@@ -162,6 +162,8 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
       throw new Error('Error submitting vote');
     }
 
+    const voteData = await response.json(); // Capture the vote data, including voteId
+
     // Fetch the updated list of votes for the proposal
     const fetchedVotes = await fetchSubmittedVotes(proposalId);
 
@@ -169,14 +171,11 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     setNewVote({ name: '', opinion: '', comment: '' });
 
     if (token) {
-      // Extract voteId from fetchedVotes
-      const voteId = fetchedVotes[0]._id; // Assuming fetchedVotes is an array with one vote object
-
       const userResponseUpdate = await fetch(`${USER_URL}/setParticipatedProposal`, {
         method: 'POST',
         body: JSON.stringify({
           proposalId,
-          voteId
+          voteId: voteData.addedVote._id // Use the returned voteId
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -194,6 +193,9 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     setError(error.message);
   }
 };
+
+
+
 
 // DELETE Table Entry API Call
 export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes, setError) => {
@@ -288,6 +290,7 @@ export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, 
     console.error('Error updating name:', error.message);
   }
 };
+
 
 /* Example Proposal Util Functions */
 export const handleExistingVoteUpdate = (index, newVoteValue, exampleProposal, setExampleProposal) => {
