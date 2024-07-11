@@ -3,6 +3,7 @@ import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
+import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { fetchExampleProposal } from '../api/proposals';
 import {
   handleExistingVoteUpdate,
@@ -126,6 +127,24 @@ const ExampleProposal = () => {
                           )}
                         </span>
                       </div>
+                      {vote.comment && (
+                        <div className='comment-tooltip show-mobile'>
+                          <FontAwesomeIcon
+                            icon={faComment}
+                            className="comment-icon"
+                            data-tip={vote.comment}
+                            data-for={`tooltip-comment-${vote._id}`}
+                          />
+                            <Tooltip
+                            id={`tooltip-comment-${vote._id}`}
+                            place="top"
+                            effect="solid"
+                            className="custom-tooltip"
+                          >
+                          <span>{vote.comment}</span>
+                        </Tooltip>
+                        </div>
+                      )}
                       <div className="toggle-button show-mobile">
                         <button onClick={() => toggleDetails(index)} aria-label="Toggle Details">
                           {expandedRows[index] ? 'Hide Details' : 'Details'}
