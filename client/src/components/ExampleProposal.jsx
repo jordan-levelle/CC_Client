@@ -78,6 +78,12 @@ const ExampleProposal = () => {
     setExpandedRows((prev) => ({ ...prev, [voteId]: !prev[voteId] }));
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && e.target.name === 'name') {
+      newSubmission();
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -223,11 +229,14 @@ const ExampleProposal = () => {
               <tr className="submit-section">
                 <td>
                   <input
+                    id='name'
                     type="text"
                     name="name"
                     value={newVote.name}
                     onChange={newTableEntry}
+                    onKeyDown={handleKeyDown}
                     placeholder="Name"
+                    aria-label='Name'
                   />
                 </td>
                 <td>
@@ -239,6 +248,7 @@ const ExampleProposal = () => {
                         data-tooltip-html={tooltips[voteOption]}
                       >
                         <button
+                          id='opinion'
                           type="button"
                           className={newVote.vote === voteOption ? 'selected' : ''}
                           onClick={() => setNewVote({ ...newVote, vote: voteOption })}
@@ -253,6 +263,7 @@ const ExampleProposal = () => {
                 </td>
                 <td>
                   <textarea
+                    id='comment'
                     type="text"
                     name="comment"
                     value={newVote.comment}

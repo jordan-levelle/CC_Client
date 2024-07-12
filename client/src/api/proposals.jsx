@@ -340,3 +340,4 @@ export const handleNewSubmission = (exampleProposal, newVote, setExampleProposal
   }));
   setNewVote({ name: '', vote: '', comment: '' });
 };
+

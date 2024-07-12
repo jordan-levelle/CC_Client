@@ -86,8 +86,6 @@ const ProposalVote = () => {
   ? `${window.location.origin}/edit/${uniqueUrl}` 
   : `${window.location.origin}/edit/${uuidv4()}/${uniqueUrl}`; 
 
- 
-
   const toggleDetails = (voteId) => {
     setExpandedRows((prev) => ({ ...prev, [voteId]: !prev[voteId] }));
   };
@@ -183,11 +181,9 @@ const ProposalVote = () => {
             {copiedEditLink ? 'URL Copied!' : 'Copy Edit Link'}
           </button>
         </p>
-        {!user && (
         <p style={{ marginTop: '10px', fontWeight: 'bold' }}>
           IMPORTANT: Save the edit link for your records! You won't see it again!
         </p>
-      )}
       </div>
 
 
@@ -374,6 +370,7 @@ const ProposalVote = () => {
             <tr className="submit-section">
               <td>
                 <input
+                  id='name'
                   type="text"
                   name="name"
                   value={newVote.name}
