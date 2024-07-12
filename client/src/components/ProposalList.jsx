@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,22 @@ const ProposalList = ({ proposal }) => {
   const { dispatch } = useProposalsContext();
   const { user } = useAuthContext();
   const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const [daysLeft, setDaysLeft] = useState(0);
+
+  useEffect(() => {
+    if (proposal.createdAt) {
+      const calcDaysLeft = (createdAt) => {
+        const ttlMilliSec = 30 * 24 * 60 * 60 * 1000;
+        const createdDate = new Date(createdAt);
+        const expiresDate = new Date(createdDate.getTime() + ttlMilliSec);
+        const x = new Date();
+        const timeDiff = expiresDate - x;
+        const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        return daysLeft;
+      };
+      setDaysLeft(calcDaysLeft(proposal.createdAt));
+    }
+  }, [proposal.createdAt]);
 
   const handleDeleteClick = async () => {
     if (!user) return;
@@ -37,6 +53,9 @@ const ProposalList = ({ proposal }) => {
         <h4>{proposal.title}</h4>
         <p>
           Proposed on: {proposal.createdAt ? formatDate(proposal.createdAt) : 'Invalid Date'}
+        </p>
+        <p>
+          Expires in: {daysLeft > 0 ? `${daysLeft} days` : 'Expired'}
         </p>
         <div className="proposal-button-group">
           <Link to={`/${proposal.uniqueUrl}`}>
