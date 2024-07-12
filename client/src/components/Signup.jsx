@@ -40,11 +40,6 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-
     if (!validateCaptcha(captchaInput)) {
       alert('Invalid CAPTCHA');
       return;
@@ -105,29 +100,6 @@ const Signup = () => {
         <button type="submit" disabled={isLoading}>Sign up</button>
         {error && <div className="error small-text">{error}</div>}
       </form>
-      <style jsx>{`
-        .password-criteria {
-          list-style-type: none;
-          padding: 0;
-        }
-        .password-criteria li {
-          font-size: 0.7rem;
-          margin: 4px 0;
-        }
-        .password-criteria .valid {
-          color: green;
-        }
-        .password-criteria .invalid {
-          color: red;
-        }
-        .error {
-          color: red;
-          margin-top: 4px;
-        }
-        .small-text {
-          font-size: 0.8rem;
-        }
-      `}</style>
     </div>
   );
 };
