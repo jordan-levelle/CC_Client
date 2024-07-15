@@ -6,17 +6,18 @@ import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { faComment } from '@fortawesome/free-solid-svg-icons';
 import { fetchExampleProposal } from '../api/proposals';
 import {
-  handleExistingVoteUpdate,
+  handleExistingOpinionUpdate,
   handleExistingCommentUpdate,
   handleExistingSubmissionDelete,
   handleNewSubmission,
-  handleNewTableEntry
+  handleNewTableEntry,
+  formatDate
 } from '../api/proposals';
 
 const ExampleProposal = () => {
   const [exampleProposal, setExampleProposal] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [newVote, setNewVote] = useState({ name: '', vote: '', comment: '' });
+  const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
   const [expandedRows, setExpandedRows] = useState({}); // State to track expanded rows
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Initial check
 
@@ -54,8 +55,8 @@ const ExampleProposal = () => {
     }
   }, [isDesktop]);
 
-  const updateVote = (index, newVoteValue) => {
-    handleExistingVoteUpdate(index, newVoteValue, exampleProposal, setExampleProposal);
+  const updateOpinion = (index, newVoteValue) => {
+    handleExistingOpinionUpdate(index, newVoteValue, exampleProposal, setExampleProposal);
   };
 
   const updateComment = (index, newComment) => {
@@ -122,17 +123,25 @@ const ExampleProposal = () => {
                   <tr>
                     <td className="mobile-name-opinion-row">
                       <div className="name-container">
-                        <span>{vote.name}</span>
+                        {vote.name ? (
+                          <span>{vote.name}</span>
+                        ): (
+                          <input 
+                            type='text'
+                          />
+                        )}
                       </div>
+                      {/* Opinion Text Label */}
                       <div className="opinion-container">
                         <span className="show-mobile">
-                          {vote.vote && (
+                          {vote.opinion && (
                             <span className="opinion-label">
-                              <FontAwesomeIcon icon={icons[vote.vote]} /> {vote.vote}
+                              <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
                             </span>
                           )}
                         </span>
                       </div>
+                      {/* Conditional rendering of the comment icon */}
                       {vote.comment && (
                         <div className='comment-tooltip show-mobile'>
                           <FontAwesomeIcon
@@ -157,27 +166,33 @@ const ExampleProposal = () => {
                         </button>
                       </div>
                     </td>
+                    {/* Opinion Buttons */}
                     <td className="hide-mobile">
                       <div className="opinion-buttons">
-                        {['Agree', 'Neutral', 'Disagree', 'Block'].map((voteOption) => (
+                        {Object.keys(icons).map((opinionType) => (
                           <div
-                            key={voteOption}
-                            data-tooltip-id={`${voteOption.toLowerCase()}-tooltip`}
-                            data-tooltip-html={tooltips[voteOption]}
+                            key={opinionType}
+                            data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                            data-tooltip-html={tooltips[opinionType]}
                           >
                             <button
                               type="button"
-                              className={vote.vote === voteOption ? 'selected' : ''}
-                              onClick={() => updateVote(index, voteOption)}
-                              data-tip={tooltips[voteOption]} // Add data-tip attribute
+                              className={vote.opinion === opinionType ? 'selected' : ''}
+                              onClick={() => updateOpinion(index, opinionType)}
+                              data-tip={tooltips[opinionType]} // Add data-tip attribute
                             >
-                              <FontAwesomeIcon icon={icons[voteOption]} /> {voteOption}
+                              <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
                             </button>
-                            <Tooltip id={`${voteOption.toLowerCase()}-tooltip`} />
+                            <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                           </div>
                         ))}
                       </div>
+                      <div className="submitted-votes-date">
+                        <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
+                      </div>
                     </td>
+
+                    {/* Comment */}
                     <td className="hide-mobile">
                       <textarea
                         type="text"
@@ -195,21 +210,21 @@ const ExampleProposal = () => {
                       <td colSpan="4">
                         <div className="expanded-details">
                           <div className="opinion-buttons">
-                            {['Agree', 'Neutral', 'Disagree', 'Block'].map((voteOption) => (
+                            {Object.keys(icons).map((opinionType) => (
                               <div
-                                key={voteOption}
-                                data-tooltip-id={`${voteOption.toLowerCase()}-tooltip`}
-                                data-tooltip-html={tooltips[voteOption]}
+                                key={opinionType}
+                                data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                                data-tooltip-html={tooltips[opinionType]}
                               >
                                 <button
                                   type="button"
-                                  className={vote.vote === voteOption ? 'selected' : ''}
-                                  onClick={() => updateVote(index, voteOption)}
-                                  data-tip={tooltips[voteOption]} // Add data-tip attribute
+                                  className={vote.opinion === opinionType ? 'selected' : ''}
+                                  onClick={() => updateOpinion(index, opinionType)}
+                                  data-tip={tooltips[opinionType]} // Add data-tip attribute
                                 >
-                                  <FontAwesomeIcon icon={icons[voteOption]} /> {voteOption}
+                                  <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
                                 </button>
-                                <Tooltip id={`${voteOption.toLowerCase()}-tooltip`} />
+                                <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                               </div>
                             ))}
                           </div>
@@ -226,6 +241,11 @@ const ExampleProposal = () => {
                   )}
                 </React.Fragment>
               ))}
+              <tr className="new-entry-title-row show-mobile">
+                <td colSpan="1" className="new-entry-title">
+                  Submit New Entry 
+                </td>
+              </tr>
               <tr className="submit-section">
                 <td>
                   <input
@@ -241,22 +261,22 @@ const ExampleProposal = () => {
                 </td>
                 <td>
                   <div className="opinion-buttons">
-                    {['Agree', 'Neutral', 'Disagree', 'Block'].map((voteOption) => (
+                    {Object.keys(icons).map((opinionType) => (
                       <div
-                        key={voteOption}
-                        data-tooltip-id={`${voteOption.toLowerCase()}-tooltip`}
-                        data-tooltip-html={tooltips[voteOption]}
+                        key={opinionType}
+                        data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                        data-tooltip-html={tooltips[opinionType]}
                       >
                         <button
                           id='opinion'
                           type="button"
-                          className={newVote.vote === voteOption ? 'selected' : ''}
-                          onClick={() => setNewVote({ ...newVote, vote: voteOption })}
-                          data-tip={tooltips[voteOption]} // Add data-tip attribute
+                          className={newVote.opinion === opinionType ? 'selected' : ''}
+                          onClick={() => setNewVote({ ...newVote, opinion: opinionType })}
+                          data-tip={tooltips[opinionType]} // Add data-tip attribute
                         >
-                          <FontAwesomeIcon icon={icons[voteOption]} /> {voteOption}
+                          <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
                         </button>
-                        <Tooltip id={`${voteOption.toLowerCase()}-tooltip`} />
+                        <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                       </div>
                     ))}
                   </div>
@@ -268,11 +288,13 @@ const ExampleProposal = () => {
                     name="comment"
                     value={newVote.comment}
                     onChange={newTableEntry}
-                    placeholder='Explain your vote...'
+                    onKeyDown={handleKeyDown}
+                    placeholder="Comment"
+                    aria-label='Comment'
                   />
                 </td>
                 <td>
-                  <button onClick={newSubmission}>Save</button>
+                  <button onClick={newSubmission} aria-label='Submit'>Submit</button>
                 </td>
               </tr>
             </tbody>

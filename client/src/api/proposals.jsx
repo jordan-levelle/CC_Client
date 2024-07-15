@@ -293,14 +293,11 @@ export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, 
 
 
 /* Example Proposal Util Functions */
-export const handleExistingVoteUpdate = (index, newVoteValue, exampleProposal, setExampleProposal) => {
-  if (!exampleProposal) {
-    console.error('Example proposal is undefined.');
-    return;
-  }
-
+export const handleExistingOpinionUpdate = (index, newVoteValue, exampleProposal, setExampleProposal) => {
   const updatedVotes = [...exampleProposal.votes];
-  updatedVotes[index].vote = newVoteValue;
+  const currentDate = new Date().toISOString();
+  updatedVotes[index].opinion = newVoteValue;
+  updatedVotes[index].updatedAt = currentDate;
   setExampleProposal(prevProposal => ({
     ...prevProposal,
     votes: updatedVotes,
@@ -309,7 +306,9 @@ export const handleExistingVoteUpdate = (index, newVoteValue, exampleProposal, s
 
 export const handleExistingCommentUpdate = (index, newComment, exampleProposal, setExampleProposal) => {
   const updatedVotes = [...exampleProposal.votes];
+  const currentDate = new Date().toISOString();
   updatedVotes[index].comment = newComment;
+  updatedVotes[index].updatedAt = currentDate;
   setExampleProposal(prevProposal => ({
     ...prevProposal,
     votes: updatedVotes,
@@ -338,6 +337,18 @@ export const handleNewSubmission = (exampleProposal, newVote, setExampleProposal
     ...prevProposal,
     votes: updatedVotes,
   }));
-  setNewVote({ name: '', vote: '', comment: '' });
+  setNewVote({ name: '', opinion: '', comment: '' });
 };
 
+export const formatDate = (dateString) => {
+  const options = {
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  };
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+};
