@@ -332,7 +332,12 @@ export const handleNewTableEntry = (e, newVote, setNewVote) => {
 };
 
 export const handleNewSubmission = (exampleProposal, newVote, setExampleProposal, setNewVote) => {
-  const updatedVotes = [...exampleProposal.votes, newVote];
+  const currentDate = new Date().toISOString();
+  const updatedNewVote = {
+    ...newVote,
+    updatedAt: currentDate
+  };
+  const updatedVotes = [...exampleProposal.votes, updatedNewVote];
   setExampleProposal(prevProposal => ({
     ...prevProposal,
     votes: updatedVotes,
@@ -341,6 +346,9 @@ export const handleNewSubmission = (exampleProposal, newVote, setExampleProposal
 };
 
 export const formatDate = (dateString) => {
+  if (!dateString || !Date.parse(dateString)) {
+    return '';
+  }
   const options = {
     month: 'numeric',
     day: 'numeric',
