@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
-import { faComment } from '@fortawesome/free-solid-svg-icons';
+import { faCommentDots } from '@fortawesome/free-solid-svg-icons';
 import { fetchExampleProposal } from '../api/proposals';
 import {
   handleExistingOpinionUpdate,
@@ -145,7 +145,7 @@ const ExampleProposal = () => {
                       {vote.comment && (
                         <div className='comment-tooltip show-mobile'>
                           <FontAwesomeIcon
-                            icon={faComment}
+                            icon={faCommentDots}
                             className="comment-icon"
                             data-tip={vote.comment}
                             data-for={`tooltip-comment-${vote._id}`}

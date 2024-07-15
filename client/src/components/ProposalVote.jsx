@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment } from '@fortawesome/free-solid-svg-icons'; // Import comment icon
+import { faCommentDots } from '@fortawesome/free-solid-svg-icons'; // Import comment icon
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
@@ -252,7 +252,7 @@ const ProposalVote = () => {
                     {vote.comment && (
                       <div className="comment-tooltip show-mobile">
                         <FontAwesomeIcon
-                          icon={faComment}
+                          icon={faCommentDots}
                           className="comment-icon"
                           data-tip={vote.comment}
                           data-for={`tooltip-comment-${vote._id}`}
