@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Form from 'react-bootstrap/Form';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { fetchProposalsListAPI } from '../api/proposals';
@@ -9,6 +10,9 @@ import ParticipatedProposalList from '../components/ParticipatedProposalList';
 const Profile = () => {
   const { proposals, participatedProposals, dispatch } = useProposalsContext();
   const { user } = useAuthContext();
+
+  // <TODO> Build out filter logic</TODO>
+  // const [ includeUserProps, setIncludeUserProps ] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +38,10 @@ const Profile = () => {
     fetchData();
   }, [dispatch, user]);
 
+  const handleParticipatedPropsFilter = () => {
+    alert('Consensus Check is working on this feature.')
+  }
+
   return (
     <div className="dashboard">
       <div className="proposals-container">
@@ -44,7 +52,17 @@ const Profile = () => {
           ))}
         </div>
         <div className="proposal-participated-container">
-          <h4>Proposals Participated In</h4>
+          <h4>Participated Proposals</h4>
+          <div className='filter-options' >
+            <Form>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="custom-switch"
+                label="Include Your Proposals"
+                onClick={handleParticipatedPropsFilter}
+              />
+          </Form>
+          </div>
           <ParticipatedProposalList proposals={participatedProposals} />
         </div>
       </div>
