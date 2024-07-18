@@ -1,10 +1,21 @@
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #f9f9f9;
+  --dark-bg: #1b1b1b;
+  --light-bg: lightgray;
+  --font-family: Arial, sans-serif;
+  --text-color: #ececec;
+  --hover-color: #0056b3;
+  --border-color: #ccc;
+}
+
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-family);
 }
 
 body {
@@ -13,9 +24,14 @@ body {
   flex-direction: column;
 }
 
+
+
+
+
+
 /*************************** Styles for header ***************************/
 .header {
-  background-color: #1b1b1b;
+  background-color: var(--dark-bg);
   height: 50px;
 }
 
@@ -454,6 +470,7 @@ body {
   outline: none; 
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); 
 }
+
 .proposal-vote-container {
   margin: 15px auto; 
   padding: 10px;
@@ -558,14 +575,8 @@ body {
   margin-left: 5px;
 }
 
-.comment-tooltip {
-  display: flex;
-  align-items: center;
-  margin-right: 10px; /* Adjust spacing between the icon and button */
-}
-
 .comment-icon {
-  margin-right: 5px; /* Space the icon slightly from the tooltip text */
+  margin-right: 5px; 
 }
 
 .details-row {
@@ -918,7 +929,13 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+
 }
+
+
+
+
+
 
 
 

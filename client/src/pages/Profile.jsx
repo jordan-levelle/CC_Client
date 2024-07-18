@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
@@ -10,9 +10,9 @@ import ParticipatedProposalList from '../components/ParticipatedProposalList';
 const Profile = () => {
   const { proposals, participatedProposals, dispatch } = useProposalsContext();
   const { user } = useAuthContext();
-
-  // <TODO> Build out filter logic</TODO>
-  // const [ includeUserProps, setIncludeUserProps ] = useState(false);
+  const [includeOwnProposals, setIncludeOwnProposals] = useState(() => {
+    return JSON.parse(localStorage.getItem('includeOwnProposals')) || false;
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +21,7 @@ const Profile = () => {
           const userProposals = await fetchProposalsListAPI(user.token);
           dispatch({ type: 'SET_PROPOSALS', payload: userProposals });
 
-          const participated = await fetchParticipatedProposalsAPI(user.token);
+          const participated = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
           if (Array.isArray(participated)) {
             dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participated });
           }
@@ -30,17 +30,18 @@ const Profile = () => {
         console.error('Error fetching proposals:', error.message);
         if (error.message.includes('JWT malformed')) {
           localStorage.removeItem('token');
-          // Optionally, redirect user to login page or show an error message
         }
       }
     };
 
     fetchData();
-  }, [dispatch, user]);
+  }, [dispatch, user, includeOwnProposals]);
 
   const handleParticipatedPropsFilter = () => {
-    alert('Consensus Check is working on this feature.')
-  }
+    const persistToggleState = !includeOwnProposals;
+    setIncludeOwnProposals(persistToggleState);
+    localStorage.setItem('includeOwnProposals', JSON.stringify(persistToggleState));
+  };
 
   return (
     <div className="dashboard">
@@ -53,15 +54,16 @@ const Profile = () => {
         </div>
         <div className="proposal-participated-container">
           <h4>Participated Proposals</h4>
-          <div className='filter-options' >
+          <div className='filter-options'>
             <Form>
-              <Form.Check // prettier-ignore
+              <Form.Check 
                 type="switch"
                 id="custom-switch"
                 label="Include Your Proposals"
-                onClick={handleParticipatedPropsFilter}
+                checked={includeOwnProposals}
+                onChange={handleParticipatedPropsFilter}
               />
-          </Form>
+            </Form>
           </div>
           <ParticipatedProposalList proposals={participatedProposals} />
         </div>

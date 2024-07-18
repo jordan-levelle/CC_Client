@@ -148,12 +148,13 @@ export const loginAPI = async (email, password) => {
 };
 
 
-export const fetchParticipatedProposalsAPI = async (token) => {
+export const fetchParticipatedProposalsAPI = async (token, includeOwnProposals = false) => {
   try {
-    const response = await fetch(`${USER_URL}/getParticipatedProposals`, {
+    const response = await fetch(`${USER_URL}/getParticipatedProposals?includeOwnProposals=${includeOwnProposals}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       }
     });
 

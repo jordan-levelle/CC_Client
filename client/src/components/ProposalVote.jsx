@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots } from '@fortawesome/free-solid-svg-icons'; // Import comment icon
+import { faCommentDots } from '@fortawesome/free-solid-svg-icons'; 
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
-import { v4 as uuidv4 } from 'uuid'; // Importing uuid library
+import { v4 as uuidv4 } from 'uuid'; 
 import {
   fetchProposalData,
   fetchSubmittedVotes,
@@ -95,10 +95,20 @@ const ProposalVote = () => {
     setNewVote((prevVote) => ({ ...prevVote, [name]: value }));
   };
 
-  const handleOpinionButtonClick = (opinionType) => {
+  const handleOpinionButtonClick = async (opinionType) => {
+    // Update newVote state with the selected opinion
     setNewVote((prevVote) => ({ ...prevVote, opinion: opinionType }));
+    try {
+      // Submit new table entry with current newVote state
+      await submitNewTableEntry(proposal._id, { ...newVote, opinion: opinionType }, setSubmittedVotes, setNewVote, setError);
+      
+      // After submission, reset newVote state to clear the form fields
+      setNewVote({ name: '', opinion: '', comment: '' });
+    } catch (error) {
+      setError('Error submitting new entry: ' + error.message);
+    }
   };
-
+  
   const handleDeleteEntry = async (voteId) => {
     try {
       await deleteTableEntry(voteId, setSubmittedVotes, submittedVotes, setError);
@@ -185,8 +195,6 @@ const ProposalVote = () => {
           IMPORTANT: Save the edit link for your records! You won't see it again!
         </p>
       </div>
-
-
       )} 
 
       <div className="proposal-vote-container">
@@ -250,21 +258,23 @@ const ProposalVote = () => {
                     </div>
                     {/* Conditional rendering of the comment icon */}
                     {vote.comment && (
-                      <div className="comment-tooltip show-mobile">
+                      <div className="show-mobile">
                         <FontAwesomeIcon
                           icon={faCommentDots}
                           className="comment-icon"
                           data-tip={vote.comment}
-                          data-for={`tooltip-comment-${vote._id}`}
+                          data-for={`comment-tooltip-${vote.comment}`}
                         />
                         <Tooltip
-                          id={`tooltip-comment-${vote._id}`}
+                          id={`comment-tooltip-${vote.comment}`}
                           place="top"
                           effect="solid"
-                          className="custom-tooltip"
+                          className="tooltip"
+                          // onClick={handleCommentIconClick}
                         >
-                          <span>{vote.comment}</span>
+                         <span>{vote.comment}</span>
                         </Tooltip>
+                        
                       </div>
                     )}
                     <div className="toggle-button-container show-mobile">
