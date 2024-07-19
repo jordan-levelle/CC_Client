@@ -56,7 +56,6 @@ body {
 
 .logo:hover {
   text-decoration: underline;
-  text-decoration-color: transparent;
 }
 
 .navbar {
