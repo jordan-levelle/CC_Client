@@ -13,7 +13,6 @@ const VerifyLoadingPage = () => {
         const { verified } = await checkVerificationStatusAPI(token);
         if (verified) {
           setVerificationStatus('success');
-          localStorage.removeItem('verificationToken');
         }
       } catch (error) {
         console.error('Error checking verification status:', error);

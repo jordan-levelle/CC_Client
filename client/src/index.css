@@ -815,6 +815,10 @@ body {
   }
 }
 
+.User-Proposals-Title {
+  margin-bottom: 33px;
+}
+
 /* Mobile styles */
 @media (max-width: 876px) {
   .dashboard {
@@ -924,12 +928,19 @@ body {
   margin-right: 5px;
 }
 
-.filter-options {
+.participated-proposal-filter-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 
+}
+
+.user-proposal-filter-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 37px;
 }
 
 

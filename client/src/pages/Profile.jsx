@@ -48,15 +48,20 @@ const Profile = () => {
       <div className="proposals-container">
         <div className="proposal-list-container">
           <h4>Your Proposals</h4>
-          {proposals && proposals.map((proposal) => (
-            <ProposalList key={proposal._id} proposal={proposal} />
-          ))}
+          <div className='user-proposal-filter-options'></div>
+          {proposals && proposals.length > 0 ? (
+            proposals.map((proposal) => (
+              <ProposalList key={proposal._id} proposal={proposal} />
+            ))
+          ) : (
+            <p>No Proposals</p>
+          )}
         </div>
         <div className="proposal-participated-container">
           <h4>Participated Proposals</h4>
-          <div className='filter-options'>
+          <div className='participated-proposal-filter-options'>
             <Form>
-              <Form.Check 
+              <Form.Check
                 type="switch"
                 id="custom-switch"
                 label="Include Your Proposals"
@@ -65,7 +70,13 @@ const Profile = () => {
               />
             </Form>
           </div>
-          <ParticipatedProposalList proposals={participatedProposals} />
+          {participatedProposals && participatedProposals.length > 0 ? (
+            participatedProposals.map((proposal) => (
+              <ParticipatedProposalList key={proposal.proposalId} proposal={proposal} />
+            ))
+          ) : (
+            <p>No participated proposals.</p>
+          )}
         </div>
       </div>
       <div className="user-details">
