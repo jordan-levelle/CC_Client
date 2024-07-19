@@ -46,16 +46,13 @@ body {
   color: #ececec;
   display: flex;
   align-items: center;
-  margin-left: 40px; /* Add margin-left to align the logo properly */
+  margin-left: 45px; /* Add margin-left to align the logo properly */
 
-}
-
-.logo-text {
-  margin-left: 40px;
 }
 
 .logo:hover {
   text-decoration: underline;
+  text-decoration-color: transparent;
 }
 
 .navbar {
@@ -83,12 +80,12 @@ body {
   text-decoration: none;
   color: #dbdbdb;
   padding: 10px 15px;
-  border-radius: 5px;
-}
 
-.nav-link:hover {
-  text-decoration-color: transparent;
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+    color: #dbdbdb !important; /* Ensures color doesn't change */
+    background-color: transparent !important; /* Ensures background doesn't change */
+  }
 }
 
 .dropdown {
@@ -99,14 +96,20 @@ body {
   text-decoration: none;
   color: #dbdbdb;
   padding: 10px 15px;
-  border-radius: 5px;
   cursor: pointer;
-  line-height: 3; /* Add this line to ensure consistent alignment */
+  line-height: 2.8; /* Add this line to ensure consistent alignment */
+
+   &:hover {
+    text-decoration: underline;
+    color: #dbdbdb !important; /* Ensures color doesn't change */
+    background-color: transparent !important; /* Ensures background doesn't change */
+  }
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
+  border-radius: 10px;
   background-color: #f9f9f9;
   width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -154,12 +157,12 @@ body {
     flex-direction: column;
     align-items: flex-start;
     position: relative;
-    padding-right: 50px;
   }
 
   .logo-link {
-    position: absolute;
-    transform: translateY(10%); /* Adjust to properly center the logo */}
+    position: relative;
+    margin: 0 auto;
+    transform: translateY(16%); /* Adjust to properly center the logo */}
 
 
   .nav-menu {
@@ -769,6 +772,7 @@ body {
   .user-details {
     width: fit-content; /* Ensure user details takes up space on the right */
     padding: 10px; /* Padding inside the box */
+    margin: 0 auto;
     background-color: #f0f0f0; /* Light gray background */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
@@ -803,6 +807,7 @@ body {
   .user-details {
     width: fit-content; /* Full width */
     margin: 0 auto;
+    align-self: center;
     order: -1; /* Move to the top */
     margin-bottom: 20px; /* Space below */
     padding: 10px;

@@ -46,22 +46,22 @@ const Header = () => {
           <span className="hamburger-icon">&#9776;</span>
         </button>
         <ul className={`nav-menu ${menuOpen ? 'active' : ''}`}>
-          <li className="nav-item-center">
+          <li>
             <Link to="/" className="nav-link" onClick={closeMenu}>
               Home
             </Link>
           </li>
-          <li className="nav-item-center">
+          <li>
             <Link to="/create" className="nav-link" onClick={closeMenu}>
               Create Proposal
             </Link>
           </li>
-          <li className="nav-item-center">
+          <li>
             <Link to="/basics" className="nav-link" onClick={closeMenu}>
               Consensus Basics
             </Link>
           </li>
-          <li className="nav-item-center">
+          <li>
             <Link to="/teams" className="nav-link" onClick={closeMenu}>
               {user ? 'Upgrade' : 'Pricing'}
             </Link>
