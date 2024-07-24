@@ -1,5 +1,5 @@
-const PROP_URL = process.env.REACT_APP_PROPOSALS;
-const USER_URL = process.env.REACT_APP_USERS;
+const PROP_URL = process.env.REACT_APP_PROPOSAL_URL;
+const USER_URL = process.env.REACT_APP_USERS_URL;
 
 // Helper function to get the headers with the optional authorization token
 const getHeaders = (token) => {

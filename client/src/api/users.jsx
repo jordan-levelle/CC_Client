@@ -1,4 +1,4 @@
-const USER_URL = process.env.REACT_APP_USERS;
+const USER_URL = process.env.REACT_APP_USERS_URL;
 
 export const resetPasswordAPI = async (token, oldPassword, newPassword) => {
   try {
