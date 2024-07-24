@@ -52,9 +52,9 @@ export const deleteProposalAPI = async (proposalId, token) => {
   return response.json();
 };
 
-// GET User Proposal List API Call
-export const fetchProposalsListAPI = async (token) => {
-  const response = await fetch(`${PROP_URL}`, {
+// GET All User Proposal List API Call
+export const fetchProposalListAPI = async (token) => {
+  const response = await fetch(`${PROP_URL}/all`, {
     headers: { 'Authorization': `Bearer ${token}` },
   });
 
@@ -65,19 +65,56 @@ export const fetchProposalsListAPI = async (token) => {
   return response.json();
 };
 
+
+// Get Active User Proposal List API Call
+export const fetchActiveProposalListAPI = async (token) => {
+  const response = await fetch(`${PROP_URL}/active`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch proposals');
+  }
+
+  return response.json();
+}
+
+// Get Expired User Proposal List API Call
+export const fetchExpiredProposalListAPI = async (token) => {
+  const response = await fetch(`${PROP_URL}/expired`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch proposals');
+  }
+
+  return response.json();
+}
+
+
+
+
+
 // GET Example* Proposal API Call
 export const fetchExampleProposal = async () => {
   try {
     const response = await fetch(`${PROP_URL}/example`);
     if (!response.ok) {
-      throw new Error('Failed to fetch example proposal');
+      const errorText = await response.text();
+      console.error('Response error text:', errorText);
+      throw new Error(`Failed to fetch example proposal: ${errorText}`);
     }
-    return response.json();
+    const jsonResponse = await response.json();
+    
+    return jsonResponse;
   } catch (error) {
     console.error('Error fetching example proposal:', error);
     throw error;
   }
 };
+
+
 
 // POST Create New Proposal API Call
 export const createProposal = async (proposalData, token) => {

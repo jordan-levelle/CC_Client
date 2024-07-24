@@ -10,6 +10,7 @@ const ProposalList = ({ proposal }) => {
   const { user } = useAuthContext();
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [daysLeft, setDaysLeft] = useState(0);
+  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     if (proposal.createdAt) {
@@ -22,9 +23,11 @@ const ProposalList = ({ proposal }) => {
         const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
         return daysLeft;
       };
-      setDaysLeft(calcDaysLeft(proposal.createdAt));
+      const days = calcDaysLeft(proposal.createdAt);
+      setDaysLeft(days);
+      setIsExpired(days <= 0 || proposal.expired); // Mark as expired if daysLeft is 0 or if already marked as expired
     }
-  }, [proposal.createdAt]);
+  }, [proposal.createdAt, proposal.expired]);
 
   const handleDeleteClick = async () => {
     if (!user) return;
@@ -39,12 +42,16 @@ const ProposalList = ({ proposal }) => {
     setShowConfirmBox(false);
   };
 
-  const handleEditClick = (proposalId) => {
-    dispatch({ type: 'EDIT_PROPOSAL', payload: { _id: proposalId } });
+  const handleEditClick = () => {
+    if (!isExpired) {
+      dispatch({ type: 'EDIT_PROPOSAL', payload: { _id: proposal._id } });
+    }
   };
 
-  const handleProposalClick = (proposalId) => {
-    dispatch({ type: 'SELECT_PROPOSAL', payload: proposalId });
+  const handleProposalClick = () => {
+    if (!isExpired) {
+      dispatch({ type: 'SELECT_PROPOSAL', payload: proposal._id });
+    }
   };
 
   return (
@@ -55,16 +62,35 @@ const ProposalList = ({ proposal }) => {
           Proposed on: {proposal.createdAt ? formatDate(proposal.createdAt) : 'Invalid Date'}
         </p>
         <p>
-          Expires in: {daysLeft > 0 ? `${daysLeft} days` : 'Expired'}
+          Expires in: {isExpired ? 'Expired' : `${daysLeft} days`}
         </p>
         <div className="proposal-button-group">
           <Link to={`/${proposal.uniqueUrl}`}>
-            <button className="view-proposal-button" onClick={() => handleProposalClick(proposal._id)}>View</button>
+            <button 
+              className="view-proposal-button" 
+              onClick={handleProposalClick}
+              disabled={isExpired}
+              style={{ opacity: isExpired ? 0.1 : 1 }}
+            >
+              View
+            </button>
           </Link>
           <Link to={`/edit/${proposal.uniqueUrl}`}>
-            <button className="edit-button" onClick={() => handleEditClick(proposal._id)}>Edit</button>
+            <button 
+              className="edit-button" 
+              onClick={handleEditClick}
+              disabled={isExpired}
+              style={{ opacity: isExpired ? 0.1 : 1 }}
+            >
+              Edit
+            </button>
           </Link>
-          <button className="delete-proposal-button" onClick={() => setShowConfirmBox(true)}>Delete</button>
+          <button 
+            className="delete-proposal-button" 
+            onClick={() => setShowConfirmBox(true)}
+          >
+            Delete
+          </button>
         </div>
       </div>
 

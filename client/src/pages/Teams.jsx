@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { PLANS_DESCRIPTION_PARAGRAPH ,STANDARD_CC_FEATURES, PRO_CC_FEATURES } from '../constants/TextConstants'; 
+import { useAuthContext } from '../hooks/useAuthContext';
 
 
 const Teams = () => {
+  const { user } = useAuthContext();
+
   const handleBuyNowClick = () => {
     alert('Consensus Check is working on this Feature.');
   }
@@ -53,8 +56,12 @@ const Teams = () => {
                       <i className="bi bi-check2-circle"></i> {feature}
                     </span>
                   </div>
-                ))}
-                <button className="btn btn-secondary" onClick={handleBuyNowClick}>Buy Now</button>
+                ))} 
+                {!user ? (
+                  <button className="btn btn-secondary" onClick={handleBuyNowClick}>Buy now</button>
+                ) : (
+                  <button className="btn btn-secondary" onClick={handleBuyNowClick}>Upgrade</button>
+                )}
               </div>
             </div>
           </div>

@@ -20,6 +20,13 @@ const proposalsReducer = (state, action) => {
         ...state,
         proposals: [action.payload, ...state.proposals],
       };
+      case 'REMOVE_PROPOSAL':
+        return {
+          ...state,
+          participatedProposals: state.participatedProposals.filter(
+            (proposal) => proposal.proposalId !== action.payload.proposalId
+          ),
+        };
     case 'DELETE_PROPOSAL':
       return {
         ...state,
@@ -29,7 +36,7 @@ const proposalsReducer = (state, action) => {
       return {
         ...state,
         proposals: state.proposals.map((proposal) =>
-          proposal._id === action.payload._id ? action.payload : proposal
+          (proposal) => proposal.proposalId !== action.payload.proposalId
         ),
       };
     case 'SELECT_PROPOSAL':

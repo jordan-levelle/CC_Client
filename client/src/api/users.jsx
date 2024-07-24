@@ -171,6 +171,49 @@ export const fetchParticipatedProposalsAPI = async (token, includeOwnProposals =
 };
 
 
+// export const deleteProposalAPI = async (proposalId, token) => {
+//   const response = await fetch(`${PROP_URL}/${proposalId}`, {
+//     method: 'DELETE',
+//     headers: { 'Authorization': `Bearer ${token}` }
+//   });
+
+//   if (!response.ok) {
+//     const errorMessage = await response.text();
+//     throw new Error(`Failed to delete proposal: ${errorMessage}`);
+//   }
+
+//   return response.json();
+// };
+
+
+
+
+export const removeParticipatedProposalAPI = async (proposalId, token) => {
+  try {
+    const response = await fetch(`${USER_URL}/removeParticipatedProposal/${proposalId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to remove participated proposal');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error removing participated proposals:', error.message);
+    throw new Error(error.message);
+  }
+};
+
+
+
+
+
 export const checkVerificationStatusAPI = async (verificationToken) => {
   try {
     let verified = false;

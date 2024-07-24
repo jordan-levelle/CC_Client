@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
-import { fetchProposalsListAPI } from '../api/proposals';
+import { fetchProposalListAPI, fetchActiveProposalListAPI, fetchExpiredProposalListAPI } from '../api/proposals';
 import { fetchParticipatedProposalsAPI } from '../api/users';
 import ProposalList from '../components/ProposalList';
 import ParticipatedProposalList from '../components/ParticipatedProposalList';
@@ -13,13 +13,22 @@ const Profile = () => {
   const [includeOwnProposals, setIncludeOwnProposals] = useState(() => {
     return JSON.parse(localStorage.getItem('includeOwnProposals')) || false;
   });
+  const [selectedFilter, setSelectedFilter] = useState('All');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (user) {
-          const userProposals = await fetchProposalsListAPI(user.token);
-          dispatch({ type: 'SET_PROPOSALS', payload: userProposals });
+          let fetchedProposals;
+          if (selectedFilter === 'All') {
+            fetchedProposals = await fetchProposalListAPI(user.token);
+          } else if (selectedFilter === 'Active') {
+            fetchedProposals = await fetchActiveProposalListAPI(user.token);
+          } else if (selectedFilter === 'Expired') {
+            fetchedProposals = await fetchExpiredProposalListAPI(user.token);
+          }
+
+          dispatch({ type: 'SET_PROPOSALS', payload: fetchedProposals });
 
           const participated = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
           if (Array.isArray(participated)) {
@@ -35,7 +44,7 @@ const Profile = () => {
     };
 
     fetchData();
-  }, [dispatch, user, includeOwnProposals]);
+  }, [dispatch, user, includeOwnProposals, selectedFilter]);
 
   const handleParticipatedPropsFilter = () => {
     const persistToggleState = !includeOwnProposals;
@@ -43,12 +52,51 @@ const Profile = () => {
     localStorage.setItem('includeOwnProposals', JSON.stringify(persistToggleState));
   };
 
+  const handlePropFilter = (event) => {
+    setSelectedFilter(event.target.value);
+  };
+
   return (
     <div className="dashboard">
       <div className="proposals-container">
         <div className="proposal-list-container">
           <h4>Your Proposals</h4>
-          <div className='user-proposal-filter-options'></div>
+          <div className='user-proposal-filter-options'>
+            <Form>
+              <div key="inline-radio" className="mb-3">
+                <Form.Check
+                  inline
+                  label="All"
+                  name="group1"
+                  type="radio"
+                  id="inline-radio-1"
+                  value="All"
+                  checked={selectedFilter === 'All'}
+                  onChange={handlePropFilter}
+                />
+                <Form.Check
+                  inline
+                  label="Active"
+                  name="group1"
+                  type="radio"
+                  id="inline-radio-2"
+                  value="Active"
+                  checked={selectedFilter === 'Active'}
+                  onChange={handlePropFilter}
+                />
+                <Form.Check
+                  inline
+                  label="Expired"
+                  name="group1"
+                  type="radio"
+                  id="inline-radio-3"
+                  value="Expired"
+                  checked={selectedFilter === 'Expired'}
+                  onChange={handlePropFilter}
+                />
+              </div>
+            </Form>
+          </div>
           {proposals && proposals.length > 0 ? (
             proposals.map((proposal) => (
               <ProposalList key={proposal._id} proposal={proposal} />
