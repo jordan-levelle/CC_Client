@@ -219,7 +219,7 @@ export const checkVerificationStatusAPI = async (verificationToken) => {
     let verified = false;
 
     while (!verified) {
-      const response = await fetch(`${process.env.REACT_APP_USERS}/verify/status/${verificationToken}`, {
+      const response = await fetch(`${process.env.REACT_APP_USERS_URL}/verify/status/${verificationToken}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
