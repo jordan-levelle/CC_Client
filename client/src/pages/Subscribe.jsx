@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-const USER_URL = process.env.REACT_APP_USERS;
+const USER_URL = process.env.REACT_APP_USERS_URL;
 
 const ProductDisplay = ({ handleCheckout }) => (
   <section>
