@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { checkVerificationStatusAPI } from 'src/api/users'; // Adjust the import path as needed
+import { checkVerificationStatusAPI } from '../api/users'; 
 
 const VerifyLoadingPage = () => {
   const [verificationStatus, setVerificationStatus] = useState(null);
@@ -41,7 +41,7 @@ const VerifyLoadingPage = () => {
   return (
     <div>
       <h2>Verifying your account...</h2>
-      <p>Please verify your email to access your profile. This may take a few minutes.</p>
+      <p>Please check your email for verification link.</p>
     </div>
   );
 };

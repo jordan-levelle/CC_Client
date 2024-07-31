@@ -1,4 +1,4 @@
-const PROP_URL = process.env.REACT_APP_PROPOSAL_URL;
+const PROP_URL = process.env.REACT_APP_PROPOSALS_URL;
 const USER_URL = process.env.REACT_APP_USERS_URL;
 
 // Helper function to get the headers with the optional authorization token
@@ -41,7 +41,7 @@ export const updateProposalAPI = async (uniqueUrl, updatedProposal, token = null
 export const deleteProposalAPI = async (proposalId, token) => {
   const response = await fetch(`${PROP_URL}/${proposalId}`, {
     method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${token}` }
+    headers: getHeaders(token),
   });
 
   if (!response.ok) {
@@ -55,7 +55,7 @@ export const deleteProposalAPI = async (proposalId, token) => {
 // GET All User Proposal List API Call
 export const fetchProposalListAPI = async (token) => {
   const response = await fetch(`${PROP_URL}/all`, {
-    headers: { 'Authorization': `Bearer ${token}` },
+    headers: getHeaders(token),
   });
 
   if (!response.ok) {
@@ -65,11 +65,10 @@ export const fetchProposalListAPI = async (token) => {
   return response.json();
 };
 
-
 // Get Active User Proposal List API Call
 export const fetchActiveProposalListAPI = async (token) => {
   const response = await fetch(`${PROP_URL}/active`, {
-    headers: { 'Authorization': `Bearer ${token}` },
+    headers: getHeaders(token),
   });
 
   if (!response.ok) {
@@ -82,7 +81,7 @@ export const fetchActiveProposalListAPI = async (token) => {
 // Get Expired User Proposal List API Call
 export const fetchExpiredProposalListAPI = async (token) => {
   const response = await fetch(`${PROP_URL}/expired`, {
-    headers: { 'Authorization': `Bearer ${token}` },
+    headers: getHeaders(token),
   });
 
   if (!response.ok) {
@@ -91,10 +90,6 @@ export const fetchExpiredProposalListAPI = async (token) => {
 
   return response.json();
 }
-
-
-
-
 
 // GET Example* Proposal API Call
 export const fetchExampleProposal = async () => {
@@ -113,8 +108,6 @@ export const fetchExampleProposal = async () => {
     throw error;
   }
 };
-
-
 
 // POST Create New Proposal API Call
 export const createProposal = async (proposalData, token) => {
@@ -231,10 +224,6 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
   }
 };
 
-
-
-
-// DELETE Table Entry API Call
 export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes, setError) => {
   try {
     const response = await fetch(`${PROP_URL}/votes/${voteId}`, {

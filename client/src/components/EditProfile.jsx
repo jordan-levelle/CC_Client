@@ -5,7 +5,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useDeleteAccount, useUpdateAccount, useResetPassword } from '../hooks/useAccountUpdate';
 
 const EditProfile = () => {
-    const { user } = useAuthContext();
+    const { user, isSubscribed } = useAuthContext();
     const { deleteAccount, deleteMessage, deleteError } = useDeleteAccount();
     const { updateEmail, updateMessage, updateError } = useUpdateAccount();
     const { resetPassword, resetPasswordMessage, resetPasswordError } = useResetPassword();
@@ -57,7 +57,6 @@ const EditProfile = () => {
             setError('Password does not meet criteria.');
             return;
         }
-
         try {
             await resetPassword(oldPassword, newPassword);
             setShowResetPassword(false);
@@ -139,10 +138,22 @@ const EditProfile = () => {
                         </div>
                     )}
                 </div>
-
                 <button className='delete-button' onClick={confirmDeleteAccount}>Delete Account</button>
                 {deleteMessage && <p>{deleteMessage}</p>}
                 {deleteError && <p>{deleteError}</p>}
+
+                {isSubscribed ? (
+                    <button style={{
+                        padding: '10px',
+                        backgroundColor: 'green',
+                        opacity: 0.5,
+                        color: 'white',
+                        borderRadius: '5px'
+                    }}>
+                        Cancel Subscription
+                    </button>
+                    ) : null}
+                
                 {showConfirmation && (
                     <div className="confirmation-popup">
                         <div className="confirmation-content">
@@ -179,5 +190,4 @@ const EditProfile = () => {
         </div>
     );
 }
-
 export default EditProfile;

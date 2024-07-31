@@ -15,43 +15,17 @@ export default function App() {
         <main className="flex-grow-1">
           <Routes>
             <Route path='/' element={<Home />} />
-            {/* Authenticated Route for Profile */}
-            <Route
-              path='/profile'
-              element={
-                <ProtectedRoute redirectTo='/auth'>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            {/* Auth Route should not be accessible if user is authenticated */}
+
+            {/* Protected Routes */}
+            <Route path='/profile' element={ <ProtectedRoute redirectTo='/auth'><Profile /></ProtectedRoute> } />
             <Route path='/auth' element={!user ? <AuthPage /> : <Navigate to='/profile' />} />
-            {/* Route for Verification */}
             <Route path='/verify/:token' element={<Verification />} />
-            {/* Route for Verification Loading Page */}
             <Route path='/verify-loading/:token' element={<VerifyLoadingPage />} />
-            {/* Authenticated Route for Edit Proposal */}
-            <Route
-              path='/edit/:uniqueUrl'
-              element={
-                <ProtectedRoute redirectTo='/auth'>
-                  <EditProposal />
-                </ProtectedRoute>
-              }
-            />
-            {/* Non Auth User Route for Edit Proposal */}
+            <Route path='/edit/:uniqueUrl' element={ <ProtectedRoute redirectTo='/auth'><EditProposal /></ProtectedRoute> } />
             <Route path='/edit/:uniqueToken/:uniqueUrl' element={<EditProposal />} />
-            {/* Authenticated Route for Profile Settings */}
-            <Route
-              path='/settings'
-              element={
-                <ProtectedRoute redirectTo='/auth'>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            {/*  */}
+            <Route path='/settings' element={ <ProtectedRoute redirectTo='/auth'><Settings /></ProtectedRoute> } />
             <Route path='/reset/:token' element={<ForgotPassword />} />
+
             {/* Public Routes */}
             <Route path='/create' element={<Create />} />
             <Route path='/basics' element={<Basics />} />
@@ -59,6 +33,7 @@ export default function App() {
             <Route path='/subscribe' element={<Subscribe />} />
             <Route path='/:uniqueUrl' element={<ProposalVote />} />
             <Route path='/example' element={<ExampleProposal />} />
+            
             {/* Redirect any unknown paths to home */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

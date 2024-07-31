@@ -3,13 +3,8 @@ import { Link } from 'react-router-dom';
 import { PLANS_DESCRIPTION_PARAGRAPH ,STANDARD_CC_FEATURES, PRO_CC_FEATURES } from '../constants/TextConstants'; 
 import { useAuthContext } from '../hooks/useAuthContext';
 
-
 const Teams = () => {
   const { user } = useAuthContext();
-
-  const handleBuyNowClick = () => {
-    alert('Consensus Check is working on this Feature.');
-  }
 
   return (
     <section id="price-section">
@@ -58,9 +53,13 @@ const Teams = () => {
                   </div>
                 ))} 
                 {!user ? (
-                  <button className="btn btn-secondary" onClick={handleBuyNowClick}>Buy now</button>
+                  <Link to="/subscribe">
+                    <button className="btn btn-secondary">Buy now</button>
+                  </Link>
                 ) : (
-                  <button className="btn btn-secondary" onClick={handleBuyNowClick}>Upgrade</button>
+                  <Link to="/subscribe">
+                    <button className="btn btn-secondary">Upgrade</button>
+                  </Link>
                 )}
               </div>
             </div>

@@ -147,7 +147,6 @@ export const loginAPI = async (email, password) => {
   }
 };
 
-
 export const fetchParticipatedProposalsAPI = async (token, includeOwnProposals = false) => {
   try {
     const response = await fetch(`${USER_URL}/getParticipatedProposals?includeOwnProposals=${includeOwnProposals}`, {
@@ -170,24 +169,6 @@ export const fetchParticipatedProposalsAPI = async (token, includeOwnProposals =
   }
 };
 
-
-// export const deleteProposalAPI = async (proposalId, token) => {
-//   const response = await fetch(`${PROP_URL}/${proposalId}`, {
-//     method: 'DELETE',
-//     headers: { 'Authorization': `Bearer ${token}` }
-//   });
-
-//   if (!response.ok) {
-//     const errorMessage = await response.text();
-//     throw new Error(`Failed to delete proposal: ${errorMessage}`);
-//   }
-
-//   return response.json();
-// };
-
-
-
-
 export const removeParticipatedProposalAPI = async (proposalId, token) => {
   try {
     const response = await fetch(`${USER_URL}/removeParticipatedProposal/${proposalId}`, {
@@ -209,10 +190,6 @@ export const removeParticipatedProposalAPI = async (proposalId, token) => {
     throw new Error(error.message);
   }
 };
-
-
-
-
 
 export const checkVerificationStatusAPI = async (verificationToken) => {
   try {

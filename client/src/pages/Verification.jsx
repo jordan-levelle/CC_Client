@@ -8,7 +8,7 @@ const Verification = () => {
   useEffect(() => {
     const verifyAccount = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_USERS_URL}/verify/${token}`, {
+        const response = await fetch(`${process.env.REACT_APP_USERS}/verify/${token}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
@@ -23,7 +23,6 @@ const Verification = () => {
         setVerificationStatus('error');
       }
     };
-
     verifyAccount();
   }, [token]);
 
@@ -34,6 +33,5 @@ const Verification = () => {
     </div>
   );
 };
-
 
 export default Verification;

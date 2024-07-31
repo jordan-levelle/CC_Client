@@ -9,7 +9,8 @@ import ParticipatedProposalList from '../components/ParticipatedProposalList';
 
 const Profile = () => {
   const { proposals, participatedProposals, dispatch } = useProposalsContext();
-  const { user } = useAuthContext();
+  const { user, isSubscribed } = useAuthContext();
+
   const [includeOwnProposals, setIncludeOwnProposals] = useState(() => {
     return JSON.parse(localStorage.getItem('includeOwnProposals')) || false;
   });
@@ -27,7 +28,6 @@ const Profile = () => {
           } else if (selectedFilter === 'Expired') {
             fetchedProposals = await fetchExpiredProposalListAPI(user.token);
           }
-
           dispatch({ type: 'SET_PROPOSALS', payload: fetchedProposals });
 
           const participated = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
@@ -129,6 +129,17 @@ const Profile = () => {
       </div>
       <div className="user-details">
         <span className="email">{user.email}</span>
+        {isSubscribed ? (
+          <div style={{
+            padding: '10px',
+            backgroundColor: 'green',
+            opacity: 0.5,
+            color: 'white',
+            borderRadius: '5px'
+          }}>
+            Subscribed
+          </div>
+        ) : null}
       </div>
     </div>
   );
