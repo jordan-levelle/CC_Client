@@ -223,7 +223,7 @@ export const checkVerificationStatusAPI = async (verificationToken) => {
 
 export const cancelUserSubscription = async (token) => {
   try {
-    const response = await fetch (`${USER_URL}/cancel-subscription)`, {
+    const response = await fetch(`${USER_URL}/cancel-subscription`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -232,8 +232,9 @@ export const cancelUserSubscription = async (token) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to cancel subscription');
+      // Try to parse the JSON response if possible, else handle as plain text
+      const errorData = await response.text(); // Use .text() to avoid JSON.parse errors
+      throw new Error(errorData || 'Failed to cancel subscription');
     }
 
     return await response.json();
@@ -241,4 +242,4 @@ export const cancelUserSubscription = async (token) => {
     console.error('Error canceling subscription:', error);
     throw error;
   }
-}
+};
