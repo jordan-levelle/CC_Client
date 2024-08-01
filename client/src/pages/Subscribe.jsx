@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from '../context/AuthContext';  // Adjust the import path as necessary
+
 const USER_URL = process.env.REACT_APP_USERS_URL;
 
 const ProductDisplay = ({ handleCheckout }) => (
@@ -21,37 +23,60 @@ const Message = ({ message }) => (
   </section>
 );
 
-export default function App() {
+export default function Subscribe() {
   const [message, setMessage] = useState("");
+  const { dispatch } = useContext(AuthContext);
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
 
     if (query.get("success")) {
       setMessage("Order placed! You will receive an email confirmation.");
+
+      // Fetch updated user information
+      const updateSubscriptionStatus = async () => {
+        const token = localStorage.getItem('token');
+        
+        try {
+          const response = await fetch(`${USER_URL}/getUserInfo`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+          });
+
+          const updatedUser = await response.json();
+          console.log('Updated user info:', updatedUser);
+
+          // Dispatch action to update subscription status
+          dispatch({ type: 'UPDATE_SUBSCRIPTION_STATUS', payload: updatedUser.subscriptionStatus });
+          
+          // Update user in local storage
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        } catch (error) {
+          console.error('Error fetching updated user info:', error);
+        }
+      };
+
+      updateSubscriptionStatus();
     }
 
     if (query.get("canceled")) {
-      setMessage(
-        "Order canceled -- continue to shop around and checkout when you're ready."
-      );
+      setMessage("Order canceled -- continue to shop around and checkout when you're ready.");
     }
-  }, []);
+  }, [dispatch]);
 
   const handleCheckout = async () => {
-    const token = localStorage.getItem('token'); 
-    const priceId = process.env.REACT_APP_PRODUCT_ID; 
-
-    console.log('Initiating checkout process');
-    console.log('Token:', token);
-    console.log('Price ID:', priceId);
+    const token = localStorage.getItem('token');
+    const priceId = process.env.REACT_APP_PRODUCT_ID;
 
     try {
       const response = await fetch(`${USER_URL}/makePayment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, 
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           priceId,

@@ -3,9 +3,10 @@ import { passwordCriteria } from '../constants/TextConstants';
 import { useSignup } from '../hooks/useSignup';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useDeleteAccount, useUpdateAccount, useResetPassword } from '../hooks/useAccountUpdate';
+import { cancelUserSubscription } from '../api/users';
 
 const EditProfile = () => {
-    const { user, isSubscribed } = useAuthContext();
+    const { user, isSubscribed, dispatch } = useAuthContext();
     const { deleteAccount, deleteMessage, deleteError } = useDeleteAccount();
     const { updateEmail, updateMessage, updateError } = useUpdateAccount();
     const { resetPassword, resetPasswordMessage, resetPasswordError } = useResetPassword();
@@ -16,6 +17,7 @@ const EditProfile = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [deleteProposals, setDeleteProposals] = useState(false);
     const [showResetPassword, setShowResetPassword] = useState(false);
+    const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
@@ -30,6 +32,30 @@ const EditProfile = () => {
     const proceedToDeleteAccount = () => {
         deleteAccount(deleteProposals);
         setShowConfirmation(false);
+    };
+
+    const handleCancelSubscription = async () => {
+        try {
+            const response = await cancelUserSubscription(user.token);
+            const data = await response.json();
+
+            if (response.subscriptionStatus === false) {
+                dispatch({ type: 'UPDATE_SUBSCRIPTION_STATUS', payload: false });
+                setShowCancelConfirmation(false);
+            } else {
+                setError(data.message);
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    const confirmCancelSubscription = () => {
+        setShowCancelConfirmation(true);
+    };
+
+    const cancelCancelSubscription = () => {
+        setShowCancelConfirmation(false);
     };
 
     const handleEmailChange = async (e) => {
@@ -115,7 +141,7 @@ const EditProfile = () => {
                                     className="password-input"
                                     type="password"
                                     value={newPassword}
-                                    onChange={handleNewPasswordChange} // Update to use handleNewPasswordChange
+                                    onChange={handleNewPasswordChange}
                                     aria-label='Enter New Password'
                                 />
                                 <ul className="password-criteria">
@@ -138,22 +164,31 @@ const EditProfile = () => {
                         </div>
                     )}
                 </div>
-                <button className='delete-button' onClick={confirmDeleteAccount}>Delete Account</button>
+                <button className='delete-cancel-button' onClick={confirmDeleteAccount}>Delete Account</button>
                 {deleteMessage && <p>{deleteMessage}</p>}
                 {deleteError && <p>{deleteError}</p>}
 
                 {isSubscribed ? (
-                    <button style={{
-                        padding: '10px',
-                        backgroundColor: 'green',
-                        opacity: 0.5,
-                        color: 'white',
-                        borderRadius: '5px'
-                    }}>
+                    <button 
+                        className='delete-cancel-button'
+                        onClick={confirmCancelSubscription}
+                    >
                         Cancel Subscription
                     </button>
-                    ) : null}
+                ) : null}
                 
+                {showCancelConfirmation && (
+                    <div className="confirmation-popup">
+                        <div className="confirmation-content">
+                            <p>Are you sure you want to cancel your subscription?</p>
+                            <button onClick={handleCancelSubscription}>Yes</button>
+                            <button onClick={cancelCancelSubscription}>No</button>
+                        </div>
+                    </div>
+                )}
+                
+                {error && <p className="error">{error}</p>}
+
                 {showConfirmation && (
                     <div className="confirmation-popup">
                         <div className="confirmation-content">
@@ -189,5 +224,6 @@ const EditProfile = () => {
             </div>
         </div>
     );
-}
+};
+
 export default EditProfile;

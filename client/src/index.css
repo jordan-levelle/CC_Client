@@ -780,7 +780,7 @@ body {
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
     border: 1px solid #ccc; /* Light border */
-    align-self: flex-start; /* Align to the top of the flex container */
+    align-self: start; /* Align to the top of the flex container */
     text-align: center;
     box-sizing: border-box; /* Include padding and border in width */
   }
@@ -1089,18 +1089,19 @@ input.email {
   background-color: #0056b3;
 }
 
-.delete-button {
+.delete-cancel-button {
   border: none;
   padding: 10px 20px;
+  margin: 5px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
   color: #fff;
   margin-top: 20px;
-  background-color: #dc3545;
+  background-color: #db293a;
 }
 
-.delete-button:hover {
+.delete-cancel-button:hover {
   background-color: #c82333;
 }
 

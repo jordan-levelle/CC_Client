@@ -196,7 +196,7 @@ export const checkVerificationStatusAPI = async (verificationToken) => {
     let verified = false;
 
     while (!verified) {
-      const response = await fetch(`${process.env.REACT_APP_USERS_URL}/verify/status/${verificationToken}`, {
+      const response = await fetch(`${USER_URL}/verify/status/${verificationToken}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -220,3 +220,25 @@ export const checkVerificationStatusAPI = async (verificationToken) => {
     throw error;
   }
 };
+
+export const cancelUserSubscription = async (token) => {
+  try {
+    const response = await fetch (`${USER_URL}/cancel-subscription)`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to cancel subscription');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error canceling subscription:', error);
+    throw error;
+  }
+}
