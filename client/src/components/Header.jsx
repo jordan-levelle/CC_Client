@@ -5,7 +5,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 const Header = () => {
   const { logout } = useLogout();
-  const { user } = useAuthContext();
+  const { user, isSubscribed } = useAuthContext();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link to="/teams" className="nav-link" onClick={closeMenu}>
+            <Link to="/subscriptions" className="nav-link" onClick={closeMenu}>
               {user ? 'Upgrade' : 'Pricing'}
             </Link>
           </li>
@@ -74,6 +74,7 @@ const Header = () => {
                 </Link>
                 <div className="dropdown-content">
                   <Link to="/profile" onClick={closeMenu}>Proposals</Link>
+                  {isSubscribed && <Link to="/teams" onClick={closeMenu}>Teams</Link>}
                   <Link to="/settings" onClick={closeMenu}>Settings</Link>
                   <span className="logout-link" onClick={handleLogout}>Logout</span>
                 </div>

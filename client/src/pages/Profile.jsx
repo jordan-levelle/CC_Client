@@ -15,6 +15,9 @@ const Profile = () => {
     return JSON.parse(localStorage.getItem('includeOwnProposals')) || false;
   });
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [showHidden, setShowHidden] = useState(() => {
+    return JSON.parse(localStorage.getItem('showHidden')) || false;
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,12 +59,18 @@ const Profile = () => {
     setSelectedFilter(event.target.value);
   };
 
+  const handleShowHiddenToggle = () => {
+    const newShowHidden = !showHidden;
+    setShowHidden(newShowHidden);
+    localStorage.setItem('showHidden', JSON.stringify(newShowHidden));
+  };
+
   return (
     <div className="dashboard">
       <div className="proposals-container">
         <div className="proposal-list-container">
           <h4>Your Proposals</h4>
-          <div className='user-proposal-filter-options'>
+          <div className="user-proposal-filter-options">
             <Form>
               <div key="inline-radio" className="mb-3">
                 <Form.Check
@@ -107,7 +116,7 @@ const Profile = () => {
         </div>
         <div className="proposal-participated-container">
           <h4>Participated Proposals</h4>
-          <div className='participated-proposal-filter-options'>
+          <div className="participated-proposal-filter-options">
             <Form>
               <Form.Check
                 type="switch"
@@ -117,10 +126,24 @@ const Profile = () => {
                 onChange={handleParticipatedPropsFilter}
               />
             </Form>
+            <Form>
+              <Form.Check
+                type="switch"
+                id="show-hidden-switch"
+                label="Show Hidden"
+                checked={showHidden}
+                onChange={handleShowHiddenToggle}
+              />
+            </Form>
           </div>
+
           {participatedProposals && participatedProposals.length > 0 ? (
             participatedProposals.map((proposal) => (
-              <ParticipatedProposalList key={proposal.proposalId} proposal={proposal} />
+              <ParticipatedProposalList
+                key={proposal.proposalId}
+                proposal={proposal}
+                showHidden={showHidden}
+              />
             ))
           ) : (
             <p>No participated proposals.</p>
@@ -130,13 +153,15 @@ const Profile = () => {
       <div className="user-details">
         <span className="email">{user.email}</span>
         {isSubscribed ? (
-          <div style={{
-            padding: '10px',
-            backgroundColor: 'green',
-            opacity: 0.5,
-            color: 'white',
-            borderRadius: '5px'
-          }}>
+          <div
+            style={{
+              padding: '10px',
+              backgroundColor: 'green',
+              opacity: 0.5,
+              color: 'white',
+              borderRadius: '5px'
+            }}
+          >
             Subscribed
           </div>
         ) : null}

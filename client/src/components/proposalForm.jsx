@@ -7,12 +7,13 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from 'react-router-dom'; 
 import { nanoid } from 'nanoid';
 import ReactQuill from 'react-quill';
+import Select from 'react-select'
 import 'react-quill/dist/quill.snow.css';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
-  const { user } = useAuthContext();
+  const { user, isSubscribed } = useAuthContext();
   const { setSelectedProposalId } = useVoteContext();
   const { register, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm();
   const navigate = useNavigate();
@@ -20,6 +21,16 @@ const ProposalForm = () => {
   const descriptionInputRef = useRef(null);
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState('');
+
+
+
+  const options = [
+    { value: 'Team 1', label: 'Team 1' },
+    { value: 'Team 2', label: 'Team 2' },
+    { value: 'Team 3', label: 'Team 3' }
+  ]
+
+
 
   useEffect(() => {
     if (!user) {
@@ -136,17 +147,27 @@ const ProposalForm = () => {
               aria-label="Proposed by"
               name="name" // Add name attribute if `name` is used in `register`
             />
-            {user ? (
+
+            {isSubscribed ? (
               <div>
-                <input 
-                  type="checkbox" 
-                  {...register('receiveNotifications')} 
-                  tabIndex="4" 
-                />
-                <label htmlFor="receiveNotifications">
-                  Receive response notifications at: {user.email}
-                </label>
+                <h6>Select Team</h6>
+                <Select options={options} />
               </div>
+            ) : null}
+  
+
+            {user ? (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                {...register('receiveNotifications')}
+                tabIndex="4"
+                style={{ marginRight: '8px' }} // Adjust margin as needed
+              />
+              <label htmlFor="receiveNotifications">
+                Receive notifications at: {user.email}
+              </label>
+            </div>
             ) : (
             <>
               <label htmlFor="email">Send notifications of new responses to:</label>

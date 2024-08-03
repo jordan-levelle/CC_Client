@@ -12,7 +12,14 @@ const Signup = () => {
   const [captchaInput, setCaptchaInput] = useState('');
   const [passwordMatch, setPasswordMatch] = useState(true);
 
-  const { signup, validatePassword, validateEmail, verificationPending, error, isLoading, passwordErrors, emailError } = useSignup();
+  const { signup, 
+          validatePassword, 
+          validateEmail, 
+          verificationPending, 
+          error, 
+          isLoading, 
+          passwordErrors, 
+          emailError } = useSignup();
 
   useEffect(() => {
     loadCaptchaEnginge(6);

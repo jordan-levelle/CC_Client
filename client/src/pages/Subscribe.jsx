@@ -4,17 +4,17 @@ import { AuthContext } from '../context/AuthContext';  // Adjust the import path
 const USER_URL = process.env.REACT_APP_USERS_URL;
 
 const ProductDisplay = ({ handleCheckout }) => (
-  <section>
-    <div className="product">
-      <div className="description">
-        <h3>Consensus Check Subscription</h3>
-        <h5>$10.00</h5>
+  <section className="subscription-section">
+      <div className="product">
+        <div className="description">
+          <h3>Consensus Check Subscription</h3>
+          <h5>$20.00 / year</h5>
+        </div>
       </div>
-    </div>
-    <button onClick={handleCheckout}>
-      Checkout
-    </button>
-  </section>
+      <button className="checkout-button" onClick={handleCheckout}>
+        Checkout
+      </button>
+    </section>
 );
 
 const Message = ({ message }) => (

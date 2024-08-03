@@ -6,3 +6,5 @@ export { default as ProposalVote } from './ProposalVote';
 export { default as EditProposal } from './EditProposal';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as ProtectedRoute } from './ProtectedRoute';
+export { default as UserTeams } from './UserTeams';
+export { default as UserCreateTeams } from './UserCreateTeams';

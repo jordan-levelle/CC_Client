@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Header, Footer } from './components';
 import { ExampleProposal, ProposalVote, EditProposal, ForgotPassword, ProtectedRoute } from './components';
-import { Home, Profile, Create, Basics, Teams, Subscribe, Settings, AuthPage, Verification, VerifyLoadingPage } from './pages';
+import { Home, Profile, Create, Basics, Subscriptions, Subscribe, Settings, Teams, AuthPage, Verification, VerifyLoadingPage } from './pages';
 import { useAuthContext } from './hooks/useAuthContext';
 
 export default function App() {
@@ -24,12 +24,13 @@ export default function App() {
             <Route path='/edit/:uniqueUrl' element={ <ProtectedRoute redirectTo='/auth'><EditProposal /></ProtectedRoute> } />
             <Route path='/edit/:uniqueToken/:uniqueUrl' element={<EditProposal />} />
             <Route path='/settings' element={ <ProtectedRoute redirectTo='/auth'><Settings /></ProtectedRoute> } />
+            <Route path='/teams' element={ <ProtectedRoute redirectTo='/auth'><Teams /></ProtectedRoute> } />
             <Route path='/reset/:token' element={<ForgotPassword />} />
 
             {/* Public Routes */}
             <Route path='/create' element={<Create />} />
             <Route path='/basics' element={<Basics />} />
-            <Route path='/teams' element={<Teams />} />
+            <Route path='/subscriptions' element={<Subscriptions />} />
             <Route path='/subscribe' element={<Subscribe />} />
             <Route path='/:uniqueUrl' element={<ProposalVote />} />
             <Route path='/example' element={<ExampleProposal />} />

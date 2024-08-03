@@ -5,20 +5,24 @@ export const PLANS_DESCRIPTION_PARAGRAPH = `
 
 export const STANDARD_CC_FEATURES = [
     "Access to User Dashboard",
-    "View created and filled-out consensus proposals.",
-    "See number of respondents and their votes.",
-    "Proposals expire after a certain period.",
-    "Limit of 15-20 respondents per proposal."
+    "Access to All Active Proposals.",
+    "Email Notifications",
+    "Edit Your Active Proposals",
+    "Proposals expire after a certain period",
+    "Limit of 15-20 respondents per proposal"
   ];
 
 export const PRO_CC_FEATURES = [
-    "Create teams for quick proposal additions and notifications.",
-    "Access all previous consensus forms.",
-    "Email updates when others answer forms.",
-    "Attach files to proposals.",
-    "Text alerts.",
-    "Browser notifications.",
-    "Unlimited respondents."
+    "Access to User Dashboard",
+    "Access to All Proposals(no expiration)",
+    "Advanced Email Notifications",
+    "Edit Your Proposals(no expiration)",
+    "No Limit of respondents per proposal",
+    "Create Teams for Simplified Proposal Creation",
+    "Attach files to proposals",
+    "Text alerts",
+    "Browser notifications",
+    "Unlimited respondents"
   ];
 
 export const passwordCriteria = [
