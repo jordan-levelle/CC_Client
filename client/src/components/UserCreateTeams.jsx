@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { createTeam } from '../api/teams';
+import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
-const UserCreateTeams = ({ onTeamCreated }) => {
+const UserCreateTeams = () => {
   const [teamName, setTeamName] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
+  const { fetchTeams } = useTeamsContext(); // Get fetchTeams from context
   const { user } = useAuthContext();
 
   const handleAddRow = () => {
@@ -26,14 +30,11 @@ const UserCreateTeams = ({ onTeamCreated }) => {
   const handleCreateTeam = async () => {
     try {
       const members = rows.map(row => ({ memberName: row.name, memberEmail: row.email }));
-      const result = await createTeam(teamName, members);
-      console.log('Team created successfully', result);
+      await createTeam(teamName, members, user.token);
       setTeamName('');
       setRows([]);
       setError(null);
-      if (onTeamCreated) {
-        onTeamCreated(); // Notify the parent component to refresh the team list
-      }
+      fetchTeams(); // Refresh team list after creating a new team
     } catch (error) {
       setError('Failed to create team');
     }
@@ -52,7 +53,7 @@ const UserCreateTeams = ({ onTeamCreated }) => {
       <table className="teams-table">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Team Members</th>
             <th>Email</th>
           </tr>
         </thead>
@@ -63,10 +64,11 @@ const UserCreateTeams = ({ onTeamCreated }) => {
               <td>{row.email}</td>
               <td>
                 <button
-                  className="delete-button"
+                  className="icon-button delete-button"
                   onClick={() => handleDeleteRow(index)}
+                  aria-label="Delete Row"
                 >
-                  X
+                  <FontAwesomeIcon icon={faMinus} />
                 </button>
               </td>
             </tr>
@@ -86,16 +88,17 @@ const UserCreateTeams = ({ onTeamCreated }) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
+                placeholder="Optional"
                 className="input-field"
               />
             </td>
             <td>
               <button
-                className="add-button"
+                className="icon-button add-button"
                 onClick={handleAddRow}
+                aria-label="Add Row"
               >
-                Add
+                <FontAwesomeIcon icon={faPlus} />
               </button>
             </td>
           </tr>
@@ -113,3 +116,4 @@ const UserCreateTeams = ({ onTeamCreated }) => {
 };
 
 export default UserCreateTeams;
+

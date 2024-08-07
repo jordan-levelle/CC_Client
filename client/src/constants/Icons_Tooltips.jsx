@@ -15,3 +15,9 @@ export const tooltips = {
   Disagree: '<div><h3>Stand Aside</h3><p>A choice to let the proposal proceed,<br/>while personally not feeling aligned with direction.</p></div>',
   Block: '<div><h3>Block</h3><p>Proposal is disastrous for the group or<br/>doesn\'t align with the group\'s core principles.</p></div>'
 };
+
+export const teamTooltips = {
+  Edit: 'Edit',
+  Create: 'Create Team Proposal',
+  Delete: 'Delete',
+}

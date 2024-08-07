@@ -968,10 +968,9 @@ body {
   border-radius: 5px;
   padding: 20px;
   margin: 10px;
-  max-width: 650px;
+  max-width: 800px;
   box-sizing: border-box; /* Ensures padding is included in the width */
 }
-
 
 .team-name-label {
   display: block;
@@ -979,31 +978,7 @@ body {
   font-weight: bold;
 }
 
-.team-name-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.teams-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.teams-table th, 
-.teams-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.teams-table th {
-  background-color: #f4f4f4;
-}
-
+.team-name-input,
 .input-field {
   width: 100%;
   padding: 8px;
@@ -1011,34 +986,61 @@ body {
   border: 1px solid #ccc;
 }
 
+.teams-table {
+  width: 100%;
+  margin-bottom: 10px;
+  border-collapse: collapse; /* Ensure borders collapse into a single line */
+}
+
+.teams-table th, 
+.teams-table td {
+  padding: 4px;
+  text-align: left;
+  border: none; /* Remove default borders on cells */
+}
+
+.teams-table tr {
+  border-bottom: 1px solid #ddd; /* Add border between rows */
+}
+
+.members-column {
+  width: 100px; /* Adjust this value to your preference */
+
+}
+
+.actions-column {
+  display: flex;
+  justify-content: space-between; /* Space the icons evenly */
+  align-items: center;
+}
+
 .add-button, 
-.delete-button, 
-.create-team-button {
-  padding: 8px 16px;
+.delete-button {
+  padding: 4px 8px;
   margin: 4px 0;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
-  color: white;
   cursor: pointer;
+  background-color: #ffffff;
+}
+
+.create-team-button {
+  padding: 4px 8px;
+  margin: 4px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #dfdfdf;
 }
 
 .add-button:hover, 
 .delete-button:hover, 
 .create-team-button:hover {
-  background-color: #0056b3;
-}
-
-.delete-button {
-  background-color: #dc3545;
-}
-
-.delete-button:hover {
-  background-color: #c82333;
+  background-color: #f3f3f3;
 }
 
 
-@media (min-width: 768px) {
+@media (min-width: 1050px) {
   .Teams-Dashboard-Container {
     flex-direction: row;
     justify-content: space-between;
@@ -1047,7 +1049,8 @@ body {
   .Create-Teams-Container, 
   .User-Teams-Container {
     flex: 1;
-    margin: 10px;
+
+    margin: 0 auto;
   }
 }
 
