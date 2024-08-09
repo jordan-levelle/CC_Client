@@ -1,9 +1,7 @@
 const TEAMS_URL = process.env.REACT_APP_TEAMS_URL;
   
   export const createTeam = async (teamName, members, token) => {
-    try {
-      console.log('Creating team with token:', token); // Add logging
-  
+    try {  
       const response = await fetch(`${TEAMS_URL}/createUserTeam`, {
         method: 'POST',
         headers: {
@@ -25,15 +23,13 @@ const TEAMS_URL = process.env.REACT_APP_TEAMS_URL;
     }
   };
   
-
-
-  export const deleteTeam = async (teamId) => {
+  export const deleteTeam = async (teamId, token) => {
     try {
-      const response = await fetch(`/api/teams/${teamId}`, {
+      const response = await fetch(`${TEAMS_URL}/deleteUserTeam/${teamId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          // Add any authentication headers if necessary
+          'Authorization': `Bearer ${token}`,
         },
       });
   
@@ -48,9 +44,15 @@ const TEAMS_URL = process.env.REACT_APP_TEAMS_URL;
     }
   };
 
+  
+
+
 export const editTeam = () => {
     
 }
+
+
+
 
 export const teamList = async (token) => {
   try {

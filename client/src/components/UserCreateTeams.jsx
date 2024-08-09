@@ -15,8 +15,9 @@ const UserCreateTeams = () => {
   const { user } = useAuthContext();
 
   const handleAddRow = () => {
-    if (name && email) {
-      setRows([...rows, { name, email }]);
+    if (name) { // Only require name, email is optional
+      const newRow = { name, email };
+      setRows([...rows, newRow]);
       setName('');
       setEmail('');
     }
@@ -116,4 +117,5 @@ const UserCreateTeams = () => {
 };
 
 export default UserCreateTeams;
+
 

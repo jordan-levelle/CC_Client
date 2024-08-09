@@ -8,7 +8,7 @@ const ProductDisplay = ({ handleCheckout }) => (
       <div className="product">
         <div className="description">
           <h3>Consensus Check Subscription</h3>
-          <h5>$20.00 / year</h5>
+          <h5>$10.00 / year</h5>
         </div>
       </div>
       <button className="checkout-button" onClick={handleCheckout}>
@@ -47,7 +47,6 @@ export default function Subscribe() {
           });
 
           const updatedUser = await response.json();
-          console.log('Updated user info:', updatedUser);
 
           // Dispatch action to update subscription status
           dispatch({ type: 'UPDATE_SUBSCRIPTION_STATUS', payload: updatedUser.subscriptionStatus });
@@ -84,7 +83,6 @@ export default function Subscribe() {
       });
 
       const session = await response.json();
-      console.log('Checkout session received:', session);
 
       // Redirect to the checkout page
       window.location.href = session.url;

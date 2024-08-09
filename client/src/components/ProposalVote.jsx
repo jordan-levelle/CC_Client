@@ -4,6 +4,7 @@ import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentDots } from '@fortawesome/free-solid-svg-icons'; 
 import { Tooltip } from 'react-tooltip';
+import Select from 'react-select'
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
 import { v4 as uuidv4 } from 'uuid'; 
@@ -17,11 +18,13 @@ import {
   updateName,
   checkFirstRender
 } from '../api/proposals';
+import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
-  const { user } = useAuthContext();
+  const { user, isSubscribed } = useAuthContext();
+  const { teams, fetchTeams } = useTeamsContext();
 
   const [proposal, setProposal] = useState(null);
   const [submittedVotes, setSubmittedVotes] = useState([]);
@@ -33,6 +36,19 @@ const ProposalVote = () => {
   const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
   const [expandedRows, setExpandedRows] = useState({});
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Initial check
+
+  useEffect(() => {
+    if (user && isSubscribed) {
+      fetchTeams(); // Fetch teams when the component mounts and user is available and subscribed
+    }
+  }, [fetchTeams, user, isSubscribed]); // Add isSubscribed to the dependency array
+
+
+  const options = teams.map((team) => ({
+    value: team._id,
+    label: team.teamName
+  }));
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,6 +67,8 @@ const ProposalVote = () => {
     };
     fetchData();
   }, [uniqueUrl]);
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -432,8 +450,19 @@ const ProposalVote = () => {
           </tbody>
           </table>
         </div>
+        <div>
+        {isSubscribed ? (
+          <div>
+            <h6>Select Team</h6>
+              <Select options={options} />
+          </div>
+        ) : null}
       </div>
+      </div>
+      
     </section>
+    
+                
   );
 };
 
