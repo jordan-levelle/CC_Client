@@ -36,10 +36,9 @@ const EditProfile = () => {
 
     const handleCancelSubscription = async () => {
         try {
-            const response = await cancelUserSubscription(user.token);
-            const data = await response.json();
-
-            if (response.subscriptionStatus === false) {
+            const data = await cancelUserSubscription(user.token);
+    
+            if (data.subscriptionStatus === false) {
                 dispatch({ type: 'UPDATE_SUBSCRIPTION_STATUS', payload: false });
                 setShowCancelConfirmation(false);
             } else {
@@ -49,6 +48,7 @@ const EditProfile = () => {
             setError(error.message);
         }
     };
+    
 
     const confirmCancelSubscription = () => {
         setShowCancelConfirmation(true);
@@ -227,3 +227,5 @@ const EditProfile = () => {
 };
 
 export default EditProfile;
+
+

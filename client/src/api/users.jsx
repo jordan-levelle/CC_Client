@@ -226,20 +226,24 @@ export const cancelUserSubscription = async (token) => {
     const response = await fetch(`${USER_URL}/cancel-subscription`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
+    // Check if the response is OK (status code 200-299)
     if (!response.ok) {
-      // Try to parse the JSON response if possible, else handle as plain text
-      const errorData = await response.text(); // Use .text() to avoid JSON.parse errors
-      throw new Error(errorData || 'Failed to cancel subscription');
+      // If not, throw an error with the status text
+      const errorMessage = await response.text(); // Use `text()` to get the full message
+      throw new Error(errorMessage || 'Failed to cancel subscription');
     }
 
-    return await response.json();
+    const data = await response.json(); // This should be safe to call if response is OK
+    return data; // Return the parsed JSON
   } catch (error) {
-    console.error('Error canceling subscription:', error);
-    throw error;
+    // Handle any errors that occurred during the fetch
+    throw new Error(error.message || 'An error occurred while canceling subscription');
   }
 };
+
+

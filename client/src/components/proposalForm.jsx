@@ -4,22 +4,38 @@ import { createProposal } from "../api/proposals";
 import { useProposalsContext } from "../hooks/useProposalContext";
 import { useVoteContext } from "../hooks/useVoteContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useTeamsContext } from '../context/TeamsContext';
 import { useNavigate } from 'react-router-dom'; 
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { nanoid } from 'nanoid';
 import ReactQuill from 'react-quill';
+import Select from 'react-select'
 import 'react-quill/dist/quill.snow.css';
-import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
-  const { user } = useAuthContext();
+  const { user, isSubscribed } = useAuthContext();
+  const { teams, fetchTeams } = useTeamsContext();
   const { setSelectedProposalId } = useVoteContext();
   const { register, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm();
+
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
+
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
-  const [captchaInput, setCaptchaInput] = useState('');
-  const [captchaError, setCaptchaError] = useState('');
+
+  useEffect(() => {
+    if (user && isSubscribed) {
+      fetchTeams(); // Fetch teams when the component mounts and user is available and subscribed
+    }
+  }, [fetchTeams, user, isSubscribed]); // Add isSubscribed to the dependency array
+
+  const options = teams.map((team) => ({
+    value: team._id,
+    label: team.teamName
+  }));
 
   useEffect(() => {
     if (!user) {
@@ -136,15 +152,22 @@ const ProposalForm = () => {
               aria-label="Proposed by"
               name="name" // Add name attribute if `name` is used in `register`
             />
-  
+            <div>
+              {isSubscribed ? (
+                <div>
+                  <h6>Select Team</h6>
+                  <Select options={options} />
+                </div>
+              ) : null}
+            </div>
 
             {user ? (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ paddingTop:'5px', display: 'flex', alignItems: 'center' }}>
               <input
                 type="checkbox"
                 {...register('receiveNotifications')}
                 tabIndex="4"
-                style={{ marginRight: '8px' }} // Adjust margin as needed
+                style={{ marginRight: '5px' }} // Adjust margin as needed
               />
               <label htmlFor="receiveNotifications">
                 Receive notifications at: {user.email}
@@ -164,7 +187,7 @@ const ProposalForm = () => {
                 />
               </>
             )}
-
+            
             {!user && (
             <>
               <LoadCanvasTemplate />
@@ -180,7 +203,6 @@ const ProposalForm = () => {
               {captchaError && <span className="error">{captchaError}</span>}
             </>
           )}
-
           <button type="submit" tabIndex="7">Create Proposal</button>
         </div>
       </form>
