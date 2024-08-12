@@ -555,9 +555,8 @@ body {
 }
 
 .submit-section {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px solid #ddd;
+  padding-top: 20px;
+  border-bottom: 2px solid #ddd;
 }
 
 .new-entry-title-row {
@@ -566,14 +565,7 @@ body {
   color: #212222; /* Green text color */
 }
 
-.new-entry-title {
-  padding: 2px;
-   /* Green border to separate from the new entry row */
-}
 
-.new-entry-row {
-  background-color: #f9f9f9; /* Light background color for the new entry row */
-}
 
 .toggle-button-container {
   display: flex;
