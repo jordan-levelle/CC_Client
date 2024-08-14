@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots } from '@fortawesome/free-solid-svg-icons'; 
+import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'; 
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
@@ -51,8 +51,6 @@ const ProposalVote = () => {
     };
     fetchData();
   }, [uniqueUrl]);
-
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -158,6 +156,12 @@ const ProposalVote = () => {
     }
   };
 
+   // Calculate the count of each opinion
+   const opinionCounts = submittedVotes.reduce((acc, vote) => {
+    acc[vote.opinion] = (acc[vote.opinion] || 0) + 1;
+    return acc;
+  }, {});
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -210,12 +214,23 @@ const ProposalVote = () => {
             <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
           </div>
         </div>
-        <div className="submitted-votes-container">
-          <table className="votes-table">
+        
+        <div className="proposal-vote-table-container">
+          <table className="votes-table">  
             <thead>
+              {/* Table Heading/Vote Tally */}
               <tr>
                 <th>Name</th>
-                <th>Opinion</th>
+                <th>
+                  <div className="opinion-summary-container">
+                    {Object.keys(icons).map((opinionType) => (
+                      <div key={opinionType} className="opinion-summary-item">
+                        <FontAwesomeIcon icon={icons[opinionType]} />
+                        <span className="opinion-count">{opinionCounts[opinionType] || 0}</span>
+                      </div>
+                    ))}
+                  </div>Opinion
+                </th>
                 <th>Comment</th>
               </tr>
             </thead>
@@ -225,7 +240,8 @@ const ProposalVote = () => {
                 Submit New Entry 
               </td>
             </tr>
-
+            
+            {/* Submit New Table Entry */}
             <tr className="submit-section">
               <td>
                 <input
@@ -253,7 +269,7 @@ const ProposalVote = () => {
                         onClick={() => handleOpinionButtonClick(opinionType)}
                         aria-label={`Vote ${opinionType}`}
                       >
-                        <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
+                        <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
                       </button>
                       <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                     </div>
@@ -263,6 +279,7 @@ const ProposalVote = () => {
               <td>
                 <textarea
                   name="comment"
+                  className="comment-input"
                   value={newVote.comment}
                   onChange={handleNewVoteChange}
                   onKeyDown={handleKeyDown}
@@ -271,16 +288,22 @@ const ProposalVote = () => {
                 />
               </td>
               <td>
-                <button onClick={handleNewTableEntry} aria-label="Submit New Entry">
+                <button 
+                  onClick={handleNewTableEntry} 
+                  aria-label="Submit New Entry"
+                  className="submit-button"
+                >
                   Submit
                 </button>
               </td>
             </tr>
+
+            {/* Submitted Votes Table */}
             {submittedVotes.map((vote, index) => (
               <React.Fragment key={vote._id}>
                 <tr>
                   {/* Name */}
-                  <td className="mobile-name-opinion-row">
+                  <td className="mobile-vote-container">
                     <div className="name-container">
                       {vote.name ? (
                         <span>{vote.name}</span>
@@ -338,12 +361,18 @@ const ProposalVote = () => {
                       </div>
                     )}
                     <div className="toggle-button-container show-mobile">
-                    
-                    <button onClick={() => toggleDetails(vote._id)} aria-label="Toggle Details">
-                      {expandedRows[vote._id] ? 'Hide Details' : 'Details'}
-                    </button>
+                    <td>
+                      <span 
+                        onClick={() => toggleDetails(vote._id)} 
+                        aria-label="Toggle Details"
+                        className="toggle-details-icon"
+                      >
+                        <FontAwesomeIcon 
+                          icon={expandedRows[vote._id] ? faArrowUp : faArrowDown} 
+                        />
+                      </span>
+                    </td>
                   </div>
-
                   </td>
                   {/* Opinion Buttons */}
                   <td className="hide-mobile">
@@ -360,7 +389,7 @@ const ProposalVote = () => {
                             onClick={() => handleOpinionUpdate(index, opinionType)}
                             aria-label={`Vote ${opinionType}`}
                           >
-                            <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
+                            <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
                           </button>
                           <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                         </div>
@@ -375,6 +404,7 @@ const ProposalVote = () => {
                   <td className="hide-mobile">
                     <div className="comment-container">
                       <textarea
+                        className="comment-input"
                         value={vote.comment}
                         onChange={(e) => handleCommentUpdate(index, e.target.value)}
                         aria-label="Comment"
@@ -382,9 +412,13 @@ const ProposalVote = () => {
                     </div>
                   </td>
                   <td className="hide-mobile">
-                    <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">
-                      Delete
-                    </button>
+                    <span 
+                      onClick={() => handleDeleteEntry(vote._id)} 
+                      aria-label="Delete Entry"
+                      style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </span>
                   </td>
                 </tr>
 
@@ -393,9 +427,7 @@ const ProposalVote = () => {
                   <tr className="details-row show-mobile">
                     <td colSpan="5">
                       <div className="expanded-details">
-                        <div className="submitted-votes-date show-mobile">
-                          <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
-                        </div>
+                        
                         <div className="opinion-buttons">
                           {Object.keys(icons).map((opinionType) => (
                             <div
@@ -415,15 +447,25 @@ const ProposalVote = () => {
                             </div>
                           ))}
                         </div>
+                        <div className="submitted-votes-date show-mobile">
+                          <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
+                        </div>
                         <div className="comment-container">
                           <textarea
+                            className="comment-input"
                             value={vote.comment}
                             onChange={(e) => handleCommentUpdate(index, e.target.value)}
                             aria-label="Comment"
                           />
-                          <button onClick={() => handleDeleteEntry(vote._id)} aria-label="Delete Entry">
-                            Delete
-                          </button>
+                          <td className="hide-mobile">
+                            <span 
+                              onClick={() => handleDeleteEntry(vote._id)} 
+                              aria-label="Delete Entry"
+                              style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                              <FontAwesomeIcon icon={faTrashCan} />
+                            </span>
+                          </td>
                         </div>
                       </div>
                     </td>
@@ -431,7 +473,6 @@ const ProposalVote = () => {
                 )}
               </React.Fragment>
             ))}
-            
           </tbody>
           </table>
         </div>

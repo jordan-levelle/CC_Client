@@ -482,8 +482,8 @@ body {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
-  background-color: #f9f9f9;
-  max-width: 90vw;
+  background-color: #ffffff;
+  max-width: 92vw;
 }
 
 .proposal-description {
@@ -505,7 +505,42 @@ body {
   width: 100%; 
 }
 
-.submitted-votes-container {
+/* Container for all opinion summary items */
+.opinion-summary-container {
+  display: flex; /* Arrange items in a row */
+  align-items: center; /* Center items vertically */
+  margin-bottom: 5px; /* Space below the summary */
+  flex: 1; /* Allow the container to grow/shrink with the column width */
+  overflow: hidden; /* Prevent overflow if needed */
+}
+
+/* Individual opinion summary item */
+.opinion-summary-item {
+  display: flex; /* Flexbox to align icon and count horizontally */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  margin-right: 10px; /* Space between items */
+  padding: 7px 20px; /* Padding inside the box */
+  border-radius: 4px; /* Optional: Rounded corners */
+  background-color: #ececec; /* Optional: Background color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Shadow for a 3D effect */
+  flex: 1 1 auto; /* Grow and shrink based on available space */
+  max-width: 99px;
+  min-width: 0;
+}
+
+/* Opinion count styling */
+.opinion-count {
+  display: inline-block; /* Ensure the count is displayed inline */
+  margin-left: 5px; /* Space between icon and count */
+}
+
+
+.opinion-summary-item:last-child {
+  margin-right: 0; /* Remove margin on the last item */
+}
+
+.proposal-vote-table-container {
   margin: 2px auto;
   overflow-x: auto;
 }
@@ -518,35 +553,121 @@ body {
 .votes-table th,
 .votes-table td {
   padding: 8px;
+  min-width: 100px; /* Ensure the column doesn't shrink below this width */
+  max-width: 300px; /* Prevent the column from growing too large */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis when content overflows */
 }
 
 .votes-table th {
-  background-color: #f2f2f2;
   text-align: left;
+  vertical-align: bottom; /* Align headers to the bottom */
+  padding: 10px; /* Adjust padding as needed */
 }
 
-.votes-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.votes-table tbody tr:nth-child(odd) {
-  background-color: #fff;
-}
-
+/* Container for buttons */
 .opinion-buttons {
-  margin-bottom: 10px;
-  display: flex;
-  flex-wrap: wrap;
+  display: flex; /* Arrange buttons in a row */
+  flex-direction: row; /* Ensure buttons are in a row */
+  gap: 10px; /* Space between buttons */
+  overflow: hidden; /* Prevent buttons from overflowing the container */
 }
 
+/* Styling for individual buttons */
 .opinion-buttons button {
-  margin-right: 10px;
-  margin-bottom: 10px;
-  padding: 10px 15px;
+  flex: 1; /* Allow buttons to grow and shrink as needed */
+  min-width: 0; /* Prevent buttons from growing too wide */
+  padding: 10px 15px; /* Padding inside the button */
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Optional: Shadow for a 3D effect */
 }
+
+
+.comment-input {
+  width: 100%; /* Ensures the textarea takes up the full width of its container */
+  padding: 10px; /* Adds padding for better text readability */
+  border-radius: 4px; /* Small border radius */
+  border: 1px solid #ccc; /* Light gray border */
+  resize: vertical; /* Allows vertical resizing only */
+  height: 70px; /* Slightly increased height */
+  font-family: inherit; /* Inherits the font style from the parent */
+  font-size: 1rem; /* Adjust font size as needed */
+  line-height: 1.5; /* Improves readability */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Optional: Adds subtle inset shadow */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus effects */
+}
+
+/* Change border and shadow on focus */
+.comment-input:focus {
+  border-color: #007BFF; /* Changes border color on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Adds a blue glow on focus */
+  outline: none; /* Removes the default outline */
+}
+
+.submit-button {
+  background-color: #007bff; /* Blue background color */
+  color: #ffffff; /* White text color */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 5px 10px; /* Padding inside the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 11px; /* Font size */
+  font-weight: bold; /* Bold text */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for a 3D effect */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+.submit-button:hover {
+  background-color: #5581af; /* Darker blue on hover */
+}
+
+.submit-button:active {
+  transform: scale(0.98); /* Slightly shrink the button when clicked */
+}
+
+.submit-button:focus {
+  outline: 2px solid #0056b3; /* Blue outline on focus for accessibility */
+  outline-offset: 2px; /* Space between the button and outline */
+}
+
+
+/* Media query to hide button text at screen widths <= 1100px */
+
+@media (max-width: 1470px) {
+  .opinion-buttons {
+    display: flex; /* Arrange buttons in a row */
+
+    width: fit-content;
+    gap: 10px; /* Space between buttons */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+  }
+
+  .opinion-buttons button {
+    flex: 1; /* Allow buttons to grow and shrink */
+    min-width: 0; /* Allow the button to shrink below its content width */
+    padding: 10px; /* Adjust padding */
+    width: fit-content;
+    box-sizing: border-box; /* Ensure padding is included in the width */
+    text-align: center; /* Center text inside the button */
+    border: 1px solid #ccc; /* Optional: Add border for better visual */
+    border-radius: 4px; /* Optional: Rounded corners */
+    background-color: #f0f0f0; /* Optional: Background color */
+    cursor: pointer; /* Change cursor to pointer */
+  }
+
+  .opinion-buttons button span {
+    display: none; /* Hide text inside the buttons if needed */
+  }
+
+  .opinion-buttons button.selected {
+    background-color: #007bff; /* Example: Highlight selected button */
+    color: #fff; /* Example: White text for selected button */
+  }
+}
+
+  
 
 .selected {
   background-color: #007bff;
@@ -555,17 +676,14 @@ body {
 }
 
 .submit-section {
-  padding-top: 20px;
   border-bottom: 2px solid #ddd;
 }
 
 .new-entry-title-row {
   text-align:left;
   font-weight: bold;
-  color: #212222; /* Green text color */
+  color: #212222; 
 }
-
-
 
 .toggle-button-container {
   display: flex;
@@ -608,102 +726,131 @@ body {
     display: none;
   }
 
-  .details-row .expanded-details {
-    display: flex;
-    flex-direction: column;
+  .opinion-summary-item {
+    margin-right: 5px; /* Reduced margin */
+    padding: 5px 15px; /* Adjust padding */
   }
 
-  .mobile-name-opinion-row {
+  .opinion-count {
+    font-size: 12px; /* Reduced font size */
+  }
+
+  .details-row {
     display: flex;
-    justify-content: space-between; /* Pushes items to the edges */
-    align-items: center; /* Vertically centers items */
-    padding: 0.5rem; /* Adds some padding for better spacing */
+    flex-direction: row; /* Arrange items in a row */
+    align-items: center; /* Center vertically */
+    flex-wrap: wrap; /* Allow wrapping if necessary */
+    padding: 10px; /* Add padding */
+  }
+
+  .mobile-vote-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Full width */
+    padding: 0.5rem; /* Padding for spacing */
   }
 
   .name-container {
     flex: 1;
+    margin-right: 10px; /* Space between name and other elements */
   }
 
   .name-container input {
-    max-width: 120px;
+    max-width: 100%; /* Full width for smaller screens */
+    box-sizing: border-box; /* Ensure padding does not affect width */
   }
-  /* Opinion container styling */
+
   .opinion-container {
-    flex-shrink: 0; /* Prevents shrinking */
-    text-align: right; /* Aligns text to the right */
-    margin-left: auto; /* Pushes it to the right */
+    flex-shrink: 0;
+    text-align: right;
+    margin-left: 10px; /* Space between opinion and details */
   }
-  
-  /* Adds a margin to the opinion label */
+
   .opinion-label {
-    margin-right: 1rem; /* Space between opinion and toggle button */
+    margin-right: 0.5rem; /* Reduced margin */
   }
 
   .details-row .opinion-buttons {
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%; /* Full width */
+    gap: 5px; /* Space between buttons */
   }
 
-  .details-row .submitted-votes-date {
-    margin-bottom: 10px;
+  .opinion-buttons button {
+    flex: 1;
+    min-width: 60px; /* Ensure minimum button width */
+    padding: 8px;
   }
 
-  .comment-container {
-    width: 95%;
+  .toggle-details-icon {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px; /* Adjust size as needed */
+    color: #007bff; /* Blue color for the icon */
   }
-
+  
   .votes-table {
     display: block;
     border-radius: 5px;
     border: 1px solid #ccc;
     width: 100%;
+    overflow-x: auto; /* Horizontal scrolling if needed */
   }
 
   .votes-table thead {
-    display: none;
+    display: none; /* Hide table header on mobile */
   }
 
-  .votes-table tr {
-    border: 3px #007bff;
-  }
-
-  .votes-table tbody,
-  .votes-table tr {
+  .votes-table tbody {
     display: block;
+    width: 100%; /* Ensure tbody fills the width of the table */
+  }
+
+  .votes-table tr {
+    border: 1px solid #007bff;
+    display: flex;
+    flex-direction: column; /* Stack entries vertically */
     width: 100%;
-    
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Space between rows */
   }
 
   .votes-table td {
     display: flex;
-    align-items: center;
-    
+    flex-direction: row; /* Stack cell content horizontally */
+    align-items: flex-start; /* Align items to the start */
+    padding: 10px;
+    position: relative; /* Positioning for pseudo-element */
+    flex: 1; /* Flex grow to fill available space */
   }
 
   .votes-table td:before {
-    flex: 1;
+    content: attr(data-label); /* Use data attribute to add labels */
+    display: block;
     font-weight: bold;
-  }
-
-  .opinion-buttons {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    width: 65%;
-  }
-
-  .opinion-buttons button {
-    flex: 1;
-    min-width: 60px;
-    padding: 8px;
+    margin-bottom: 5px; /* Space between label and content */
   }
 
   .submitted-votes-date {
     display: flex;
     padding-left: 10px;
   }
+
+  /* Stack only the submit-section */
+  .submit-section {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    gap: 10px; /* Space between stacked items */
+  }
 }
+
+
 
 
 .tooltip {
