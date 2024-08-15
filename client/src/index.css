@@ -509,7 +509,7 @@ body {
 .opinion-summary-container {
   display: flex; /* Arrange items in a row */
   align-items: center; /* Center items vertically */
-  margin-bottom: 5px; /* Space below the summary */
+  margin-bottom: 15px; /* Space below the summary */
   flex: 1; /* Allow the container to grow/shrink with the column width */
   overflow: hidden; /* Prevent overflow if needed */
 }
@@ -553,7 +553,7 @@ body {
 .votes-table th,
 .votes-table td {
   padding: 8px;
-  min-width: 100px; /* Ensure the column doesn't shrink below this width */
+  min-width: 75px; /* Ensure the column doesn't shrink below this width */
   max-width: 300px; /* Prevent the column from growing too large */
   overflow: hidden;
   text-overflow: ellipsis; /* Adds ellipsis when content overflows */
@@ -562,7 +562,6 @@ body {
 .votes-table th {
   text-align: left;
   vertical-align: bottom; /* Align headers to the bottom */
-  padding: 10px; /* Adjust padding as needed */
 }
 
 /* Container for buttons */

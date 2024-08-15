@@ -283,7 +283,7 @@ const ProposalVote = () => {
                   value={newVote.comment}
                   onChange={handleNewVoteChange}
                   onKeyDown={handleKeyDown}
-                  placeholder="Comment"
+                  placeholder="Explain your vote..."
                   aria-label="Comment"
                 />
               </td>

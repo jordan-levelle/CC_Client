@@ -1,23 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { deleteTeam } from '../api/teams';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Tooltip } from 'react-tooltip';
 import { teamTooltips } from '../constants/Icons_Tooltips';
-import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from 'react-tooltip';
 import { faPencil, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
+import 'react-tooltip/dist/react-tooltip.css';
+import UserEditTeams from '../components/UserEditTeams'; // Import UserEditTeams
 
 const UserTeams = () => {
   const { teams, fetchTeams } = useTeamsContext();
   const { user } = useAuthContext();
 
+  const [showEditTeams, setShowEditTeams] = useState(false);
+ 
   useEffect(() => {
     if (user) {
       fetchTeams(); // Fetch teams when the component mounts and user is available
     }
   }, [fetchTeams, user]);
 
+  const handleEditTeams = () => {
+    setShowEditTeams(true);
+  };
+
+  const handleCancelEditTeams = () => {
+    setShowEditTeams(false);
+  };
 
   const handleDeleteClick = async (teamId) => {
     try {
@@ -28,6 +38,7 @@ const UserTeams = () => {
       // Optionally, display an error message to the user here
     }
   };
+
   return (
     <div>
       <table className="teams-table">
@@ -51,7 +62,12 @@ const UserTeams = () => {
                       data-tooltip-html={teamTooltips.Edit}
                       style={{ cursor: 'pointer' }}
                     >
-                      <FontAwesomeIcon icon={faPencil} className="action-icon" />
+                      <FontAwesomeIcon 
+                        icon={faPencil} 
+                        className="action-icon" 
+                        onClick={handleEditTeams}
+                      />
+                      {showEditTeams && <UserEditTeams onClose={handleCancelEditTeams} />}
                       <Tooltip id="edit-tooltip" />
                     </div>
                     <div
@@ -81,8 +97,8 @@ const UserTeams = () => {
       </table>
     </div>
   );
-  
-}
+};
 
 export default UserTeams;
+
 

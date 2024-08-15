@@ -49,7 +49,6 @@ const EditProfile = () => {
         }
     };
     
-
     const confirmCancelSubscription = () => {
         setShowCancelConfirmation(true);
     };
@@ -66,12 +65,6 @@ const EditProfile = () => {
         } catch (error) {
             setError(error.message);
         }
-    };
-
-    const handleNewPasswordChange = (e) => {
-        const sanitizedNewPassword = e.target.value;
-        setNewPassword(sanitizedNewPassword);
-        validatePassword(sanitizedNewPassword);
     };
 
     const handleResetPassword = async (e) => {
@@ -91,6 +84,12 @@ const EditProfile = () => {
         } catch (error) {
             setError(error.message);
         }
+    };
+
+    const handleNewPasswordChange = (e) => {
+        const sanitizedNewPassword = e.target.value;
+        setNewPassword(sanitizedNewPassword);
+        validatePassword(sanitizedNewPassword);
     };
 
     const cancelResetPassword = () => {

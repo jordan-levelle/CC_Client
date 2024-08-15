@@ -1,4 +1,3 @@
-// pages/Teams.js
 import React from 'react';
 import UserTeams from '../components/UserTeams';
 import UserCreateTeams from '../components/UserCreateTeams';
@@ -14,10 +13,10 @@ const Teams = () => {
         <h4>Your Teams</h4>
         <UserTeams />
       </div>
+
     </div>
   );
 };
 
 export default Teams;
-
 
