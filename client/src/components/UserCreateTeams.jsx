@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { createTeam } from '../api/teams';
+import { createTeam, editTeam } from '../api/teams';
 import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
-const UserCreateTeams = () => {
-  const [teamName, setTeamName] = useState('');
+const UserCreateTeams = ({ existingTeam, onClose }) => {
+  const [teamName, setTeamName] = useState(existingTeam ? existingTeam.teamName : '');
+  const [rows, setRows] = useState(existingTeam ? existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail })) : []);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
   const { fetchTeams } = useTeamsContext(); // Get fetchTeams from context
   const { user } = useAuthContext();
@@ -24,22 +24,31 @@ const UserCreateTeams = () => {
   };
 
   const handleDeleteRow = (index) => {
-    const updatedRows = rows.filter((row, i) => i !== index);
+    const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
   };
 
-  const handleCreateTeam = async () => {
+  const handleSubmit = async () => {
     try {
-      const members = rows.map(row => ({ memberName: row.name, memberEmail: row.email }));
-      await createTeam(teamName, members, user.token);
-      setTeamName('');
-      setRows([]);
-      setError(null);
-      fetchTeams(); // Refresh team list after creating a new team
+        const members = rows.map(row => ({ memberName: row.name, memberEmail: row.email }));
+
+        if (existingTeam) {
+            // Call the editTeam function with the appropriate parameters
+            await editTeam(existingTeam._id, { teamName, members }, user.token);
+        } else {
+            await createTeam({ teamName, members }, user.token);
+        }
+
+        setTeamName('');
+        setRows([]);
+        setError(null);
+        fetchTeams(); // Refresh team list after creating or editing a team
+        onClose(); // Close the modal or form after submission
     } catch (error) {
-      setError('Failed to create team');
+        setError('Failed to save team');
     }
-  };
+};
+
 
   return (
     <div className="user-create-teams">
@@ -108,14 +117,16 @@ const UserCreateTeams = () => {
       {error && <div className="error-message">{error}</div>}
       <button
         className="create-team-button"
-        onClick={handleCreateTeam}
+        onClick={handleSubmit}
       >
-        Create Team
+        {existingTeam ? 'Update Team' : 'Create Team'}
       </button>
     </div>
   );
 };
 
 export default UserCreateTeams;
+
+
 
 

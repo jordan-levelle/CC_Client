@@ -11,9 +11,11 @@ import UserEditTeams from '../components/UserEditTeams'; // Import UserEditTeams
 
 const UserTeams = () => {
   const { teams, fetchTeams } = useTeamsContext();
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [showEditTeams, setShowEditTeams] = useState(false);
   const { user } = useAuthContext();
 
-  const [showEditTeams, setShowEditTeams] = useState(false);
+  
  
   useEffect(() => {
     if (user) {
@@ -21,11 +23,13 @@ const UserTeams = () => {
     }
   }, [fetchTeams, user]);
 
-  const handleEditTeams = () => {
+  const handleEditTeams = (team) => {
+    setSelectedTeam(team);
     setShowEditTeams(true);
   };
 
   const handleCancelEditTeams = () => {
+    setSelectedTeam(null);
     setShowEditTeams(false);
   };
 
@@ -65,7 +69,7 @@ const UserTeams = () => {
                       <FontAwesomeIcon 
                         icon={faPencil} 
                         className="action-icon" 
-                        onClick={handleEditTeams}
+                        onClick={() => handleEditTeams(team)}
                       />
                       {showEditTeams && <UserEditTeams onClose={handleCancelEditTeams} />}
                       <Tooltip id="edit-tooltip" />
@@ -95,6 +99,12 @@ const UserTeams = () => {
           )}
         </tbody>
       </table>
+      {showEditTeams && (
+        <UserEditTeams 
+          selectedTeam={selectedTeam} 
+          onClose={handleCancelEditTeams} 
+        />
+      )}
     </div>
   );
 };

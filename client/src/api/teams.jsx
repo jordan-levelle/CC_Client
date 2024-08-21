@@ -46,10 +46,29 @@ const TEAMS_URL = process.env.REACT_APP_TEAMS_URL;
 
   
 
+  export const editTeam = async (teamId, { teamName, members }, token) => {
+    try {
+        const response = await fetch(`${TEAMS_URL}/editUserTeam/${teamId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ teamName, members }), // Ensure the payload matches what the backend expects
+        });
 
-export const editTeam = () => {
-    
+        if (!response.ok) {
+            throw new Error('Failed to update team');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error updating team:', error);
+        throw error;
+    }
 }
+
 
 
 
