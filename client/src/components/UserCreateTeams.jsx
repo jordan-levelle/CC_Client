@@ -11,11 +11,11 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
-  const { fetchTeams } = useTeamsContext(); // Get fetchTeams from context
+  const { fetchTeams } = useTeamsContext();
   const { user } = useAuthContext();
 
   const handleAddRow = () => {
-    if (name) { // Only require name, email is optional
+    if (name) {
       const newRow = { name, email };
       setRows([...rows, newRow]);
       setName('');
@@ -28,12 +28,19 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
     setRows(updatedRows);
   };
 
-  const handleSubmit = async () => {
+  const handleEmailChange = (index, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index].email = value;
+    setRows(updatedRows);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
         const members = rows.map(row => ({ memberName: row.name, memberEmail: row.email }));
 
         if (existingTeam) {
-            // Call the editTeam function with the appropriate parameters
             await editTeam(existingTeam._id, { teamName, members }, user.token);
         } else {
             await createTeam({ teamName, members }, user.token);
@@ -43,15 +50,14 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
         setRows([]);
         setError(null);
         fetchTeams(); // Refresh team list after creating or editing a team
-        onClose(); // Close the modal or form after submission
+        if (onClose) onClose(); // Call onClose if it is defined
     } catch (error) {
         setError('Failed to save team');
     }
-};
-
+  };
 
   return (
-    <div className="user-create-teams">
+    <form className="user-create-teams" onSubmit={handleSubmit}>
       <label htmlFor="team-name" className="team-name-label">Team Name</label>
       <input
         id="team-name"
@@ -65,15 +71,25 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
           <tr>
             <th>Team Members</th>
             <th>Email</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {Array.isArray(rows) && rows.map((row, index) => (
             <tr key={index}>
               <td>{row.name}</td>
-              <td>{row.email}</td>
+              <td>
+                <input
+                  type="email"
+                  value={row.email || ''}
+                  onChange={(e) => handleEmailChange(index, e.target.value)}
+                  placeholder="Optional"
+                  className="email-input-field"
+                />
+              </td>
               <td>
                 <button
+                  type="button"
                   className="icon-button delete-button"
                   onClick={() => handleDeleteRow(index)}
                   aria-label="Delete Row"
@@ -104,6 +120,7 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
             </td>
             <td>
               <button
+                type="button"
                 className="icon-button add-button"
                 onClick={handleAddRow}
                 aria-label="Add Row"
@@ -116,17 +133,13 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
       </table>
       {error && <div className="error-message">{error}</div>}
       <button
+        type="submit"
         className="create-team-button"
-        onClick={handleSubmit}
       >
         {existingTeam ? 'Update Team' : 'Create Team'}
       </button>
-    </div>
+    </form>
   );
 };
 
 export default UserCreateTeams;
-
-
-
-

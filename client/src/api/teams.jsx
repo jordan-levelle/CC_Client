@@ -1,12 +1,13 @@
 const TEAMS_URL = process.env.REACT_APP_TEAMS_URL;
   
-  export const createTeam = async (teamName, members, token) => {
+  export const createTeam = async ({teamName, members}, token) => {
     try {  
+      
       const response = await fetch(`${TEAMS_URL}/createUserTeam`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Correctly set the Authorization header
+          'Authorization': `Bearer ${token}` 
         },
         body: JSON.stringify({ teamName, members }),
       });
