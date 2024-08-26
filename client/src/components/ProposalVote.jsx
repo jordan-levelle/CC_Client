@@ -222,14 +222,16 @@ const ProposalVote = () => {
               <tr>
                 <th>Name</th>
                 <th>
-                  <div className="opinion-summary-container">
-                    {Object.keys(icons).map((opinionType) => (
-                      <div key={opinionType} className="opinion-summary-item">
-                        <FontAwesomeIcon icon={icons[opinionType]} />
-                        <span className="opinion-count">{opinionCounts[opinionType] || 0}</span>
-                      </div>
-                    ))}
-                  </div>Opinion
+                <div className="opinion-summary-container">
+      {Object.keys(icons).map((opinionType) => (
+        <div key={opinionType} className="opinion-summary-item">
+          <div className="opinion-content">
+            <FontAwesomeIcon icon={icons[opinionType]} />
+            <span className="opinion-count">{opinionCounts[opinionType] || 0}</span>
+          </div>
+        </div>
+      ))}
+    </div>Opinion
                 </th>
                 <th>Comment</th>
               </tr>

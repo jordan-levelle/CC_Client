@@ -8,15 +8,16 @@ import { Tooltip } from 'react-tooltip';
 import { faPencil, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import 'react-tooltip/dist/react-tooltip.css';
 import UserEditTeams from '../components/UserEditTeams'; // Import UserEditTeams
+import ProposalForm from './proposalForm';
+import Modal from './ModalOverlay';
 
 const UserTeams = () => {
-  const { teams, fetchTeams } = useTeamsContext();
+  const { teams, fetchTeams, updateSelectedTeam } = useTeamsContext();
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [showEditTeams, setShowEditTeams] = useState(false);
+  const [showProposalForm, setShowProposalForm] = useState(false);
   const { user } = useAuthContext();
 
-  
- 
   useEffect(() => {
     if (user) {
       fetchTeams(); // Fetch teams when the component mounts and user is available
@@ -32,6 +33,12 @@ const UserTeams = () => {
     setSelectedTeam(null);
     setShowEditTeams(false);
   };
+
+  const handleFileIconClick = (team) => {
+    updateSelectedTeam(team);
+    setShowProposalForm(true);
+
+  }
 
   const handleDeleteClick = async (teamId) => {
     try {
@@ -79,7 +86,11 @@ const UserTeams = () => {
                       data-tooltip-html={teamTooltips.Create}
                       style={{ cursor: 'pointer' }}
                     >
-                      <FontAwesomeIcon icon={faFile} className="action-icon" />
+                      <FontAwesomeIcon 
+                        icon={faFile} 
+                        className="action-icon" 
+                        onClick={() => handleFileIconClick(team)}
+                      />
                       <Tooltip id="create-tooltip" />
                     </div>
                     <div
@@ -100,10 +111,18 @@ const UserTeams = () => {
         </tbody>
       </table>
       {showEditTeams && (
-        <UserEditTeams 
-          selectedTeam={selectedTeam} 
-          onClose={handleCancelEditTeams} 
-        />
+        
+          <UserEditTeams 
+            selectedTeam={selectedTeam} 
+            onClose={handleCancelEditTeams} 
+          />
+
+      )}
+
+      {showProposalForm && (
+        <Modal isOpen={showProposalForm} onClose={() => setShowProposalForm(false)}>
+          <ProposalForm />
+        </Modal>
       )}
     </div>
   );

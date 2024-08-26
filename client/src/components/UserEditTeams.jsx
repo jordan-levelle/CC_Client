@@ -13,7 +13,6 @@ const UserEditTeams = ({ selectedTeam, onClose }) => {
         >
           <FontAwesomeIcon icon={faXmark} />
         </button>
-        <h2>Edit Team</h2>
         <UserCreateTeams 
           existingTeam={selectedTeam} 
           onClose={onClose} 
@@ -40,8 +39,8 @@ const popupStyles = {
   backgroundColor: '#fff',
   padding: '20px',
   borderRadius: '8px',
-  textAlign: 'center',
-  width: '550px',
+  textAlign: 'start',
+  width: '650px',
 };
 
 const closeButtonStyles = {

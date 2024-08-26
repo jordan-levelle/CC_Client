@@ -11,6 +11,7 @@ export const useTeamsContext = () => {
 
 export const TeamsContextProvider = ({ children }) => {
   const [teams, setTeams] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState(null);
   const { user } = useAuthContext();
 
   const fetchTeams = useCallback(async () => {
@@ -28,8 +29,12 @@ export const TeamsContextProvider = ({ children }) => {
     }
   }, [user]);
 
+  const updateSelectedTeam = (team) => {
+    setSelectedTeam(team);
+  }
+
   return (
-    <TeamsContext.Provider value={{ teams, fetchTeams }}>
+    <TeamsContext.Provider value={{ teams, fetchTeams, selectedTeam, updateSelectedTeam }}>
       {children}
     </TeamsContext.Provider>
   );

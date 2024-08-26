@@ -15,9 +15,13 @@ import 'react-quill/dist/quill.snow.css';
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
   const { user, isSubscribed } = useAuthContext();
-  const { teams, fetchTeams } = useTeamsContext();
+  const { teams, fetchTeams, selectedTeam } = useTeamsContext();
   const { setSelectedProposalId } = useVoteContext();
-  const { register, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm();
+  const { register, 
+          handleSubmit, 
+          setValue, 
+          watch, 
+          formState: { errors }, reset } = useForm();
 
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState('');
@@ -32,10 +36,11 @@ const ProposalForm = () => {
     }
   }, [fetchTeams, user, isSubscribed]); // Add isSubscribed to the dependency array
 
-  const options = teams.map((team) => ({
-    value: team._id,
-    label: team.teamName
-  }));
+  useEffect(() => {
+    if (selectedTeam) {
+      setValue('team', selectedTeam._id); // Automatically select the team in the dropdown
+    }
+  }, [selectedTeam, setValue]);
 
   useEffect(() => {
     if (!user) {
@@ -51,6 +56,11 @@ const ProposalForm = () => {
       titleInputRef.current.focus(); 
     }
   }, []);
+
+  const options = teams.map((team) => ({
+    value: team._id,
+    label: team.teamName
+  }));
 
   const generateDummyUser = () => ({
     _id: process.env.REACT_APP_NON_AUTH_USER,
@@ -156,7 +166,11 @@ const ProposalForm = () => {
               {isSubscribed ? (
                 <div>
                   <h6>Select Team</h6>
-                  <Select options={options} />
+                  <Select 
+                    options={options} 
+                    defaultValue={selectedTeam ? { value: selectedTeam._id, label: selectedTeam.teamName } : null}
+                    onChange={(selectedOption) => setValue('team', selectedOption)}
+                  />
                 </div>
               ) : null}
             </div>
@@ -211,3 +225,4 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
+

@@ -1,0 +1,42 @@
+{
+    "title": "Lets get pizza for dinner!",
+    "description": "<p>Let's get a half olive and half green pepper pizza for dinner tonight!</p>",
+    "name": "Zach",
+    "votes": [
+      {
+        "name": "Zach",
+        "opinion": "Agree",
+        "comment": "I support this proposal.",
+        "createdAt": "2024-08-23T12:00:00.000Z",
+        "updatedAt": "2024-08-23T12:00:00.000Z"
+      },
+      {
+        "name": "Jane",
+        "opinion": "Neutral",
+        "comment": "I don't like olives but I could eat the other side",
+        "createdAt": "2024-08-23T12:00:00.000Z",
+        "updatedAt": "2024-08-23T12:00:00.000Z"
+      },
+      {
+        "name": "Smith",
+        "opinion": "Agree",
+        "comment": "We've been eating out a lot. Could we make this ourselves?",
+        "createdAt": "2024-08-23T12:00:00.000Z",
+        "updatedAt": "2024-08-23T12:00:00.000Z"
+      },
+      {
+        "name": "Angela",
+        "opinion": "Disagree",
+        "comment": "I oppose this proposal.",
+        "createdAt": "2024-08-23T12:00:00.000Z",
+        "updatedAt": "2024-08-23T12:00:00.000Z"
+      },
+      {
+        "name": "Nelson",
+        "opinion": "Disagree",
+        "comment": "I can't eat cheese.",
+        "createdAt": "2024-08-23T12:00:00.000Z",
+        "updatedAt": "2024-08-23T12:00:00.000Z"
+      }
+    ]
+  }

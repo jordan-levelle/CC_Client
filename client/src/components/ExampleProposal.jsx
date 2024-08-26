@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { faCommentDots } from '@fortawesome/free-solid-svg-icons';
-import { fetchExampleProposal } from '../api/proposals';
+import exampleProposalData from '../constants/ExampleProposal.json'
 import {
   handleExistingOpinionUpdate,
   handleExistingCommentUpdate,
@@ -15,26 +15,11 @@ import {
 } from '../api/proposals';
 
 const ExampleProposal = () => {
-  const [exampleProposal, setExampleProposal] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [exampleProposal, setExampleProposal] = useState(exampleProposalData);
   const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
   const [expandedRows, setExpandedRows] = useState({}); // State to track expanded rows
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Initial check
 
-  useEffect(() => {
-    const fetchProposal = async () => {
-      try {
-        const proposalData = await fetchExampleProposal();
-        setExampleProposal(proposalData);
-      } catch (error) {
-        console.error('Error fetching example proposal:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProposal();
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -85,10 +70,6 @@ const ExampleProposal = () => {
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (!exampleProposal) {
     return <div>No example proposal found.</div>;
   }
@@ -118,6 +99,62 @@ const ExampleProposal = () => {
               </tr>
             </thead>
             <tbody>
+            <tr className="new-entry-title-row show-mobile">
+                <td colSpan="1" className="new-entry-title">
+                  Submit New Entry 
+                </td>
+              </tr>
+              <tr className="submit-section">
+                <td>
+                  <input
+                    id='name'
+                    type="text"
+                    name="name"
+                    value={newVote.name}
+                    onChange={newTableEntry}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Name"
+                    aria-label='Name'
+                  />
+                </td>
+                <td>
+                  <div className="opinion-buttons">
+                    {Object.keys(icons).map((opinionType) => (
+                      <div
+                        key={opinionType}
+                        data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                        data-tooltip-html={tooltips[opinionType]}
+                      >
+                        <button
+                          id='opinion'
+                          type="button"
+                          className={newVote.opinion === opinionType ? 'selected' : ''}
+                          onClick={() => setNewVote({ ...newVote, opinion: opinionType })}
+                          data-tip={tooltips[opinionType]} // Add data-tip attribute
+                        >
+                          <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
+                        </button>
+                        <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
+                      </div>
+                    ))}
+                  </div>
+                </td>
+                <td>
+                  <textarea
+                    id='comment'
+                    type="text"
+                    name="comment"
+                    value={newVote.comment}
+                    onChange={newTableEntry}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Comment"
+                    aria-label='Comment'
+                  />
+                </td>
+                <td>
+                  <button onClick={newSubmission} aria-label='Submit'>Submit</button>
+                </td>
+              </tr>
               {exampleProposal.votes.map((vote, index) => (
                 <React.Fragment key={index}>
                   <tr>
@@ -241,62 +278,6 @@ const ExampleProposal = () => {
                   )}
                 </React.Fragment>
               ))}
-              <tr className="new-entry-title-row show-mobile">
-                <td colSpan="1" className="new-entry-title">
-                  Submit New Entry 
-                </td>
-              </tr>
-              <tr className="submit-section">
-                <td>
-                  <input
-                    id='name'
-                    type="text"
-                    name="name"
-                    value={newVote.name}
-                    onChange={newTableEntry}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Name"
-                    aria-label='Name'
-                  />
-                </td>
-                <td>
-                  <div className="opinion-buttons">
-                    {Object.keys(icons).map((opinionType) => (
-                      <div
-                        key={opinionType}
-                        data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
-                        data-tooltip-html={tooltips[opinionType]}
-                      >
-                        <button
-                          id='opinion'
-                          type="button"
-                          className={newVote.opinion === opinionType ? 'selected' : ''}
-                          onClick={() => setNewVote({ ...newVote, opinion: opinionType })}
-                          data-tip={tooltips[opinionType]} // Add data-tip attribute
-                        >
-                          <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
-                        </button>
-                        <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
-                      </div>
-                    ))}
-                  </div>
-                </td>
-                <td>
-                  <textarea
-                    id='comment'
-                    type="text"
-                    name="comment"
-                    value={newVote.comment}
-                    onChange={newTableEntry}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Comment"
-                    aria-label='Comment'
-                  />
-                </td>
-                <td>
-                  <button onClick={newSubmission} aria-label='Submit'>Submit</button>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -306,3 +287,4 @@ const ExampleProposal = () => {
 };
 
 export default ExampleProposal;
+

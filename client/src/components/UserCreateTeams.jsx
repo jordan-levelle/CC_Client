@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createTeam, editTeam } from '../api/teams';
 import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const UserCreateTeams = ({ existingTeam, onClose }) => {
   const [teamName, setTeamName] = useState(existingTeam ? existingTeam.teamName : '');
-  const [rows, setRows] = useState(existingTeam ? existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail })) : []);
+  const [rows, setRows] = useState(() =>
+    existingTeam
+      ? existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail })).sort((a, b) => a.name.localeCompare(b.name))
+      : []
+  );
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
   const { fetchTeams } = useTeamsContext();
   const { user } = useAuthContext();
 
+  useEffect(() => {
+    if (existingTeam) {
+      setTeamName(existingTeam.teamName);
+      setRows(existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail })).sort((a, b) => a.name.localeCompare(b.name)));
+    }
+  }, [existingTeam]);
+
   const handleAddRow = () => {
     if (name) {
       const newRow = { name, email };
-      setRows([...rows, newRow]);
+      setRows(prevRows => [...prevRows, newRow].sort((a, b) => a.name.localeCompare(b.name)));
       setName('');
       setEmail('');
     }
@@ -25,34 +36,34 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
 
   const handleDeleteRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
-    setRows(updatedRows);
+    setRows(updatedRows.sort((a, b) => a.name.localeCompare(b.name)));
   };
 
   const handleEmailChange = (index, value) => {
     const updatedRows = [...rows];
     updatedRows[index].email = value;
-    setRows(updatedRows);
+    setRows(updatedRows.sort((a, b) => a.name.localeCompare(b.name)));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-        const members = rows.map(row => ({ memberName: row.name, memberEmail: row.email }));
+      const members = rows.map(row => ({ memberName: row.name, memberEmail: row.email }));
 
-        if (existingTeam) {
-            await editTeam(existingTeam._id, { teamName, members }, user.token);
-        } else {
-            await createTeam({ teamName, members }, user.token);
-        }
+      if (existingTeam) {
+        await editTeam(existingTeam._id, { teamName, members }, user.token);
+      } else {
+        await createTeam({ teamName, members }, user.token);
+      }
 
-        setTeamName('');
-        setRows([]);
-        setError(null);
-        fetchTeams(); // Refresh team list after creating or editing a team
-        if (onClose) onClose(); // Call onClose if it is defined
+      setTeamName('');
+      setRows([]);
+      setError(null);
+      fetchTeams(); // Refresh team list after creating or editing a team
+      if (onClose) onClose(); // Call onClose if it is defined
     } catch (error) {
-        setError('Failed to save team');
+      setError('Failed to save team');
     }
   };
 
@@ -94,7 +105,7 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
                   onClick={() => handleDeleteRow(index)}
                   aria-label="Delete Row"
                 >
-                  <FontAwesomeIcon icon={faMinus} />
+                  <FontAwesomeIcon icon={faTrashCan} />
                 </button>
               </td>
             </tr>
