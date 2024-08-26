@@ -8,7 +8,7 @@ import { cancelUserSubscription } from '../api/users';
 const AccountSettings = () => {
   const [key, setKey] = useState('profile');
   const { user, isSubscribed, dispatch } = useAuthContext();
-  const { deleteAccount, deleteMessage, deleteError } = useDeleteAccount();
+  const { deleteAccount } = useDeleteAccount();
   const { updateEmail, updateMessage, updateError } = useUpdateAccount();
   const { resetPassword, resetPasswordMessage, resetPasswordError } = useResetPassword();
   const { validatePassword, passwordErrors } = useSignup();

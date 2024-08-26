@@ -1,5 +1,5 @@
 import React from 'react';
-import { AccountSettings } from '../components'; // Adjust the path if necessary
+// import { AccountSettings } from '../components'; // Adjust the path if necessary
 import { EditProfile } from '../components';
 
 const Settings = () => {
