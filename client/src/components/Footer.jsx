@@ -1,18 +1,13 @@
 import React from 'react';
+import '../styles/components/footer.css';
 
 const Footer = () => {
   return (
-    <footer className="footer mt-auto bg-light border-top border-light">
-      <div className="container overflow-hidden">
-        <div className="row align-items-end">
-          <div className="col-12 text-center text-end">
-            <div className="copyright">
-              &copy; 2024. All Rights Reserved.
-            </div>
-            <div className="credits text-secondary fs-8">
-              <p className="link-secondary text-decoration-none">Website Support by Jordan Levelle</p>
-            </div>
-          </div>
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-content">
+          <p className="copyright">&copy; 2024. All Rights Reserved.</p>
+          <p className="credits">Website Support by Jordan Levelle</p>
         </div>
       </div>
     </footer>
@@ -20,7 +15,6 @@ const Footer = () => {
 };
 
 export default Footer;
-
 
 
 

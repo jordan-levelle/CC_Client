@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { HomePageText } from '../constants/HomeTextConstants';
+import '../styles/pages/homepage.css'; 
+
 const Home = () => {
   return (
     <div className="home-page">
@@ -24,8 +26,6 @@ const Home = () => {
 };
 
 export default Home;
-
-
 
 
 

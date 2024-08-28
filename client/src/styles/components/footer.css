@@ -1,0 +1,18 @@
+/************************* Styles for Footer *************************/
+.footer {
+    margin-top: auto;
+    width: 100%;
+    background-color: #1c1c1c;
+    border-top: 1px solid #dee2e6;
+    padding: .2rem 0; /* Added padding to replace py-3 */
+}
+
+.footer-content {
+    text-align: center; /* Centers all text in the footer */
+    color: #dfdfdf;
+}
+
+.credits {
+    color: #a8a8a8;
+    font-size: 0.875rem;
+}

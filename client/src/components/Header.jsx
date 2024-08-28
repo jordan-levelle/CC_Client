@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
+import '../styles/components/header.css';
 
 const Header = () => {
   const { logout } = useLogout();
@@ -26,8 +27,8 @@ const Header = () => {
   };
 
   const toggleMenu = (event) => {
-    event.stopPropagation(); // Prevent event propagation
-    setMenuOpen((prevMenuOpen) => !prevMenuOpen);
+    event.stopPropagation();
+    setMenuOpen((prev) => !prev);
   };
   
   const closeMenu = () => {
@@ -38,40 +39,20 @@ const Header = () => {
     <header className="header">
       <nav className="navbar">
         <Link to="/" className="logo-link">
-          <h1 className="logo">
-            <span className="logo-text">Consensus Check</span>
-          </h1>
+          <h1 className="logo">Consensus Check</h1>
         </Link>
         <button className="hamburger" onClick={toggleMenu}>
           <span className="hamburger-icon">&#9776;</span>
         </button>
         <ul className={`nav-menu ${menuOpen ? 'active' : ''}`}>
-          <li>
-            <Link to="/" className="nav-link" onClick={closeMenu}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/create" className="nav-link" onClick={closeMenu}>
-              Create Proposal
-            </Link>
-          </li>
-          <li>
-            <Link to="/basics" className="nav-link" onClick={closeMenu}>
-              Consensus Basics
-            </Link>
-          </li>
-          <li>
-            <Link to="/subscriptions" className="nav-link" onClick={closeMenu}>
-              {user ? 'Upgrade' : 'Pricing'}
-            </Link>
-          </li>
+          <li><Link to="/" className="nav-link" onClick={closeMenu}>Home</Link></li>
+          <li><Link to="/create" className="nav-link" onClick={closeMenu}>Create Proposal</Link></li>
+          <li><Link to="/basics" className="nav-link" onClick={closeMenu}>Consensus Basics</Link></li>
+          <li><Link to="/subscriptions" className="nav-link" onClick={closeMenu}>{user ? 'Upgrade' : 'Pricing'}</Link></li>
           <li className="dropdown">
             {user ? (
               <>
-                <Link to="/profile" className="dropbtn" onClick={closeMenu}>
-                  Profile
-                </Link>
+                <Link to="/profile" className="nav-link" onClick={closeMenu}>Profile</Link>
                 <div className="dropdown-content">
                   <Link to="/profile" onClick={closeMenu}>Proposals</Link>
                   {isSubscribed && <Link to="/teams" onClick={closeMenu}>Teams</Link>}
@@ -80,9 +61,7 @@ const Header = () => {
                 </div>
               </>
             ) : (
-              <Link to="/auth" className="dropbtn" onClick={closeMenu}>
-                Login
-              </Link>
+              <Link to="/auth" className="nav-link" onClick={closeMenu}>Login</Link>
             )}
           </li>
         </ul>
@@ -92,7 +71,6 @@ const Header = () => {
 };
 
 export default Header;
-
 
 
 

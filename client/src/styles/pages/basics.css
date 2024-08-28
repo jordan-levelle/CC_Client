@@ -1,0 +1,26 @@
+/************ Styles For Consensus Basics Page ***************/
+.consensus-basics-container {
+    max-width: 800px;
+    
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .subsection-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  
+  .basics-section {
+    margin-bottom: 20px;
+  }
+  
+  ul, ol {
+    margin-left: 20px;
+  }
+  
