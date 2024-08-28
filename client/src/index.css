@@ -416,7 +416,7 @@ body {
   background-color: #fcf8e3;
   border: 1px solid #fbeed5;
 }
-/*                                    */
+
 
 .first-render-message {
   background-color: rgba(144, 238, 144, 0.8); /* Semi-transparent light lime green background */
@@ -577,20 +577,21 @@ body {
 .opinion-buttons {
   display: flex; /* Arrange buttons in a row */
   flex-direction: row; /* Ensure buttons are in a row */
-  gap: 10px; /* Space between buttons */
-  overflow: hidden; /* Prevent buttons from overflowing the container */
+  gap: .7vw .8vw; /* Space between buttons */
+
 }
 
 /* Styling for individual buttons */
 .opinion-buttons button {
   flex: 1; /* Allow buttons to grow and shrink as needed */
   min-width: 0; /* Prevent buttons from growing too wide */
-  padding: 10px 15px; /* Padding inside the button */
+  padding: .8vw .9vw; /* Padding adjusts with viewport width */
   border: none;
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Optional: Shadow for a 3D effect */
 }
+
 
 
 .comment-input {
@@ -643,10 +644,9 @@ body {
 
 /* Media query to hide button text at screen widths <= 1100px */
 
-@media (max-width: 1470px) {
+@media (max-width: 920px) {
   .opinion-buttons {
     display: flex; /* Arrange buttons in a row */
-
     width: fit-content;
     gap: 10px; /* Space between buttons */
     box-sizing: border-box; /* Ensure padding and border are included in the width */
@@ -857,9 +857,6 @@ body {
     gap: 10px; /* Space between stacked items */
   }
 }
-
-
-
 
 .tooltip {
   position: fixed;

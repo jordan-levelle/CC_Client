@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import { v4 as uuidv4 } from 'uuid'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'; 
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
-import { v4 as uuidv4 } from 'uuid'; 
+import { useAuthContext } from "../hooks/useAuthContext";
 import {
   fetchProposalData,
   fetchSubmittedVotes,
@@ -17,7 +18,7 @@ import {
   updateName,
   checkFirstRender
 } from '../api/proposals';
-import { useAuthContext } from "../hooks/useAuthContext";
+
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();

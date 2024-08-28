@@ -18,8 +18,7 @@ root.render(
         <VoteContextProvider>
           <TeamsContextProvider>
           <App />
-          </TeamsContextProvider>
-          
+          </TeamsContextProvider>  
         </VoteContextProvider>
       </ProposalsContextProvider>
     </AuthContextProvider>

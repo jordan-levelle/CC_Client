@@ -179,7 +179,10 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     // Fetch the updated list of votes for the proposal
     const fetchedVotes = await fetchSubmittedVotes(proposalId);
 
-    setSubmittedVotes(fetchedVotes);
+    // Sort the votes by createdAt date
+    const sortedVotes = fetchedVotes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    setSubmittedVotes(sortedVotes);
     setNewVote({ name: '', opinion: '', comment: '' });
 
     if (token) {
@@ -189,10 +192,7 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
           proposalId,
           voteId: voteData.addedVote._id // Use the returned voteId
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers,
       });
 
       if (!userResponseUpdate.ok) {
@@ -205,6 +205,7 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     setError(error.message);
   }
 };
+
 
 export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes, setError) => {
   try {
@@ -368,3 +369,5 @@ export const formatDate = (dateString) => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat('en-US', options).format(date);
 };
+
+
