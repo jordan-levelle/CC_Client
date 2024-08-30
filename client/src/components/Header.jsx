@@ -30,7 +30,7 @@ const Header = () => {
     event.stopPropagation();
     setMenuOpen((prev) => !prev);
   };
-  
+
   const closeMenu = () => {
     setMenuOpen(false);
   };
@@ -45,23 +45,53 @@ const Header = () => {
           <span className="hamburger-icon">&#9776;</span>
         </button>
         <ul className={`nav-menu ${menuOpen ? 'active' : ''}`}>
-          <li><Link to="/" className="nav-link" onClick={closeMenu}>Home</Link></li>
-          <li><Link to="/create" className="nav-link" onClick={closeMenu}>Create Proposal</Link></li>
-          <li><Link to="/basics" className="nav-link" onClick={closeMenu}>Consensus Basics</Link></li>
-          <li><Link to="/subscriptions" className="nav-link" onClick={closeMenu}>{user ? 'Upgrade' : 'Pricing'}</Link></li>
+          <li>
+            <Link to="/" className="nav-link" onClick={closeMenu}>
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/create" className="nav-link" onClick={closeMenu}>
+              Create Proposal
+            </Link>
+          </li>
+          <li>
+            <Link to="/basics" className="nav-link" onClick={closeMenu}>
+              Consensus Basics
+            </Link>
+          </li>
+          <li>
+            <Link to="/subscriptions" className="nav-link" onClick={closeMenu}>
+              {user ? 'Upgrade' : 'Pricing'}
+            </Link>
+          </li>
           <li className="dropdown">
             {user ? (
               <>
-                <Link to="/profile" className="nav-link" onClick={closeMenu}>Profile</Link>
+                <Link to="/profile" className="nav-link" onClick={closeMenu}>
+                  Profile
+                </Link>
                 <div className="dropdown-content">
-                  <Link to="/profile" onClick={closeMenu}>Proposals</Link>
-                  {isSubscribed && <Link to="/teams" onClick={closeMenu}>Teams</Link>}
-                  <Link to="/settings" onClick={closeMenu}>Settings</Link>
-                  <span className="logout-link" onClick={handleLogout}>Logout</span>
+                  <Link to="/profile" onClick={closeMenu}>
+                    Proposals
+                  </Link>
+                  {isSubscribed && (
+                    <Link to="/teams" onClick={closeMenu}>
+                      Teams
+                    </Link>
+                  )}
+                  <Link to="/settings" onClick={closeMenu}>
+                    Settings
+                  </Link>
+                  <span className="logout-link" onClick={handleLogout}>
+                    Logout
+                  </span>
                 </div>
               </>
             ) : (
-              <Link to="/auth" className="nav-link" onClick={closeMenu}>Login</Link>
+              <Link to="/auth" className="nav-link" onClick={closeMenu}>
+                Login
+              </Link>
             )}
           </li>
         </ul>
@@ -71,6 +101,3 @@ const Header = () => {
 };
 
 export default Header;
-
-
-

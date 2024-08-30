@@ -34,6 +34,7 @@
     padding: 0;
     display: flex;
     gap: 15px;
+    z-index: 20;
   }
   
   .nav-link {
@@ -71,6 +72,7 @@
   
   .logout-link:hover,
   .dropdown-content a:hover {
+    cursor: pointer;
     background-color: #f1f1f1;
   }
   
@@ -125,17 +127,6 @@
     .nav-menu.active .dropdown-content {
       top: 100%;
       left: 0;
-    }
-  
-    .nav-link,
-    .dropdown-content a {
-      padding: 10px 15px;
-      border-bottom: 1px solid #424242;
-    }
-  
-    .nav-link:last-child,
-    .dropdown-content a:last-child {
-      border-bottom: none;
     }
   }
   

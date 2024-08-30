@@ -18,6 +18,7 @@ import {
   updateName,
   checkFirstRender
 } from '../api/proposals';
+import '../styles/components/proposalvote.css';
 
 
 const ProposalVote = () => {
@@ -176,25 +177,29 @@ const ProposalVote = () => {
   return (
     <section>
      {showFirstRenderMessage && (
-     <div className="first-render-message" style={{ marginTop: '20px', fontSize: '14px' }}>
-        <p>Welcome! Your Proposal has been created</p>
+     <div className="first-render-message">
+        <h4>Welcome! Your Proposal has been created</h4>
         <div className="copy-link-container">
           <p>
             Copy this link to send to Respondents: 
-            <span className="proposal-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
+            <span>
               <a href={proposalLink} target="_blank" rel="noopener noreferrer">{proposalLink}</a>
             </span>
-            <button className="copy-proposal-button" onClick={() => copyUrlToClipboard('proposal', proposalLink)} style={{ marginLeft: '10px' }}>
+            <button 
+              className="small-button" 
+              onClick={() => copyUrlToClipboard('proposal', proposalLink)}>
               {copiedProposalLink ? 'URL Copied!' : 'Copy Proposal Link'}
             </button>
           </p>
         </div>
-        <p style={{ marginTop: '10px' }}>
+        <p>
           Use this link to edit your proposal:
-          <span className="edit-link" style={{ fontSize: '12px', marginLeft: '10px' }}>
+          <span>
             <a href={editLink} target="_blank" rel="noopener noreferrer">{editLink}</a>
           </span>
-          <button className="edit-proposal-button" onClick={() => copyUrlToClipboard('edit', editLink)} style={{ marginLeft: '10px' }}>
+          <button 
+            className="small-button" 
+            onClick={() => copyUrlToClipboard('edit', editLink)}>
             {copiedEditLink ? 'URL Copied!' : 'Copy Edit Link'}
           </button>
         </p>
@@ -204,11 +209,11 @@ const ProposalVote = () => {
           </p>
         )}
       </div>
-      )} 
+     )}  
 
-      <div className="proposal-vote-container">
+      <div className="main-container">
         <div className="proposal-info">
-          <h2>{proposal.title}</h2>
+          <h3>{proposal.title}</h3>
           {proposal.name && <p>Proposed by: {proposal.name}</p>}
           <p>Proposed On: {formatDate(proposal.createdAt)}</p>
           <div className="proposal-description">
@@ -216,34 +221,36 @@ const ProposalVote = () => {
           </div>
         </div>
         
-        <div className="proposal-vote-table-container">
-          <table className="votes-table">  
-            <thead>
-              {/* Table Heading/Vote Tally */}
-              <tr>
-                <th>Name</th>
-                <th>
-                <div className="opinion-summary-container">
-      {Object.keys(icons).map((opinionType) => (
-        <div key={opinionType} className="opinion-summary-item">
-          <div className="opinion-content">
-            <FontAwesomeIcon icon={icons[opinionType]} />
-            <span className="opinion-count">{opinionCounts[opinionType] || 0}</span>
-          </div>
-        </div>
-      ))}
-    </div>Opinion
-                </th>
-                <th>Comment</th>
-              </tr>
-            </thead>
-            <tbody>
-            <tr className="new-entry-title-row show-mobile">
-              <td colSpan="1" className="new-entry-title">
-                Submit New Entry 
-              </td>
-            </tr>
-            
+        <div className="table-container">
+          <table className="table">  
+ 
+          <thead>
+          {/* Table Heading/Vote Tally */}
+          <tr>
+            <th>
+              <h9>Name</h9>
+            </th>
+            <th className="opinion-column">
+              <div className="opinion-tally-wrapper">
+                <div className="opinion-tally-container">
+                  {Object.keys(icons).map((opinionType) => (
+                    <div key={opinionType} className="opinion-content">
+                      <div className="opinion-tally-item">
+                        <FontAwesomeIcon icon={icons[opinionType]} />
+                        <span className="opinion-count">{opinionCounts[opinionType] || 0}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <h9>Opinion</h9>
+              </div>
+            </th>
+            <th>
+              <h9>Comment</h9>
+            </th>
+          </tr>
+        </thead>
+          <tbody>
             {/* Submit New Table Entry */}
             <tr className="submit-section">
               <td>
@@ -256,6 +263,7 @@ const ProposalVote = () => {
                   onKeyDown={handleKeyDown}
                   placeholder="Name"
                   aria-label="Name"
+                  className='name-input'
                 />
               </td>
               <td>
@@ -294,7 +302,7 @@ const ProposalVote = () => {
                 <button 
                   onClick={handleNewTableEntry} 
                   aria-label="Submit New Entry"
-                  className="submit-button"
+                  className="small-button"
                 >
                   Submit
                 </button>
@@ -306,48 +314,47 @@ const ProposalVote = () => {
               <React.Fragment key={vote._id}>
                 <tr>
                   {/* Name */}
-                  <td className="mobile-vote-container">
-                    <div className="name-container">
-                      {vote.name ? (
-                        <span>{vote.name}</span>
-                      ) : (
-                        <input
-                          type="text"
-                          value={vote.localName || ''}
-                          onChange={(e) => {
-                            const { value } = e.target;
-                            setSubmittedVotes((prevVotes) => {
-                              const updatedVotes = [...prevVotes];
-                              updatedVotes[index].localName = value;
-                              return updatedVotes;
-                            });
-                          }}
-                          onBlur={() => {
-                            if (vote.localName) {
-                              handleNameUpdate(index, vote.localName);
-                            }
-                          }}
-                          placeholder="Name"
-                        />
+                  <td className="info-container">
+                  <div className="name-container">
+                    {vote.name ? (
+                      <span>{vote.name}</span>
+                    ) : (
+                      <input
+                        className='name-input'
+                        type="text"
+                        value={vote.localName || ''}
+                        onChange={(e) => {
+                          const { value } = e.target;
+                          setSubmittedVotes((prevVotes) => {
+                            const updatedVotes = [...prevVotes];
+                            updatedVotes[index].localName = value;
+                            return updatedVotes;
+                          });
+                        }}
+                        onBlur={() => {
+                          if (vote.localName) {
+                            handleNameUpdate(index, vote.localName);
+                          }
+                        }}
+                        placeholder="Name"
+                      />
+                    )}
+                  </div>
+                  <div className="details-container">
+                    {/* Opinion Text Label */}
+                    <div className="opinion-label-container show-mobile">
+                      {vote.opinion && (
+                        <span className="opinion-label">
+                          <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
+                        </span>
                       )}
                     </div>
 
-                    {/* Opinion Text Label */}
-                    <div className="opinion-container">
-                      <span className="show-mobile">
-                        {vote.opinion && (
-                          <span className="opinion-label">
-                            <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
-                          </span>
-                        )}
-                      </span>
-                    </div>
                     {/* Conditional rendering of the comment icon */}
                     {vote.comment && (
-                      <div className="show-mobile">
+                      <div className="comment-icon-container show-mobile">
                         <FontAwesomeIcon
                           icon={faCommentDots}
-                          className="comment-icon"
                           data-tip={vote.comment}
                           data-for={`comment-tooltip-${vote.comment}`}
                         />
@@ -356,15 +363,13 @@ const ProposalVote = () => {
                           place="top"
                           effect="solid"
                           className="tooltip"
-                          // onClick={handleCommentIconClick}
                         >
-                         <span>{vote.comment}</span>
+                          <span>{vote.comment}</span>
                         </Tooltip>
-                        
                       </div>
                     )}
-                    <div className="toggle-button-container show-mobile">
-                    <td>
+
+                    <div className="show-mobile">
                       <span 
                         onClick={() => toggleDetails(vote._id)} 
                         aria-label="Toggle Details"
@@ -374,107 +379,109 @@ const ProposalVote = () => {
                           icon={expandedRows[vote._id] ? faArrowUp : faArrowDown} 
                         />
                       </span>
-                    </td>
+                    </div>
                   </div>
-                  </td>
-                  {/* Opinion Buttons */}
-                  <td className="hide-mobile">
-                    <div className="opinion-buttons">
-                      {Object.keys(icons).map((opinionType) => (
-                        <div
-                          key={opinionType}
-                          data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
-                          data-tooltip-html={tooltips[opinionType]}
-                        >
-                          <button
-                            type="button"
-                            className={vote.opinion === opinionType ? 'selected' : ''}
-                            onClick={() => handleOpinionUpdate(index, opinionType)}
-                            aria-label={`Vote ${opinionType}`}
-                          >
-                            <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
-                          </button>
-                          <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
-                        </div>
-                      ))}
-                    </div>
-                    <div className="submitted-votes-date">
-                      <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
-                    </div>
-                  </td>
+                </td>
 
-                  {/* Comment */}
-                  <td className="hide-mobile">
-                    <div className="comment-container">
-                      <textarea
-                        className="comment-input"
-                        value={vote.comment}
-                        onChange={(e) => handleCommentUpdate(index, e.target.value)}
-                        aria-label="Comment"
-                      />
+                {/* Opinion Buttons (Desktop only) */}
+                <td>
+                  <div className="hide-mobile opinion-buttons">
+                    {Object.keys(icons).map((opinionType) => (
+                      <div
+                        key={opinionType}
+                        data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                        data-tooltip-html={tooltips[opinionType]}
+                      >
+                        <button
+                          type="button"
+                          className={vote.opinion === opinionType ? 'selected' : ''}
+                          onClick={() => handleOpinionUpdate(index, opinionType)}
+                          aria-label={`Vote ${opinionType}`}
+                        >
+                          <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
+                        </button>
+                        <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
+                      </div>
+                    ))}
+                  </div>
+                  <div className='hide-mobile'>
+                    <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
+                  </div>
+                </td>
+
+                {/* Comment (Desktop only) */}
+                <td className='hide-mobile'>
+                  <div className="comment-container hide-mobile">
+                    <textarea
+                      className="comment-input"
+                      value={vote.comment}
+                      onChange={(e) => handleCommentUpdate(index, e.target.value)}
+                      aria-label="Comment"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <span
+                    
+                    onClick={() => handleDeleteEntry(vote._id)} 
+                    aria-label="Delete Entry"
+                    style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <FontAwesomeIcon className="hide-mobile" icon={faTrashCan} />
+                  </span>
+                </td>
+              </tr>
+
+              {/* Expanded Mobile Details */}
+              {expandedRows[vote._id] && (
+                <tr className="show-mobile">
+                  <td>
+                    <div className="expanded-details">
+                      {/* Opinion Buttons (Shown only when expanded on mobile) */}
+                      <div className="opinion-buttons-mobile">
+                        {Object.keys(icons).map((opinionType) => (
+                          <div
+                            key={opinionType}
+                            data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                            data-tooltip-html={tooltips[opinionType]}
+                          >
+                            <button
+                              type="button"
+                              className={vote.opinion === opinionType ? 'selected' : ''}
+                              onClick={() => handleOpinionUpdate(index, opinionType)}
+                              aria-label={`Vote ${opinionType}`}
+                            >
+                              <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
+                            </button>
+                            <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="show-mobile">
+                        <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
+                      </div>
+                      <div className="comment-container">
+                        <textarea
+                          className="comment-input-mobile"
+                          value={vote.comment}
+                          onChange={(e) => handleCommentUpdate(index, e.target.value)}
+                          aria-label="Comment"
+                        />
+                        <td className="hide-mobile">
+                          <span 
+                            onClick={() => handleDeleteEntry(vote._id)} 
+                            aria-label="Delete Entry"
+                            style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          >
+                            <FontAwesomeIcon icon={faTrashCan} />
+                          </span>
+                        </td>
+                      </div>
                     </div>
-                  </td>
-                  <td className="hide-mobile">
-                    <span 
-                      onClick={() => handleDeleteEntry(vote._id)} 
-                      aria-label="Delete Entry"
-                      style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </span>
                   </td>
                 </tr>
-
-                {/* Expanded Mobile Details */}
-                {expandedRows[vote._id] && (
-                  <tr className="details-row show-mobile">
-                    <td colSpan="5">
-                      <div className="expanded-details">
-                        
-                        <div className="opinion-buttons">
-                          {Object.keys(icons).map((opinionType) => (
-                            <div
-                              key={opinionType}
-                              data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
-                              data-tooltip-html={tooltips[opinionType]}
-                            >
-                              <button
-                                type="button"
-                                className={vote.opinion === opinionType ? 'selected' : ''}
-                                onClick={() => handleOpinionUpdate(index, opinionType)}
-                                aria-label={`Vote ${opinionType}`}
-                              >
-                                <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
-                              </button>
-                              <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
-                            </div>
-                          ))}
-                        </div>
-                        <div className="submitted-votes-date show-mobile">
-                          <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
-                        </div>
-                        <div className="comment-container">
-                          <textarea
-                            className="comment-input"
-                            value={vote.comment}
-                            onChange={(e) => handleCommentUpdate(index, e.target.value)}
-                            aria-label="Comment"
-                          />
-                          <td className="hide-mobile">
-                            <span 
-                              onClick={() => handleDeleteEntry(vote._id)} 
-                              aria-label="Delete Entry"
-                              style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                            >
-                              <FontAwesomeIcon icon={faTrashCan} />
-                            </span>
-                          </td>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
+              )}
+            </React.Fragment>
             ))}
           </tbody>
           </table>
