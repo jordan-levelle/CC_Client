@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
-import { faCommentDots } from '@fortawesome/free-solid-svg-icons';
+import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'; 
 import exampleProposalData from '../constants/ExampleProposal.json'
 import {
   handleExistingOpinionUpdate,
@@ -83,27 +83,28 @@ const ExampleProposal = () => {
           <strong>Note:</strong> This is an example proposal. Nothing you change will be saved.
         </p>
       </div>
-      <div className="proposal-vote-container">
+      <div className="main-container">
         <div className="proposal-info">
-          <h2>{exampleProposal.title}</h2>
+          <h3>{exampleProposal.title}</h3>
           <p>Proposed by: {exampleProposal.name}</p>
           <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
         </div>
-        <div className="submitted-votes-container">
-          <table className="votes-table">
+        <div className="table-container">
+          <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Opinion</th>
-                <th>Comment</th>
+                <th>
+                  <h9>Name</h9>
+                </th>
+                <th>
+                  <h9>Opinion</h9>
+                </th>
+                <th>
+                  <h9>Comment</h9>
+                </th>
               </tr>
             </thead>
             <tbody>
-            <tr className="new-entry-title-row show-mobile">
-                <td colSpan="1" className="new-entry-title">
-                  Submit New Entry 
-                </td>
-              </tr>
               <tr className="submit-section">
                 <td>
                   <input
@@ -115,6 +116,7 @@ const ExampleProposal = () => {
                     onKeyDown={handleKeyDown}
                     placeholder="Name"
                     aria-label='Name'
+                    className='name-input'
                   />
                 </td>
                 <td>
@@ -130,7 +132,7 @@ const ExampleProposal = () => {
                           type="button"
                           className={newVote.opinion === opinionType ? 'selected' : ''}
                           onClick={() => setNewVote({ ...newVote, opinion: opinionType })}
-                          data-tip={tooltips[opinionType]} // Add data-tip attribute
+                          data-tip={tooltips[opinionType]} 
                         >
                           <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
                         </button>
@@ -149,35 +151,40 @@ const ExampleProposal = () => {
                     onKeyDown={handleKeyDown}
                     placeholder="Comment"
                     aria-label='Comment'
+                    className="comment-input"
                   />
                 </td>
                 <td>
-                  <button onClick={newSubmission} aria-label='Submit'>Submit</button>
+                  <button 
+                    onClick={newSubmission} 
+                    aria-label='Submit'
+                    className="small-button">Submit</button>
                 </td>
               </tr>
               {exampleProposal.votes.map((vote, index) => (
                 <React.Fragment key={index}>
                   <tr>
-                    <td className="mobile-name-opinion-row">
+                    <td className="info-container">
                       <div className="name-container">
                         {vote.name ? (
                           <span>{vote.name}</span>
                         ): (
-                          <input 
+                          <input
+                            className='name-input' 
                             type='text'
                           />
                         )}
                       </div>
                       {/* Opinion Text Label */}
-                      <div className="opinion-container">
-                        <span className="show-mobile">
+                      <div className="details-container">
+                        <span className="opinion-label-container show-mobile">
                           {vote.opinion && (
                             <span className="opinion-label">
                               <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
                             </span>
                           )}
                         </span>
-                      </div>
+                      
                       {/* Conditional rendering of the comment icon */}
                       {vote.comment && (
                         <div className='comment-tooltip show-mobile'>
@@ -188,24 +195,32 @@ const ExampleProposal = () => {
                             data-for={`tooltip-comment-${vote._id}`}
                           />
                             <Tooltip
-                            id={`tooltip-comment-${vote._id}`}
+                            id={`comment-tooltip-${vote._id}`}
                             place="top"
                             effect="solid"
-                            className="custom-tooltip"
+                            className="tooltip"
                           >
                           <span>{vote.comment}</span>
                         </Tooltip>
                         </div>
                       )}
-                      <div className="toggle-button show-mobile">
-                        <button onClick={() => toggleDetails(index)} aria-label="Toggle Details">
-                          {expandedRows[index] ? 'Hide Details' : 'Details'}
-                        </button>
+                      <div className="show-mobile">
+                      <span 
+                        onClick={() => toggleDetails(index)} 
+                        aria-label="Toggle Details"
+                        className="toggle-details-icon"
+                      >
+                        <FontAwesomeIcon 
+                          icon={expandedRows[vote._id] ? faArrowUp : faArrowDown} 
+                        />
+                      </span>
+                    </div>
                       </div>
                     </td>
+
                     {/* Opinion Buttons */}
-                    <td className="hide-mobile">
-                      <div className="opinion-buttons">
+                    <td>
+                      <div className="hide-mobile opinion-buttons">
                         {Object.keys(icons).map((opinionType) => (
                           <div
                             key={opinionType}
@@ -224,29 +239,38 @@ const ExampleProposal = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="submitted-votes-date">
+                      <div className='hide-mobile'>
                         <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
                       </div>
                     </td>
 
                     {/* Comment */}
                     <td className="hide-mobile">
-                      <textarea
-                        type="text"
-                        value={vote.comment}
-                        onChange={(e) => updateComment(index, e.target.value)}
-                        placeholder='Explain your vote...'
-                      />
+                      <div className="comment-container hide-mobile">
+                        <textarea
+                          type="text"
+                          value={vote.comment}
+                          onChange={(e) => updateComment(index, e.target.value)}
+                          placeholder='Explain your vote...'
+                        />
+                      </div>
                     </td>
-                    <td className="hide-mobile">
-                      <button onClick={() => deleteSubmission(index)}>Delete</button>
+                    <td>
+                      <span 
+                        onClick={() => deleteSubmission(index)}
+                        aria-label="Delete Entry"
+                        style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <FontAwesomeIcon className="hide-mobile" icon={faTrashCan} />
+                      </span>
+                     
                     </td>
                   </tr>
                   {expandedRows[index] && (
-                    <tr className="details-row show-mobile">
-                      <td colSpan="4">
+                    <tr className="show-mobile">
+                      <td>
                         <div className="expanded-details">
-                          <div className="opinion-buttons">
+                          <div className="opinion-buttons-mobile">
                             {Object.keys(icons).map((opinionType) => (
                               <div
                                 key={opinionType}
@@ -265,13 +289,24 @@ const ExampleProposal = () => {
                               </div>
                             ))}
                           </div>
-                          <textarea
-                            type="text"
-                            value={vote.comment}
-                            onChange={(e) => updateComment(index, e.target.value)}
-                            placeholder='Explain your vote...'
-                          />
-                          <button onClick={() => deleteSubmission(index)}>Delete</button>
+                          <div className='comment-container'>
+                            <textarea
+                              className="comment-input-mobile"
+                              type="text"
+                              value={vote.comment}
+                              onChange={(e) => updateComment(index, e.target.value)}
+                              placeholder='Explain your vote...'
+                            /> 
+                            <td className="hide-mobile">
+                              <span 
+                                onClick={() => deleteSubmission(index)}
+                                 aria-label="Delete Entry"
+                                style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                              >
+                                <FontAwesomeIcon icon={faTrashCan} />
+                              </span>
+                            </td>
+                          </div>           
                         </div>
                       </td>
                     </tr>

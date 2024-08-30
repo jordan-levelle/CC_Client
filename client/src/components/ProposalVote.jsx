@@ -220,10 +220,8 @@ const ProposalVote = () => {
             <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
           </div>
         </div>
-        
         <div className="table-container">
           <table className="table">  
- 
           <thead>
           {/* Table Heading/Vote Tally */}
           <tr>
@@ -302,9 +300,7 @@ const ProposalVote = () => {
                 <button 
                   onClick={handleNewTableEntry} 
                   aria-label="Submit New Entry"
-                  className="small-button"
-                >
-                  Submit
+                  className="small-button">Submit
                 </button>
               </td>
             </tr>
@@ -421,8 +417,7 @@ const ProposalVote = () => {
                   </div>
                 </td>
                 <td>
-                  <span
-                    
+                  <span 
                     onClick={() => handleDeleteEntry(vote._id)} 
                     aria-label="Delete Entry"
                     style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
