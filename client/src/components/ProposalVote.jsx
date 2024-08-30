@@ -308,7 +308,7 @@ const ProposalVote = () => {
             {/* Submitted Votes Table */}
             {submittedVotes.map((vote, index) => (
               <React.Fragment key={vote._id}>
-                <tr>
+                <tr className='submitted-table-row'>
                   {/* Name */}
                   <td className="info-container">
                   <div className="name-container">
@@ -347,7 +347,7 @@ const ProposalVote = () => {
                     </div>
 
                     {/* Conditional rendering of the comment icon */}
-                    {vote.comment && (
+                    {vote.comment ? (
                       <div className="comment-icon-container show-mobile">
                         <FontAwesomeIcon
                           icon={faCommentDots}
@@ -363,6 +363,8 @@ const ProposalVote = () => {
                           <span>{vote.comment}</span>
                         </Tooltip>
                       </div>
+                    ) : (
+                      <div className="comment-icon-placeholder"></div> /* Placeholder for spacing */
                     )}
 
                     <div className="show-mobile">
@@ -429,7 +431,7 @@ const ProposalVote = () => {
 
               {/* Expanded Mobile Details */}
               {expandedRows[vote._id] && (
-                <tr className="show-mobile">
+                <tr className="submitted-table-row show-mobile"> 
                   <td>
                     <div className="expanded-details">
                       {/* Opinion Buttons (Shown only when expanded on mobile) */}

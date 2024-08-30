@@ -1,209 +1,211 @@
 /**************Styles for Proposal Vote Component**************/
-  .example-alert {
-    color: #c09853;
-    padding: 8px 35px 8px 14px;
-    margin-bottom: 20px;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
-    background-color: #fcf8e3;
-    border: 1px solid #fbeed5;
-  }
-  
-  .first-render-message {
-    max-width: 92vw;
-    padding: 20px;
-    margin: 5px auto;
-    background-color: rgba(144, 238, 144, 0.8); 
-    color: #333; 
-    border-radius: 10px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    font-size: 13px; 
-  }
-  
-  .alert-block {
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-  
-  .main-container {
-    margin: 15px auto; 
-    padding: 7px;
-    max-width: 92vw;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  }
-  
-  .proposal-description {
-    background-color: rgba(228, 228, 228, 0.4);
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
+.example-alert {
+  color: #c09853;
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+}
 
-  /* Table Styling */
-  .table-container {
-    margin: 2px auto;
-  }
-  
-  .table {
-    border-collapse: collapse; 
-    border: none;
-  }
+.first-render-message {
+  max-width: 92vw;
+  padding: 20px;
+  margin: 5px auto;
+  background-color: rgba(144, 238, 144, 0.8); 
+  color: #333; 
+  border-radius: 10px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  font-size: 13px; 
+}
 
-  .table th,
-  .table td {
-    min-width: 65px; 
-    max-width: 300px; 
-    border: none; 
-  }
-  
-  .table th {
-    text-align: left;
-    vertical-align: bottom; 
-  }
+.alert-block {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
 
-  .table tr {
-    vertical-align: middle; 
-  }
+.main-container {
+  margin: 15px auto; 
+  padding: 7px;
+  max-width: 92vw;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
 
-  /* Container for all opinion summary items */
-  .opinion-tally-container {
-    display: flex; 
-    align-items: center; 
-    margin-bottom: 15px; 
-    flex: 1; 
-    overflow: hidden; 
-  }
-  
-  .opinion-content {
+.proposal-description {
+  background-color: rgba(228, 228, 228, 0.4);
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Table Styling */
+.table-container {
+  margin: 2px auto;
+}
+
+.table {
+  border-collapse: collapse; 
+  border: none;
+}
+
+.table th,
+.table td {
+  min-width: 65px; 
+  max-width: 300px; 
+  border: none; 
+}
+
+.table th {
+  text-align: left;
+  vertical-align: bottom; 
+}
+
+.table tr {
+  vertical-align: middle; 
+}
+
+/* Container for all opinion summary items */
+.opinion-tally-container {
+  display: flex; 
+  align-items: center; 
+  margin-bottom: 15px; 
+  flex: 1; 
+  overflow: hidden; 
+}
+
+.opinion-content {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  margin-right: 10px; 
+  padding: 7px 20px; 
+  flex: 1 1 auto; 
+  max-width: 105px;
+  min-width: 0;
+}
+
+.opinion-tally-item {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  border-bottom: 2px solid #1b1b1b; 
+  padding-bottom: 2px; 
+  margin: 0 5px; 
+}
+
+.opinion-count {
+  display: inline-block; 
+  margin-left: 5px; 
+}
+
+.submit-section {
+  border-bottom: 2px solid #ddd;
+}
+
+.name-input {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 25vw; 
+  max-width: 250px;
+  min-width: 110px; 
+}
+
+.name-input:focus {
+  border-color: var(--focus-border-color);
+  box-shadow: var(--focus-box-shadow);
+  outline: var(--focus-outline);
+}
+
+.opinion-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: .7vw .8vw; 
+}
+
+.opinion-buttons button {
+  flex: 1; 
+  min-width: 0; 
+  padding: .8vw .9vw; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
+}
+
+.selected {
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #007bff;
+}
+
+.comment-input {
+  width: 100%; 
+  padding: 10px; 
+  border-radius: 4px; 
+  border: 1px solid #ccc; 
+  resize: vertical; 
+  height: 70px; 
+  font-family: inherit; 
+  font-size: 1rem; 
+  line-height: 1.5; 
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); 
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.comment-input:focus {
+  border-color: var(--focus-border-color);
+  box-shadow: var(--focus-box-shadow);
+  outline: var(--focus-outline);
+}
+
+.expanded-details {
+  display: flex;
+  background-color: #f9f9f9;
+  flex-direction: column;
+  padding-top: 5px;
+}
+
+.opinion-mobile {
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+/* Only Show on Mobile */
+.show-mobile {
+  display: none;
+}
+
+@media (max-width: 920px) {
+.opinion-buttons {
     display: flex;
-    align-items: center; 
-    justify-content: center; 
-    margin-right: 10px; 
-    padding: 7px 20px; 
-    flex: 1 1 auto; 
-    max-width: 105px;
-    min-width: 0;
-  }
-  
-  .opinion-tally-item {
-    display: flex;
-    align-items: center; 
-    justify-content: center; 
-    border-bottom: 2px solid #1b1b1b; 
-    padding-bottom: 2px; 
-    margin: 0 5px; 
-  }
-  
-  .opinion-count {
-    display: inline-block; 
-    margin-left: 5px; 
-  }
-
-  .submit-section {
-    border-bottom: 2px solid #ddd;
-  }
-
-  .name-input {
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1.5;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    width: 25vw; 
-    max-width: 250px;
-    min-width: 110px; 
-  }
-  
-  .name-input:focus {
-    border-color: var(--focus-border-color);
-    box-shadow: var(--focus-box-shadow);
-    outline: var(--focus-outline);
-  }
-
-  .opinion-buttons {
     display: flex;
     flex-direction: row;
-    gap: .7vw .8vw; 
-  }
-  
-  .opinion-buttons button {
-    flex: 1; 
-    min-width: 0; 
-    padding: .8vw .9vw; 
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
   }
 
-  .selected {
-    background-color: #007bff;
-    color: #fff;
-    border: 1px solid #007bff;
-  }
-  
-  .comment-input {
-    width: 100%; 
-    padding: 10px; 
-    border-radius: 4px; 
-    border: 1px solid #ccc; 
-    resize: vertical; 
-    height: 70px; 
-    font-family: inherit; 
-    font-size: 1rem; 
-    line-height: 1.5; 
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); 
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
-  }
-  
-  .comment-input:focus {
-    border-color: var(--focus-border-color);
-    box-shadow: var(--focus-box-shadow);
-    outline: var(--focus-outline);
-  }
-  
-  .expanded-details {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .opinion-mobile {
-    display: inline-block;
-    margin-left: 5px;
-    vertical-align: middle;
-  }
-  
-  /* Only Show on Mobile */
-  .show-mobile {
-    display: none;
-  }
-  
-@media (max-width: 920px) {
-  .opinion-buttons {
-      display: flex;
-      display: flex;
-      flex-direction: row;
-    }
+.opinion-buttons button {
+  padding: 7px; 
+  width: fit-content;
+  box-sizing: border-box; 
+  text-align: center; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  background-color: #f0f0f0; 
+  cursor: pointer; 
+}
 
-  .opinion-buttons button {
-    padding: 7px; 
-    width: fit-content;
-    box-sizing: border-box; 
-    text-align: center; 
-    border: 1px solid #ccc; 
-    border-radius: 4px; 
-    background-color: #f0f0f0; 
-    cursor: pointer; 
-  }
-  
-  .opinion-buttons button.selected {
-    background-color: #007bff; 
-    color: #fff; 
-  }
+.opinion-buttons button.selected {
+  background-color: #007bff; 
+  color: #fff; 
+}
 }
 
 /* General Mobile Styles */
@@ -224,7 +226,19 @@
   .table tr {
     display: flex;
     flex-direction: column;
-    margin-bottom: 4px; 
+    margin-bottom: 6px; 
+  }
+
+  .table tr:nth-child(0) {
+    margin-bottom: 20px; /* Adjust this value as needed */
+}
+
+  .submitted-table-row {
+    vertical-align: middle; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    display: flex;
+    flex-direction: column;
   }
 
   .table td {
@@ -235,95 +249,113 @@
     display: none;
   }
 
-  .opinion-tally-container {
-    display: flex;
-  }
 
-  /* Submit New Entry Row */
-  .submit-section td {
-    display: flex;
-    flex-direction: column;
-    padding: 4px 0; 
-  }
+.opinion-tally-container {
+  display: flex;
+}
 
-  .info-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
+/* Submit New Entry Row */
+.submit-section td {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0; 
+}
 
-  .name-container {
-    flex: 1;
-  }
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 
-  .details-container {
-    display: flex;
-    align-items: center;
-    gap: 4px; 
-  }
+.name-container {
+  flex: 1;
+}
 
-  .opinion-label-container,
-  .comment-icon-container,
-  .toggle-button-container {
-    display: flex;
-  }
+.details-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
-  /* Toggling Rows */
-  .toggle-button-container {
-    justify-content: flex-end;
-  }
+.opinion-label-container,
+.comment-icon-container,
+.toggle-button-container {
+  display: flex;
+  margin: 4px;
+}
 
-  .toggle-details-icon {
-    cursor: pointer;
-    font-size: 1rem;
-  }
+.comment-icon-container {
+  width: 24px; /* Adjust the width to match the icon's size */
+  height: 24px; /* Adjust the height to match the icon's size */
+  justify-content: center;
+  align-items: center;
+}
 
-  /* Expanded Details */
-  .expanded-details {
-    display: flex;
-    flex-direction: column;
-    gap: 4px; 
-  }
+/* Invisible placeholder for maintaining layout */
+.comment-icon-placeholder {
+  width: 24px;
+  height: 24px;
+}
 
-  .comment-container {
-    margin-top: 6px;
-  }
+/* Toggling Rows */
+.toggle-button-container {
+  justify-content: flex-end;
+}
 
-  /* Mobile styles for opinion buttons */
-  .opinion-buttons-mobile {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5vw; 
-  }
+.toggle-details-icon {
+  cursor: pointer;
+  margin-left: 6px;
+  font-size: 1rem;
+}
 
-  .opinion-buttons-mobile button {
-    flex: 1;
-    padding: 4px;
-    width: fit-content;
-    box-sizing: border-box;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f0f0f0;
-    cursor: pointer;
-  }
+/* Mobile styles for opinion buttons */
+.opinion-buttons-mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5vw; 
+}
 
-  .opinion-buttons-mobile button span {
-    display: none;
-  }
+.opinion-buttons-mobile button {
+  flex: 1;
+  padding: 7px;
+  width: fit-content;
+  box-sizing: border-box;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
 
-  .opinion-buttons-mobile button.selected {
-    background-color: #007bff;
-    color: #fff;
-  }
+.opinion-buttons-mobile button span {
+  display: none;
+}
 
-  /* Mobile styles for comment input */
-  .comment-input-mobile {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
+.opinion-buttons-mobile button.selected {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.comment-input-mobile {
+  width: 100%; 
+  padding: 10px; 
+  border-radius: 4px; 
+  border: 1px solid #ccc; 
+  resize: vertical; 
+  height: 70px; 
+  font-family: inherit; 
+  font-size: 1rem; 
+  line-height: 1.5; 
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); 
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.comment-input-mobile:focus {
+  border-color: var(--focus-border-color);
+  box-shadow: var(--focus-box-shadow);
+  outline: var(--focus-outline);
+}
 }
 
 
