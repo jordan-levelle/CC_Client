@@ -1,0 +1,86 @@
+/**************Styles for Teams Pages**************/
+  .team-name-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .team-name-input,
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .teams-table {
+    width: 100%;
+    margin-bottom: 10px;
+    border-collapse: collapse; /* Ensure borders collapse into a single line */
+  }
+  
+  .teams-table th, 
+  .teams-table td {
+    padding: 8px;
+    text-align: left;
+    border: none; /* Remove default borders on cells */
+  }
+  
+  .teams-table tr {
+    border-bottom: 1px solid #ddd; /* Add border between rows */
+  }
+  
+  .members-column {
+    width: 100px; /* Adjust this value to your preference */
+  
+  }
+  
+  .actions-column {
+    display: flex;
+    justify-content: space-between; /* Space the icons evenly */
+    align-items: center;
+  }
+  
+  .add-button, 
+  .delete-button {
+    padding: 4px 8px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #ffffff;
+  }
+  
+  .create-team-button {
+    padding: 4px 8px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #dfdfdf;
+  }
+  
+  .add-button:hover, 
+  .delete-button:hover, 
+  .create-team-button:hover {
+    background-color: #f3f3f3;
+  }
+  
+  
+  @media (min-width: 1050px) {
+    .Teams-Dashboard-Container {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    
+    .Create-Teams-Container, 
+    .User-Teams-Container {
+      flex: 1;
+  
+      margin: 0 auto;
+    }
+  }
+  
+  
+  
+  

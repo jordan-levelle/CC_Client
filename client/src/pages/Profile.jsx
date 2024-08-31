@@ -67,8 +67,8 @@ const Profile = () => {
 
   return (
     <div className="dashboard">
-      <div className="proposals-container">
-        <div className="proposal-list-container">
+      <div className="page-container">
+        <div className="component-container-1">
           <h4>Your Proposals</h4>
           <div className="user-proposal-filter-options">
             <Form>
@@ -114,7 +114,7 @@ const Profile = () => {
             <p>No Proposals</p>
           )}
         </div>
-        <div className="proposal-participated-container">
+        <div className="component-container-2">
           <h4>Participated Proposals</h4>
           <div className="participated-proposal-filter-options">
             <Form>

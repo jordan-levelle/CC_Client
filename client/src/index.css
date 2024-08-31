@@ -26,6 +26,47 @@ body {
   flex-direction: column;
 }
 
+/* Global Container Styles */
+
+.page-container {
+  display: flex;
+  justify-content: space-between; /* Ensure space between the two containers */
+  gap: 20px; /* Space between the containers */
+  padding: 20px;
+  flex-wrap: wrap; /* Allows containers to wrap to the next line */
+}
+
+
+.component-container-1,
+.component-container-2 {
+  border: 1px solid lightblue;
+  border-radius: 5px;
+  padding: 20px;
+  flex: 1; 
+  min-width: 300px; /* Minimum width to maintain side-by-side layout */
+  box-shadow: .1rem .1rem .2rem rgba(0, 0, 0, 0.5);
+}
+
+.cardlist-item {
+  width: 80%; /* Allow the card to take full width of the parent */
+  max-width: 500px; /* Optional: Keep a max-width to prevent it from getting too large */
+  box-sizing: border-box; /* Include padding and border in width */
+  margin: 0; /* No extra margin */
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #dddbdb;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow the card to grow and shrink with its parent */
+}
+
+@media (max-width: 920px) {
+  .cardlist-item {
+    width: 100%; /* Make the card take up the full width */
+  }
+}
 
 /* Global Button Styles */
 .small-button {
@@ -196,338 +237,6 @@ body {
 
 
 
-
-/* 
-  *************Styles for User Dashboard*************** 
-*/
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  gap: 20px;
-  min-height: 100vh; /* Ensure the dashboard takes full height */
-}
-
-/* Desktop styles */
-@media (min-width: 1140px) {
-  .dashboard {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .proposals-container {
-    display: flex;
-    flex-direction: row;
-    gap: 50px;
-    flex: 1; /* Take up remaining space */
-  }
-
-  .proposal-list-container {
-    width: 420px;
-    max-width: none; /* No max-width restrictions */
-    box-sizing: border-box; /* Include padding and border in width */
-    margin: 0; /* No extra margin */
-  }
-
-  .user-details {
-    width: fit-content; /* Ensure user details takes up space on the right */
-    padding: 10px; /* Padding inside the box */
-    margin: 0 auto;
-    background-color: #f0f0f0; /* Light gray background */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    border: 1px solid #ccc; /* Light border */
-    align-self: start; /* Align to the top of the flex container */
-    text-align: center;
-    box-sizing: border-box; /* Include padding and border in width */
-  }
-}
-
-/* Tablet to Desktop styles */
-@media (min-width: 876px) and (max-width: 1140px) {
-  .dashboard {
-    flex-direction: column;
-  }
-
-  .proposals-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto;
-    gap: 50px;
-  }
-
-  .proposal-list-container {
-    width: 400px; /* Full width for each container */
-    max-width: none;
-    margin-bottom: 20px; /* Space between containers */
-    
-  }
-
-  .user-details {
-    width: fit-content; /* Full width */
-    margin: 0 auto;
-    align-self: center;
-    margin-bottom: 20px; /* Space below */
-    padding: 10px;
-    background-color: #f0f0f0; /* Light gray background */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    border: 1px solid #ccc; /* Light border */
-    text-align: center;
-  }
-}
-
-
-
-/* Mobile styles */
-@media (max-width: 876px) {
-  .dashboard {
-    flex-direction: column;
-  }
-
-  .proposals-container {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-  }
-
-  .proposal-list-container {
-    max-width: 370px;
-    width: 80vw;
-  }
-
-  .user-details {
-    width: fit-content; /* Full width */
-    margin: 0 auto;
-    margin-bottom: 20px; /* Space below */
-    padding: 10px;
-    background-color: #f0f0f0; /* Light gray background */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    border: 1px solid #ccc; /* Light border */
-    text-align: center;
-  }
-}
-
-.proposal-item {
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #dddbdb;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.proposal-button-group {
-  display: flex;
-  justify-content: center;
-  max-width: fit-content;
-  flex-wrap: wrap; /* Allow buttons to wrap to next line */
-  gap: 5px; /* Add some space between buttons */
-}
-
-.view-proposal-button, 
-.edit-button, 
-.delete-proposal-button {
-  font-size: medium;
-  padding: 5px 10px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Smooth transition for hover */
-}
-
-.view-proposal-button {
-  width: auto; /* Allow button to expand with text */
-  background-color: #007bff; /* Blue background color */
-  color: #ffffff;
-}
-
-.delete-proposal-button {
-  width: auto; /* Allow button to expand with text */
-  background-color: #dddbdb;
-  color: #dc3545;
-}
-
-.edit-button {
-  width: auto; /* Allow button to expand with text */
-  background-color: #a8a8a8; /* Grey background color */
-  color: #ffffff;
-}
-
-.view-proposal-button:hover,
-.edit-button:hover {
-  background-color: #6d6d6d; /* Darker shade of grey for hover */
-}
-
-.confirmation-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  border: 1px solid #ccc;
-  padding: 20px;
-  z-index: 1000;
-}
-
-.confirmation-content {
-  text-align: center;
-}
-
-.confirmation-options label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.confirmation-options input[type="radio"] {
-  margin-right: 5px;
-}
-
-.participated-proposal-filter-options {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-
-}
-
-.participated-proposal-filter-options .form-check {
-  margin-right: 20px; /* Remove default margin if needed */
-}
-
-.user-proposal-filter-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-}
-
-
-
-
-
-
-/* 
-  *************Styles for Teams Pages*************
-*/
-
-.Teams-Dashboard-Container {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-}
-
-.Create-Teams-Container,
-.User-Teams-Container {
-  border: 1px solid lightblue;
-  border-radius: 5px;
-  padding: 20px;
-  max-width: 800px;
-  box-sizing: border-box; /* Ensures padding is included in the width */
-}
-
-.team-name-label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.team-name-input,
-.input-field {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.teams-table {
-  width: 100%;
-  margin-bottom: 10px;
-  border-collapse: collapse; /* Ensure borders collapse into a single line */
-}
-
-.teams-table th, 
-.teams-table td {
-  padding: 8px;
-  text-align: left;
-  border: none; /* Remove default borders on cells */
-}
-
-.teams-table tr {
-  border-bottom: 1px solid #ddd; /* Add border between rows */
-}
-
-.members-column {
-  width: 100px; /* Adjust this value to your preference */
-
-}
-
-.actions-column {
-  display: flex;
-  justify-content: space-between; /* Space the icons evenly */
-  align-items: center;
-}
-
-.add-button, 
-.delete-button {
-  padding: 4px 8px;
-  margin: 4px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: #ffffff;
-}
-
-.create-team-button {
-  padding: 4px 8px;
-  margin: 4px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: #dfdfdf;
-}
-
-.add-button:hover, 
-.delete-button:hover, 
-.create-team-button:hover {
-  background-color: #f3f3f3;
-}
-
-
-@media (min-width: 1050px) {
-  .Teams-Dashboard-Container {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .Create-Teams-Container, 
-  .User-Teams-Container {
-    flex: 1;
-
-    margin: 0 auto;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* 
   *************Styles for Authentication Pages*************
 */
@@ -593,12 +302,6 @@ body {
 .small-text {
   font-size: 0.8rem;
 }
-
-
-
-
-
-
 
 
 
@@ -804,15 +507,6 @@ input.email {
 .confirm-button:hover {
   background-color: #218838;
 }
-
-
-
-
-
-
-
-
-
 
 
 /* 

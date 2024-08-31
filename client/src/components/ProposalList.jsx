@@ -4,6 +4,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { Link } from 'react-router-dom';
 import { deleteProposalAPI } from '../api/proposals';
 import { formatDate } from '../constants/HomeTextConstants';
+import '../styles/components/userdashboard.css';
 
 const ProposalList = ({ proposal }) => {
   const { dispatch } = useProposalsContext();
@@ -55,8 +56,8 @@ const ProposalList = ({ proposal }) => {
   };
 
   return (
-    <div className="proposal-list-container">
-      <div className="proposal-item">
+    <section>
+      <div className="cardlist-item">
         <h4>{proposal.title}</h4>
         <p>
           Proposed on: {proposal.createdAt ? formatDate(proposal.createdAt) : 'Invalid Date'}
@@ -103,7 +104,7 @@ const ProposalList = ({ proposal }) => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

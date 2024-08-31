@@ -241,9 +241,6 @@
     flex-direction: column;
   }
 
-  .table td {
-    display: flex;
-  }
 
   th h9 {
     display: none;

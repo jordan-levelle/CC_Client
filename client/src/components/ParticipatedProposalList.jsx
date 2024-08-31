@@ -19,7 +19,7 @@ const ParticipatedProposalList = ({ proposal, showHidden }) => {
   if (isHidden && !showHidden) return null;
 
   return (
-    <div className="proposal-item">
+    <div className="cardlist-item ">
       <h4>{proposal.proposalTitle}</h4>
       {proposal.vote ? (
         <div>
