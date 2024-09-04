@@ -4,6 +4,7 @@ import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import ErrorMessage from './ErrorMessage';
 
 const UserCreateTeams = ({ existingTeam, onClose }) => {
   const [teamName, setTeamName] = useState(existingTeam ? existingTeam.teamName : '');
@@ -26,14 +27,17 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
   }, [existingTeam]);
 
   const handleAddRow = () => {
-    if (name) {
+    if (!name) {
+      setError('Name is required');
+      return;
+    }
+      setError('');
       const newRow = { name, email };
-      setRows(prevRows => [...prevRows, newRow].sort((a, b) => a.name.localeCompare(b.name)));
+      setRows(prevRows => [...prevRows, newRow]);
       setName('');
       setEmail('');
-    }
-  };
-
+  }
+  
   const handleDeleteRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows.sort((a, b) => a.name.localeCompare(b.name)));
@@ -48,15 +52,20 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!teamName) {
+      setError('Team name is required');
+      return;
+    }
+
     try {
-      const members = rows.map(row => ({ memberName: row.name, memberEmail: row.email }));
+      const sortedRows = [...rows].sort((a, b) => a.name.localeCompare(b.name));
+      const members = sortedRows.map(row => ({ memberName: row.name, memberEmail: row.email }));
 
       if (existingTeam) {
         await editTeam(existingTeam._id, { teamName, members }, user.token);
       } else {
         await createTeam({ teamName, members }, user.token);
       }
-
       setTeamName('');
       setRows([]);
       setError(null);
@@ -118,6 +127,7 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Name"
                 className="input-field"
+                
               />
             </td>
             <td>
@@ -142,10 +152,10 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
           </tr>
         </tbody>
       </table>
-      {error && <div className="error-message">{error}</div>}
+      <ErrorMessage message={error} />
       <button
         type="submit"
-        className="create-team-button"
+        className="small-button"
       >
         {existingTeam ? 'Update Team' : 'Create Team'}
       </button>

@@ -8,7 +8,7 @@
   --border-color: #ccc;
   --focus-border-color: #007BFF;
   --focus-box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  --focus-outline: none; /* No outline */
+  --focus-outline: none;
 }
 
 *,
@@ -26,8 +26,8 @@ body {
   flex-direction: column;
 }
 
-/* Global Container Styles */
 
+/**************************** Global Container Styles *******************************/
 .page-container {
   display: flex;
   justify-content: space-between; /* Ensure space between the two containers */
@@ -35,7 +35,6 @@ body {
   padding: 20px;
   flex-wrap: wrap; /* Allows containers to wrap to the next line */
 }
-
 
 .component-container-1,
 .component-container-2 {
@@ -68,7 +67,9 @@ body {
   }
 }
 
-/* Global Button Styles */
+
+
+/***************************** Global Button Styles **********************************/
 .small-button {
   background-color: #007bff; 
   color: #ffffff; 
@@ -87,7 +88,43 @@ body {
   background-color: #0056b3;
 }
 
-/* Global Tooltip Styles */
+
+
+/**************************** Global Tooltip Styles **********************************/
+.overlayStyles {
+  position: 'fixed';
+  top: 0;
+  left: 0;
+  width: '100%';
+  height: '100%';
+  background-color: 'rgba(0, 0, 0, .2)';
+  display: 'flex';
+  justify-content: 'center';
+  align-items: 'center';
+};
+
+.popupStyles {
+  position: 'relative';
+  background-color: '#fff';
+  padding: '20px';
+  border-radius: '8px';
+  text-align: 'start';
+  width: '650px';
+};
+
+.popupCloseButtonStyles {
+  position: 'absolute';
+  top: '10px';
+  right: '10px';
+  background: 'none';
+  border: 'none';
+  cursor: 'pointer';
+  font-size: '1.5rem';
+};
+
+
+
+/**************************** Global Tooltip Styles **********************************/
 .tooltip {
   position: fixed;
   background-color: white;

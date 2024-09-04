@@ -9,7 +9,8 @@ import { faPencil, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import 'react-tooltip/dist/react-tooltip.css';
 import UserEditTeams from '../components/UserEditTeams'; // Import UserEditTeams
 import ProposalForm from './proposalForm';
-import Modal from './ModalOverlay';
+import Modal from './PopupOverlay';
+
 
 const UserTeams = () => {
   const { teams, fetchTeams, updateSelectedTeam } = useTeamsContext();

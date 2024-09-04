@@ -7,6 +7,7 @@ import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
+// import { useTeamsContext } from 'src/context/TeamsContext';
 import { useAuthContext } from "../hooks/useAuthContext";
 import {
   fetchProposalData,
@@ -24,6 +25,7 @@ import '../styles/components/proposalvote.css';
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
   const { user } = useAuthContext();
+  // const { teams, fetchTeams, selectedTeam } = useTeamsContext();
 
   const [proposal, setProposal] = useState(null);
   const [submittedVotes, setSubmittedVotes] = useState([]);
@@ -34,7 +36,9 @@ const ProposalVote = () => {
   const [copiedEditLink, setCopiedEditLink] = useState(false);
   const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
   const [expandedRows, setExpandedRows] = useState({});
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Initial check
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
+
+  // const teamNames = selectedTeam ? selectedTeam.names || [] : [];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,15 +86,10 @@ const ProposalVote = () => {
     }
   };
 
-   // Define the links
-   const proposalLink = `${window.location.origin}/${uniqueUrl}`;
-   const editLink = user
+  const proposalLink = `${window.location.origin}/${uniqueUrl}`;
+  const editLink = user
   ? `${window.location.origin}/edit/${uniqueUrl}` 
   : `${window.location.origin}/edit/${uuidv4()}/${uniqueUrl}`; 
-
-  const toggleDetails = (voteId) => {
-    setExpandedRows((prev) => ({ ...prev, [voteId]: !prev[voteId] }));
-  };
 
   const handleNewVoteChange = (e) => {
     const { name, value } = e.target;
@@ -143,6 +142,10 @@ const ProposalVote = () => {
     }
   };
 
+  const toggleDetails = (voteId) => {
+    setExpandedRows((prev) => ({ ...prev, [voteId]: !prev[voteId] }));
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && e.target.name === 'name') {
       handleNewTableEntry();
@@ -158,8 +161,7 @@ const ProposalVote = () => {
     }
   };
 
-   // Calculate the count of each opinion
-   const opinionCounts = submittedVotes.reduce((acc, vote) => {
+  const opinionCounts = submittedVotes.reduce((acc, vote) => {
     acc[vote.opinion] = (acc[vote.opinion] || 0) + 1;
     return acc;
   }, {});
@@ -226,7 +228,7 @@ const ProposalVote = () => {
           {/* Table Heading/Vote Tally */}
           <tr>
             <th>
-              <h9>Name</h9>
+              <h8>Name</h8>
             </th>
             <th className="opinion-column">
               <div className="opinion-tally-wrapper">
@@ -240,11 +242,11 @@ const ProposalVote = () => {
                     </div>
                   ))}
                 </div>
-                <h9>Opinion</h9>
+                <h8>Opinion</h8>
               </div>
             </th>
             <th>
-              <h9>Comment</h9>
+              <h8>Comment</h8>
             </th>
           </tr>
         </thead>

@@ -1,24 +1,23 @@
 /**************Styles for User Dashboard****************/
-
 .user-details {
-    width: fit-content; /* Ensure user details takes up space on the right */
-    padding: 10px; /* Padding inside the box */
+    width: fit-content; 
+    padding: 10px; 
     margin: 0 auto;
-    background-color: #f0f0f0; /* Light gray background */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    border: 1px solid #ccc; /* Light border */
-    align-self: start; /* Align to the top of the flex container */
+    background-color: #f0f0f0; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #ccc; 
+    align-self: start; 
     text-align: center;
-    box-sizing: border-box; /* Include padding and border in width */
+    box-sizing: border-box; 
   }
   
   .proposal-button-group {
     display: flex;
     justify-content: center;
     max-width: fit-content;
-    flex-wrap: wrap; /* Allow buttons to wrap to next line */
-    gap: 5px; /* Add some space between buttons */
+    flex-wrap: wrap; 
+    gap: 5px; 
   }
   
   .view-proposal-button, 
@@ -30,30 +29,30 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth transition for hover */
+    transition: background-color 0.3s ease;
   }
   
   .view-proposal-button {
-    width: auto; /* Allow button to expand with text */
-    background-color: #007bff; /* Blue background color */
+    width: auto; 
+    background-color: #007bff; 
     color: #ffffff;
   }
   
   .delete-proposal-button {
-    width: auto; /* Allow button to expand with text */
+    width: auto; 
     background-color: #dddbdb;
     color: #dc3545;
   }
   
   .edit-button {
-    width: auto; /* Allow button to expand with text */
-    background-color: #a8a8a8; /* Grey background color */
+    width: auto; 
+    background-color: #a8a8a8; 
     color: #ffffff;
   }
   
   .view-proposal-button:hover,
   .edit-button:hover {
-    background-color: #6d6d6d; /* Darker shade of grey for hover */
+    background-color: #6d6d6d; 
   }
   
   .confirmation-popup {
@@ -89,7 +88,7 @@
   }
   
   .participated-proposal-filter-options .form-check {
-    margin-right: 20px; /* Remove default margin if needed */
+    margin-right: 20px; 
   }
   
   .user-proposal-filter-options {

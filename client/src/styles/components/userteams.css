@@ -16,28 +16,28 @@
   .teams-table {
     width: 100%;
     margin-bottom: 10px;
-    border-collapse: collapse; /* Ensure borders collapse into a single line */
+    border-collapse: collapse; 
   }
   
   .teams-table th, 
   .teams-table td {
     padding: 8px;
     text-align: left;
-    border: none; /* Remove default borders on cells */
+    border: none; 
   }
   
   .teams-table tr {
-    border-bottom: 1px solid #ddd; /* Add border between rows */
+    border-bottom: 1px solid #ddd;
   }
   
   .members-column {
-    width: 100px; /* Adjust this value to your preference */
+    width: 100px; 
   
   }
   
   .actions-column {
     display: flex;
-    justify-content: space-between; /* Space the icons evenly */
+    justify-content: space-between; 
     align-items: center;
   }
   
