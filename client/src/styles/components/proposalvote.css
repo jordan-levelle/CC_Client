@@ -67,7 +67,7 @@
   vertical-align: middle; 
 }
 
-/* Container opinion summary items */
+/* Container for all opinion summary items */
 .opinion-tally-container {
   display: flex; 
   align-items: center; 
@@ -101,7 +101,6 @@
   margin-left: 5px; 
 }
 
-/* Submit Section */
 .submit-section {
   border-bottom: 2px solid #ddd;
 }
@@ -243,7 +242,7 @@
   }
 
 
-  th h9 {
+  th h8 {
     display: none;
   }
 
