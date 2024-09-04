@@ -76,7 +76,11 @@
 }
 
 .dropdown {
-  position: relative; /* Add this line */
+  position: relative; /* Ensure dropdown positioning */
+}
+
+.dropdown:hover .dropdown-content {
+  display: block; /* Show dropdown on hover for desktop */
 }
 
 .hamburger {
@@ -85,10 +89,6 @@
 
 .dropdown-icon {
   display: none;
-}
-
-.dropdown-content.active {
-  display: block;
 }
 
 @media only screen and (max-width: 1133px) {
