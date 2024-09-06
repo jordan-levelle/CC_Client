@@ -7,7 +7,7 @@ import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Icons_Tooltips';
 import { formatDate } from '../constants/HomeTextConstants';
-// import { useTeamsContext } from 'src/context/TeamsContext';
+import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from "../hooks/useAuthContext";
 import {
   fetchProposalData,
@@ -21,14 +21,14 @@ import {
 } from '../api/proposals';
 import '../styles/components/proposalvote.css';
 
-
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
   const { user } = useAuthContext();
-  // const { teams, fetchTeams, selectedTeam } = useTeamsContext();
+  const { selectedTeam } = useTeamsContext();
 
   const [proposal, setProposal] = useState(null);
   const [submittedVotes, setSubmittedVotes] = useState([]);
+  const [votesSubmitted, setVotesSubmitted] = useState(false);
   const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,26 +38,47 @@ const ProposalVote = () => {
   const [expandedRows, setExpandedRows] = useState({});
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
 
-  // const teamNames = selectedTeam ? selectedTeam.names || [] : [];
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataAndHandleVotes = async () => {
       try {
+        // Fetch proposal data
         const { proposal: proposalData } = await fetchProposalData(uniqueUrl);
         setProposal(proposalData);
+  
+        // Fetch submitted votes
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
+  
+        // Check if this is the first render
         const firstRender = await checkFirstRender(proposalData._id);
         setShowFirstRenderMessage(firstRender);
+  
+        // Handle initial vote submission if it's the first render
+        if (selectedTeam && proposalData && proposalData._id && !votesSubmitted && firstRender) {
+          const votePromises = selectedTeam.members.map((member) => {
+            const memberVote = { name: member.memberName, opinion: '', comment: '' };
+            return submitNewTableEntry(proposalData._id, memberVote, setSubmittedVotes, setNewVote, setError);
+          });
+  
+          // Submit all votes concurrently and update the state with the new votes
+          await Promise.all(votePromises);
+  
+          const updatedVotes = await fetchSubmittedVotes(proposalData._id);
+          setSubmittedVotes(updatedVotes);
+  
+          setVotesSubmitted(true); // Prevent multiple submissions
+        }
       } catch (error) {
-        setError('Error fetching data: ' + error.message);
+        setError('Error fetching data or submitting initial votes: ' + error.message);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchData();
-  }, [uniqueUrl]);
-
+  
+    fetchDataAndHandleVotes();
+  }, [uniqueUrl, selectedTeam, votesSubmitted]);
+  
   useEffect(() => {
     const handleResize = () => {
       setIsDesktop(window.innerWidth > 768);
@@ -97,13 +118,9 @@ const ProposalVote = () => {
   };
 
   const handleOpinionButtonClick = async (opinionType) => {
-    // Update newVote state with the selected opinion
     setNewVote((prevVote) => ({ ...prevVote, opinion: opinionType }));
     try {
-      // Submit new table entry with current newVote state
       await submitNewTableEntry(proposal._id, { ...newVote, opinion: opinionType }, setSubmittedVotes, setNewVote, setError);
-      
-      // After submission, reset newVote state to clear the form fields
       setNewVote({ name: '', opinion: '', comment: '' });
     } catch (error) {
       setError('Error submitting new entry: ' + error.message);
@@ -142,16 +159,6 @@ const ProposalVote = () => {
     }
   };
 
-  const toggleDetails = (voteId) => {
-    setExpandedRows((prev) => ({ ...prev, [voteId]: !prev[voteId] }));
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && e.target.name === 'name') {
-      handleNewTableEntry();
-    }
-  };
-
   const handleNewTableEntry = async () => {
     try {
       await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes, setNewVote, setError);
@@ -161,10 +168,20 @@ const ProposalVote = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && e.target.name === 'name') {
+      handleNewTableEntry();
+    }
+  };
+
   const opinionCounts = submittedVotes.reduce((acc, vote) => {
     acc[vote.opinion] = (acc[vote.opinion] || 0) + 1;
     return acc;
   }, {});
+
+  const toggleDetails = (voteId) => {
+    setExpandedRows((prev) => ({ ...prev, [voteId]: !prev[voteId] }));
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -212,7 +229,6 @@ const ProposalVote = () => {
         )}
       </div>
      )}  
-
       <div className="main-container">
         <div className="proposal-info">
           <h3>{proposal.title}</h3>
@@ -228,7 +244,7 @@ const ProposalVote = () => {
           {/* Table Heading/Vote Tally */}
           <tr>
             <th>
-              <h8>Name</h8>
+              <h6>Name</h6>
             </th>
             <th className="opinion-column">
               <div className="opinion-tally-wrapper">
@@ -242,11 +258,11 @@ const ProposalVote = () => {
                     </div>
                   ))}
                 </div>
-                <h8>Opinion</h8>
+                <h6>Opinion</h6>
               </div>
             </th>
             <th>
-              <h8>Comment</h8>
+              <h6>Comment</h6>
             </th>
           </tr>
         </thead>
@@ -306,7 +322,6 @@ const ProposalVote = () => {
                 </button>
               </td>
             </tr>
-
             {/* Submitted Votes Table */}
             {submittedVotes.map((vote, index) => (
               <React.Fragment key={vote._id}>
@@ -466,7 +481,7 @@ const ProposalVote = () => {
                           onChange={(e) => handleCommentUpdate(index, e.target.value)}
                           aria-label="Comment"
                         />
-                        <td className="hide-mobile">
+                        <div className="show-mobile">
                           <span 
                             onClick={() => handleDeleteEntry(vote._id)} 
                             aria-label="Delete Entry"
@@ -474,7 +489,7 @@ const ProposalVote = () => {
                           >
                             <FontAwesomeIcon icon={faTrashCan} />
                           </span>
-                        </td>
+                        </div>
                       </div>
                     </div>
                   </td>

@@ -15,7 +15,7 @@ import 'react-quill/dist/quill.snow.css';
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
   const { user, isSubscribed } = useAuthContext();
-  const { teams, fetchTeams, selectedTeam } = useTeamsContext();
+  const { teams, fetchTeams, selectedTeam, updateSelectedTeam } = useTeamsContext();
   const { setSelectedProposalId } = useVoteContext();
   const { register, 
           handleSubmit, 
@@ -35,12 +35,6 @@ const ProposalForm = () => {
       fetchTeams(); // Fetch teams when the component mounts and user is available and subscribed
     }
   }, [fetchTeams, user, isSubscribed]); // Add isSubscribed to the dependency array
-
-  useEffect(() => {
-    if (selectedTeam) {
-      setValue('team', selectedTeam._id); // Automatically select the team in the dropdown
-    }
-  }, [selectedTeam, setValue]);
 
   useEffect(() => {
     if (!user) {
@@ -109,6 +103,8 @@ const ProposalForm = () => {
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
       setSelectedProposalId(json._id);
+
+      updateSelectedTeam(selectedTeam);
 
       navigate(`/${json.uniqueUrl}`);
       reset();
