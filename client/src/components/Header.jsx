@@ -54,8 +54,12 @@ const Header = () => {
     <header className="header">
       <nav className="navbar">
         <Link to="/" className="logo-link">
-          <h1 className="logo">Consensus Check</h1>
+          <h1 className="logo">
+            Consensus Check
+            <span className="beta">(beta)</span>
+          </h1>
         </Link>
+
         <button className="hamburger" onClick={toggleMenu}>
           <span className="hamburger-icon">&#9776;</span>
         </button>

@@ -16,6 +16,12 @@
   margin-left: 45px;
 }
 
+.beta {
+  font-size: 0.8rem;
+  color: gray; 
+  margin-left: 0.5rem; 
+}
+
 .logo:hover {
   text-decoration: underline;
 }
