@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, Link } from 'react';
 import { useProposalsContext } from '../hooks/useProposalContext';
-import { Link } from 'react-router-dom';
+
 // import { useAuthContext } from '../hooks/useAuthContext';
 
 const ParticipatedProposalList = ({ proposal, showHidden }) => {

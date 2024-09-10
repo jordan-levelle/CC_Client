@@ -289,7 +289,7 @@ export const fetchArchivedProposalsAPI = async (token) => {
 
 export const removeArchivedProposalAPI = async (token, proposalId) => {
   try {
-    const response = await fetch(`${USER_URL}/archive/${proposalId}`, {
+    const response = await fetch(`${USER_URL}/removeArchive/${proposalId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
