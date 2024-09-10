@@ -91,6 +91,19 @@ export const fetchExpiredProposalListAPI = async (token) => {
   return response.json();
 }
 
+export const fetchArchivedProposalListAPI = async (token) => {
+  const response = await fetch(`${PROP_URL}/archived`, {
+    headers: getHeaders(token),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch proposals');
+  }
+
+  return response.json();
+}
+
+
 // POST Create New Proposal API Call
 export const createProposal = async (proposalData, token) => {
     try {

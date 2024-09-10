@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Link } from 'react';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { Link } from 'react-router-dom';
 import { deleteProposalAPI } from '../api/proposals';
+import { archiveProposalAPI } from '../api/users';
 import { formatDate } from '../constants/HomeTextConstants';
 import '../styles/components/userdashboard.css';
 
 const ProposalList = ({ proposal }) => {
   const { dispatch } = useProposalsContext();
-  const { user } = useAuthContext();
-  const [showConfirmBox, setShowConfirmBox] = useState(false);
+  const { user, isSubscribed } = useAuthContext();
   const [daysLeft, setDaysLeft] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
 
@@ -26,7 +25,7 @@ const ProposalList = ({ proposal }) => {
       };
       const days = calcDaysLeft(proposal.createdAt);
       setDaysLeft(days);
-      setIsExpired(days <= 0 || proposal.expired); // Mark as expired if daysLeft is 0 or if already marked as expired
+      setIsExpired(days <= 0 || proposal.expired);
     }
   }, [proposal.createdAt, proposal.expired]);
 
@@ -39,8 +38,6 @@ const ProposalList = ({ proposal }) => {
     } catch (error) {
       console.error('Error deleting proposal:', error);
     }
-
-    setShowConfirmBox(false);
   };
 
   const handleEditClick = () => {
@@ -52,6 +49,17 @@ const ProposalList = ({ proposal }) => {
   const handleProposalClick = () => {
     if (!isExpired) {
       dispatch({ type: 'SELECT_PROPOSAL', payload: proposal._id });
+    }
+  };
+
+  const handleArchiveClick = async () => {
+    if (!user) return;
+
+    try {
+      await archiveProposalAPI(proposal._id, user.token);
+      dispatch({ type: 'ARCHIVE_PROPOSAL', payload: proposal });
+    } catch (error) {
+      console.error('Error archiving proposal:', error);
     }
   };
 
@@ -86,24 +94,23 @@ const ProposalList = ({ proposal }) => {
               Edit
             </button>
           </Link>
+          {isSubscribed && (
+            <button 
+              className="archive-proposal-button" 
+              onClick={handleArchiveClick}
+              disabled={isExpired}
+            >
+              Archive
+            </button>
+          )}
           <button 
             className="delete-proposal-button" 
-            onClick={() => setShowConfirmBox(true)}
+            onClick={handleDeleteClick}
           >
             Delete
           </button>
         </div>
       </div>
-
-      {showConfirmBox && (
-        <div className="confirmation-popup">
-          <div className="confirmation-content">
-            <p>Are you sure you want to delete this proposal? This will delete all responses.</p>
-            <button className="" onClick={handleDeleteClick}>Yes</button>
-            <button className="" onClick={() => setShowConfirmBox(false)}>Cancel</button>
-          </div>
-        </div>
-      )}
     </section>
   );
 };

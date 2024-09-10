@@ -42,13 +42,13 @@ body {
   border-radius: 5px;
   padding: 20px;
   flex: 1; 
-  min-width: 300px; /* Minimum width to maintain side-by-side layout */
+  min-width: 350px; /* Minimum width to maintain side-by-side layout */
   box-shadow: .1rem .1rem .2rem rgba(0, 0, 0, 0.5);
 }
 
 .cardlist-item {
   width: 80%; /* Allow the card to take full width of the parent */
-  max-width: 500px; /* Optional: Keep a max-width to prevent it from getting too large */
+  max-width: 480px; /* Optional: Keep a max-width to prevent it from getting too large */
   box-sizing: border-box; /* Include padding and border in width */
   margin: 0; /* No extra margin */
   padding: 20px;
@@ -61,7 +61,7 @@ body {
   flex-grow: 1; /* Allow the card to grow and shrink with its parent */
 }
 
-@media (max-width: 920px) {
+@media (max-width: 950px) {
   .cardlist-item {
     width: 100%; /* Make the card take up the full width */
   }

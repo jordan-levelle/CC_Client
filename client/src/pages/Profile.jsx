@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { useProposalsContext } from '../hooks/useProposalContext';
-import { fetchProposalListAPI, fetchActiveProposalListAPI, fetchExpiredProposalListAPI } from '../api/proposals';
-import { fetchParticipatedProposalsAPI } from '../api/users';
 import ProposalList from '../components/ProposalList';
 import ParticipatedProposalList from '../components/ParticipatedProposalList';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useProposalsContext } from '../hooks/useProposalContext';
+import { fetchParticipatedProposalsAPI } from '../api/users';
+import {
+  fetchProposalListAPI,
+  fetchActiveProposalListAPI,
+  fetchExpiredProposalListAPI,
+  fetchArchivedProposalListAPI
+} from '../api/proposals';
 
 const Profile = () => {
   const { proposals, participatedProposals, dispatch } = useProposalsContext();
@@ -20,19 +25,25 @@ const Profile = () => {
   });
 
   useEffect(() => {
+    const filterApiCalls = {
+      All: () => fetchProposalListAPI(user.token),
+      Active: () => fetchActiveProposalListAPI(user.token),
+      Expired: () => fetchExpiredProposalListAPI(user.token),
+      Archived: () => fetchArchivedProposalListAPI(user.token),
+    };
+  
     const fetchData = async () => {
       try {
         if (user) {
-          let fetchedProposals;
-          if (selectedFilter === 'All') {
-            fetchedProposals = await fetchProposalListAPI(user.token);
-          } else if (selectedFilter === 'Active') {
-            fetchedProposals = await fetchActiveProposalListAPI(user.token);
-          } else if (selectedFilter === 'Expired') {
-            fetchedProposals = await fetchExpiredProposalListAPI(user.token);
-          }
+          const apiCall = isSubscribed
+            ? ['Active', 'Archived'].includes(selectedFilter)
+              ? filterApiCalls[selectedFilter]
+              : filterApiCalls['Active']
+            : filterApiCalls[selectedFilter];
+  
+          const fetchedProposals = await apiCall();
           dispatch({ type: 'SET_PROPOSALS', payload: fetchedProposals });
-
+  
           const participated = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
           if (Array.isArray(participated)) {
             dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participated });
@@ -45,9 +56,12 @@ const Profile = () => {
         }
       }
     };
-
+  
     fetchData();
-  }, [dispatch, user, includeOwnProposals, selectedFilter]);
+  }, [dispatch, user, includeOwnProposals, selectedFilter, isSubscribed]);
+  
+  
+  
 
   const handleParticipatedPropsFilter = () => {
     const persistToggleState = !includeOwnProposals;
@@ -73,36 +87,73 @@ const Profile = () => {
           <div className="user-proposal-filter-options">
             <Form>
               <div key="inline-radio" className="mb-3">
-                <Form.Check
-                  inline
-                  label="All"
-                  name="group1"
-                  type="radio"
-                  id="inline-radio-1"
-                  value="All"
-                  checked={selectedFilter === 'All'}
-                  onChange={handlePropFilter}
-                />
-                <Form.Check
-                  inline
-                  label="Active"
-                  name="group1"
-                  type="radio"
-                  id="inline-radio-2"
-                  value="Active"
-                  checked={selectedFilter === 'Active'}
-                  onChange={handlePropFilter}
-                />
-                <Form.Check
-                  inline
-                  label="Expired"
-                  name="group1"
-                  type="radio"
-                  id="inline-radio-3"
-                  value="Expired"
-                  checked={selectedFilter === 'Expired'}
-                  onChange={handlePropFilter}
-                />
+                {isSubscribed ? (
+                  <>
+                    <Form.Check
+                      inline
+                      label="Active"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-2"
+                      value="Active"
+                      checked={selectedFilter === 'Active'}
+                      onChange={handlePropFilter}
+                    />
+                    <Form.Check
+                      inline
+                      label="Archived"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-4"
+                      value="Archived"
+                      checked={selectedFilter === 'Archived'}
+                      onChange={handlePropFilter}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Form.Check
+                      inline
+                      label="All"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-1"
+                      value="All"
+                      checked={selectedFilter === 'All'}
+                      onChange={handlePropFilter}
+                    />
+                    <Form.Check
+                      inline
+                      label="Active"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-2"
+                      value="Active"
+                      checked={selectedFilter === 'Active'}
+                      onChange={handlePropFilter}
+                    />
+                    <Form.Check
+                      inline
+                      label="Expired"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-3"
+                      value="Expired"
+                      checked={selectedFilter === 'Expired'}
+                      onChange={handlePropFilter}
+                    />
+                    <Form.Check
+                      inline
+                      label="Archived"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-4"
+                      value="Archived"
+                      checked={selectedFilter === 'Archived'}
+                      onChange={handlePropFilter}
+                    />
+                  </>
+                )}
               </div>
             </Form>
           </div>

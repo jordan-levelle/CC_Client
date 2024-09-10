@@ -5,7 +5,7 @@ export const ProposalsContext = createContext();
 const initialState = {
   proposals: [],
   selectedProposalId: null,
-  participatedProposals: []
+  participatedProposals: [],
 };
 
 const proposalsReducer = (state, action) => {
@@ -20,13 +20,13 @@ const proposalsReducer = (state, action) => {
         ...state,
         proposals: [action.payload, ...state.proposals],
       };
-      case 'REMOVE_PROPOSAL':
-        return {
-          ...state,
-          participatedProposals: state.participatedProposals.filter(
-            (proposal) => proposal.proposalId !== action.payload.proposalId
-          ),
-        };
+    case 'REMOVE_PROPOSAL':
+      return {
+        ...state,
+        participatedProposals: state.participatedProposals.filter(
+          (proposal) => proposal.proposalId !== action.payload.proposalId
+        ),
+      };
     case 'DELETE_PROPOSAL':
       return {
         ...state,
@@ -36,7 +36,7 @@ const proposalsReducer = (state, action) => {
       return {
         ...state,
         proposals: state.proposals.map((proposal) =>
-          (proposal) => proposal.proposalId !== action.payload.proposalId
+          proposal._id === action.payload._id ? { ...proposal, ...action.payload } : proposal
         ),
       };
     case 'SELECT_PROPOSAL':
@@ -48,6 +48,13 @@ const proposalsReducer = (state, action) => {
       return {
         ...state,
         participatedProposals: action.payload,
+      };
+    case 'ARCHIVE_PROPOSAL':
+      return {
+        ...state,
+        proposals: state.proposals.map((proposal) =>
+          proposal._id === action.payload._id ? { ...proposal, archived: true } : proposal
+        ),
       };
     default:
       return state;

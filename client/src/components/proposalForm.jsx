@@ -7,7 +7,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useTeamsContext } from '../context/TeamsContext';
 import { useNavigate } from 'react-router-dom'; 
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
-import { nanoid } from 'nanoid';
 import ReactQuill from 'react-quill';
 import Select from 'react-select'
 import 'react-quill/dist/quill.snow.css';
@@ -34,7 +33,7 @@ const ProposalForm = () => {
     if (user && isSubscribed) {
       fetchTeams(); // Fetch teams when the component mounts and user is available and subscribed
     }
-  }, [fetchTeams, user, isSubscribed]); // Add isSubscribed to the dependency array
+  }, [fetchTeams, user, isSubscribed]); 
 
   useEffect(() => {
     if (!user) {
@@ -93,10 +92,8 @@ const ProposalForm = () => {
       }
 
       const currentUser = user || generateDummyUser();
-      const uniqueUrl = nanoid(10);
       const proposal = { 
         ...data, 
-        uniqueUrl,
         email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email, // Use the email based on the checkbox or input field
       };
 

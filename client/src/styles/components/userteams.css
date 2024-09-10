@@ -67,7 +67,7 @@
   }
   
   
-  @media (min-width: 1050px) {
+  @media (min-width: 950px) {
     .Teams-Dashboard-Container {
       flex-direction: row;
       justify-content: space-between;

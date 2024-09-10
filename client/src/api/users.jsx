@@ -17,7 +17,7 @@ export const resetPasswordAPI = async (token, oldPassword, newPassword) => {
       throw new Error(data.error || 'Failed to reset password');
     }
 
-    return data.message; // Assuming the response contains a message field
+    return data.message;
   } catch (error) {
     throw new Error(error.message || 'An error occurred');
   }
@@ -108,7 +108,6 @@ export const signupAPI = async (email, password) => {
       body: JSON.stringify({ email, password }),
       headers: { 
         'Content-Type': 'application/json' },
-      
     });
   
     if (!response.ok) {
@@ -231,19 +230,82 @@ export const cancelUserSubscription = async (token) => {
       },
     });
 
-    // Check if the response is OK (status code 200-299)
     if (!response.ok) {
-      // If not, throw an error with the status text
-      const errorMessage = await response.text(); // Use `text()` to get the full message
+      const errorMessage = await response.text();
       throw new Error(errorMessage || 'Failed to cancel subscription');
     }
 
-    const data = await response.json(); // This should be safe to call if response is OK
-    return data; // Return the parsed JSON
+    const data = await response.json();
+    return data;
   } catch (error) {
-    // Handle any errors that occurred during the fetch
     throw new Error(error.message || 'An error occurred while canceling subscription');
   }
 };
 
+// New API calls for proposal archiving
+export const archiveProposalAPI = async (token, proposalId) => {
+  try {
+    const response = await fetch(`${USER_URL}/archive/${proposalId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to archive proposal');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error archiving proposal:', error.message);
+    throw new Error(error.message);
+  }
+};
+
+export const fetchArchivedProposalsAPI = async (token) => {
+  try {
+    const response = await fetch(`${USER_URL}/archivedProposals`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch archived proposals');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching archived proposals:', error.message);
+    throw new Error(error.message);
+  }
+};
+
+export const removeArchivedProposalAPI = async (token, proposalId) => {
+  try {
+    const response = await fetch(`${USER_URL}/archive/${proposalId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to remove archived proposal');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error removing archived proposal:', error.message);
+    throw new Error(error.message);
+  }
+};
 
