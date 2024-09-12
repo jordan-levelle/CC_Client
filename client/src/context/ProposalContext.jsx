@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useContext } from 'react';
 
 export const ProposalsContext = createContext();
 
@@ -6,6 +6,7 @@ const initialState = {
   proposals: [],
   selectedProposalId: null,
   participatedProposals: [],
+  archivedProposals: [],
 };
 
 const proposalsReducer = (state, action) => {
@@ -52,21 +53,49 @@ const proposalsReducer = (state, action) => {
     case 'ARCHIVE_PROPOSAL':
       return {
         ...state,
-        proposals: state.proposals.map((proposal) =>
-          proposal._id === action.payload._id ? { ...proposal, archived: true } : proposal
-        ),
+        archivedProposals: [...state.archivedProposals, action.payload],
+      };
+    case 'UNARCHIVE_PROPOSAL':
+      return {
+        ...state,
+        archivedProposals: state.archivedProposals.filter(proposal => proposal._id !== action.payload._id),
       };
     default:
       return state;
   }
 };
 
+// Add filterProposals function
+const filterProposals = (proposals, filter) => {
+  switch (filter) {
+    case 'Active':
+      return proposals.filter(p => !p.isArchived && !p.isExpired);
+    case 'Expired':
+      return proposals.filter(p => p.isExpired);
+    case 'Archived':
+      return proposals.filter(p => p.isArchived);
+    case 'All':
+    default:
+      return proposals;
+  }
+};
+
 export const ProposalsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(proposalsReducer, initialState);
 
+  // Include filterProposals in the context
+  const contextValue = {
+    ...state,
+    dispatch,
+    filterProposals,
+  };
+
   return (
-    <ProposalsContext.Provider value={{ ...state, dispatch }}>
+    <ProposalsContext.Provider value={contextValue}>
       {children}
     </ProposalsContext.Provider>
   );
 };
+
+// Custom hook to use the context
+export const useProposalsContext = () => useContext(ProposalsContext);

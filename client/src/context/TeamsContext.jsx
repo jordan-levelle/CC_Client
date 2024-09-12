@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { teamList } from '../api/teams';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -30,7 +29,7 @@ export const TeamsContextProvider = ({ children }) => {
   }, [user]);
 
   const updateSelectedTeam = (team) => {
-    setSelectedTeam(team);
+    setSelectedTeam(team || null); // Ensure null is set if no team is selected
   }
 
   return (
@@ -39,4 +38,5 @@ export const TeamsContextProvider = ({ children }) => {
     </TeamsContext.Provider>
   );
 };
+
 

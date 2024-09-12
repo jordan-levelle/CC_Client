@@ -1,9 +1,9 @@
-import React, { useState, useEffect} from 'react';
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { deleteProposalAPI } from '../api/proposals';
-import { archiveProposalAPI } from '../api/users';
+import { deleteProposalAPI } from 'src/api/proposals'; 
+import { toggleArchiveProposalAPI } from 'src/api/users';
 import { formatDate } from '../constants/HomeTextConstants';
 import '../styles/components/userdashboard.css';
 
@@ -26,9 +26,9 @@ const ProposalList = ({ proposal }) => {
       };
       const days = calcDaysLeft(proposal.createdAt);
       setDaysLeft(days);
-      setIsExpired(days <= 0 || proposal.expired);
+      setIsExpired(days <= 0 || proposal.isExpired);
     }
-  }, [proposal.createdAt, proposal.expired]);
+  }, [proposal.createdAt, proposal.isExpired]);
 
   const handleDeleteClick = async () => {
     if (!user) return;
@@ -57,10 +57,14 @@ const ProposalList = ({ proposal }) => {
     if (!user) return;
 
     try {
-      await archiveProposalAPI(proposal._id, user.token);
-      dispatch({ type: 'ARCHIVE_PROPOSAL', payload: proposal });
+      const response = await toggleArchiveProposalAPI(proposal._id, user.token);
+      if (response.isArchived) {
+        dispatch({ type: 'ARCHIVE_PROPOSAL', payload: proposal });
+      } else {
+        dispatch({ type: 'UNARCHIVE_PROPOSAL', payload: proposal });
+      }
     } catch (error) {
-      console.error('Error archiving proposal:', error);
+      console.error('Error toggling archive state:', error);
     }
   };
 
@@ -71,13 +75,15 @@ const ProposalList = ({ proposal }) => {
         <p>
           Proposed on: {proposal.createdAt ? formatDate(proposal.createdAt) : 'Invalid Date'}
         </p>
-        <p>
-          Expires in: {isExpired ? 'Expired' : `${daysLeft} days`}
-        </p>
+        {!isSubscribed && (
+          <p>
+            Expires in: {isExpired ? 'Expired' : `${daysLeft} days`}
+          </p>
+        )}
         <div className="proposal-button-group">
           <Link to={`/${proposal.uniqueUrl}`}>
             <button 
-              className="view-proposal-button" 
+              className="small-button" 
               onClick={handleProposalClick}
               disabled={isExpired}
               style={{ opacity: isExpired ? 0.1 : 1 }}
@@ -87,7 +93,7 @@ const ProposalList = ({ proposal }) => {
           </Link>
           <Link to={`/edit/${proposal.uniqueUrl}`}>
             <button 
-              className="edit-button" 
+              className="small-button" 
               onClick={handleEditClick}
               disabled={isExpired}
               style={{ opacity: isExpired ? 0.1 : 1 }}
@@ -97,15 +103,15 @@ const ProposalList = ({ proposal }) => {
           </Link>
           {isSubscribed && (
             <button 
-              className="archive-proposal-button" 
+              className="small-button" 
               onClick={handleArchiveClick}
               disabled={isExpired}
             >
-              Archive
+              {proposal.isArchived ? 'Unarchive' : 'Archive'}
             </button>
           )}
           <button 
-            className="delete-proposal-button" 
+            className="small-delete-button" 
             onClick={handleDeleteClick}
           >
             Delete

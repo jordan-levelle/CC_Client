@@ -42,7 +42,7 @@ body {
   border-radius: 5px;
   padding: 20px;
   flex: 1; 
-  min-width: 350px; /* Minimum width to maintain side-by-side layout */
+  min-width: 400px; /* Minimum width to maintain side-by-side layout */
   box-shadow: .1rem .1rem .2rem rgba(0, 0, 0, 0.5);
 }
 
@@ -78,11 +78,26 @@ body {
   padding: 5px 10px; 
   margin-left: 5px;
   cursor: pointer; 
-  font-size: 11px; 
+  font-size: 13px; 
   font-weight: bold; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
   transition: background-color 0.3s, transform 0.2s; 
 }
+
+.small-delete-button {
+  background-color: transparent; /* Make the background transparent */
+  color: red; /* Set the text color to red */
+  border: none; 
+  border-radius: 5px; 
+  padding: 5px 10px; 
+  margin-left: 5px;
+  cursor: pointer; 
+  font-size: 13px; 
+  font-weight: bold; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  transition: background-color 0.3s, transform 0.2s; 
+}
+
 
 .small-button:hover {
   background-color: #0056b3;

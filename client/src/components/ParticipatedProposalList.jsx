@@ -33,7 +33,7 @@ const ParticipatedProposalList = ({ proposal, showHidden }) => {
       <div className="proposal-button-group">
         <Link to={`/${proposal.uniqueUrl}`}>
           <button
-            className="view-proposal-button"
+            className="small-button"
             onClick={() => handleProposalClick(proposal.proposalId || proposal._id)}
             disabled={proposal.isExpired}
           >
@@ -41,7 +41,7 @@ const ParticipatedProposalList = ({ proposal, showHidden }) => {
           </button>
         </Link>
         <button
-          className="delete-proposal-button"
+          className="small-delete-button"
           onClick={handleHideClick}
           style={{ opacity: proposal.isExpired ? 0.5 : 1 }}
         >

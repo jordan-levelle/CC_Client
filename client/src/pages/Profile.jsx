@@ -4,16 +4,15 @@ import ProposalList from '../components/ProposalList';
 import ParticipatedProposalList from '../components/ParticipatedProposalList';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
-import { fetchParticipatedProposalsAPI } from '../api/users';
+import {
+  fetchParticipatedProposalsAPI,
+} from '../api/users';
 import {
   fetchProposalListAPI,
-  fetchActiveProposalListAPI,
-  fetchExpiredProposalListAPI,
-  fetchArchivedProposalListAPI
 } from '../api/proposals';
 
 const Profile = () => {
-  const { proposals, participatedProposals, dispatch } = useProposalsContext();
+  const { proposals, participatedProposals, dispatch, filterProposals } = useProposalsContext();
   const { user, isSubscribed } = useAuthContext();
 
   const [includeOwnProposals, setIncludeOwnProposals] = useState(() => {
@@ -25,43 +24,24 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    const filterApiCalls = {
-      All: () => fetchProposalListAPI(user.token),
-      Active: () => fetchActiveProposalListAPI(user.token),
-      Expired: () => fetchExpiredProposalListAPI(user.token),
-      Archived: () => fetchArchivedProposalListAPI(user.token),
-    };
-  
     const fetchData = async () => {
-      try {
-        if (user) {
-          const apiCall = isSubscribed
-            ? ['Active', 'Archived'].includes(selectedFilter)
-              ? filterApiCalls[selectedFilter]
-              : filterApiCalls['Active']
-            : filterApiCalls[selectedFilter];
-  
-          const fetchedProposals = await apiCall();
-          dispatch({ type: 'SET_PROPOSALS', payload: fetchedProposals });
-  
-          const participated = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
-          if (Array.isArray(participated)) {
-            dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participated });
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching proposals:', error.message);
-        if (error.message.includes('JWT malformed')) {
-          localStorage.removeItem('token');
+      if (user) {
+        try {
+          // Fetch all proposals
+          const proposalsData = await fetchProposalListAPI(user.token);
+          dispatch({ type: 'SET_PROPOSALS', payload: proposalsData });
+          
+          // Fetch participated proposals
+          const participatedData = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
+          dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participatedData });
+        } catch (error) {
+          console.error('Error fetching proposals:', error.message);
         }
       }
     };
-  
+
     fetchData();
-  }, [dispatch, user, includeOwnProposals, selectedFilter, isSubscribed]);
-  
-  
-  
+  }, [selectedFilter, includeOwnProposals, user, dispatch]);
 
   const handleParticipatedPropsFilter = () => {
     const persistToggleState = !includeOwnProposals;
@@ -79,6 +59,9 @@ const Profile = () => {
     localStorage.setItem('showHidden', JSON.stringify(newShowHidden));
   };
 
+  // Use the filterProposals function from context
+  const filteredProposals = filterProposals(proposals, selectedFilter);
+
   return (
     <div className="dashboard">
       <div className="page-container">
@@ -89,6 +72,16 @@ const Profile = () => {
               <div key="inline-radio" className="mb-3">
                 {isSubscribed ? (
                   <>
+                    <Form.Check
+                      inline
+                      label="All"
+                      name="group1"
+                      type="radio"
+                      id="inline-radio-2"
+                      value="All"
+                      checked={selectedFilter === 'All'}
+                      onChange={handlePropFilter}
+                    />
                     <Form.Check
                       inline
                       label="Active"
@@ -142,23 +135,13 @@ const Profile = () => {
                       checked={selectedFilter === 'Expired'}
                       onChange={handlePropFilter}
                     />
-                    <Form.Check
-                      inline
-                      label="Archived"
-                      name="group1"
-                      type="radio"
-                      id="inline-radio-4"
-                      value="Archived"
-                      checked={selectedFilter === 'Archived'}
-                      onChange={handlePropFilter}
-                    />
                   </>
                 )}
               </div>
             </Form>
           </div>
-          {proposals && proposals.length > 0 ? (
-            proposals.map((proposal) => (
+          {filteredProposals && filteredProposals.length > 0 ? (
+            filteredProposals.map((proposal) => (
               <ProposalList key={proposal._id} proposal={proposal} />
             ))
           ) : (
@@ -172,7 +155,7 @@ const Profile = () => {
               <Form.Check
                 type="switch"
                 id="custom-switch"
-                label="Include Your Proposals"
+                label="Your Proposals"
                 checked={includeOwnProposals}
                 onChange={handleParticipatedPropsFilter}
               />
@@ -181,7 +164,7 @@ const Profile = () => {
               <Form.Check
                 type="switch"
                 id="show-hidden-switch"
-                label="Show Hidden"
+                label="Hidden"
                 checked={showHidden}
                 onChange={handleShowHiddenToggle}
               />

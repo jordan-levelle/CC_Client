@@ -1,5 +1,68 @@
 const USER_URL = process.env.REACT_APP_USERS_URL;
 
+export const signupAPI = async (email, password) => {
+  try {
+    const response = await fetch(`${USER_URL}/signup`, {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: { 
+        'Content-Type': 'application/json' },
+    });
+  
+    if (!response.ok) {
+      const json = await response.json();
+      throw new Error(json.error);
+    }
+  
+    return response.json();
+  } catch (error) {
+    console.error('Error sign up:', error);
+    throw error;
+  }
+};
+
+export const loginAPI = async (email, password) => {
+  try {
+    const response = await fetch(`${USER_URL}/login`, {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    
+    const json = await response.json();
+  
+    if (!response.ok) {
+      throw new Error(json.error);
+    }
+  
+    // Store token in local storage upon successful login
+    localStorage.setItem('token', json.token);
+   
+    return json;
+  } catch (error) {
+    console.error('Error log in:', error);
+    throw error;
+  }
+};
+
+export const deleteAccountAPI = async (token, deleteProposals) => {
+  const response = await fetch(`${USER_URL}/deleteUser`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ deleteProposals }), 
+  });
+
+  if (!response.ok) {
+    const errorMessage = await response.json();
+    throw new Error(errorMessage.error);
+  }
+
+  return 'Account deleted successfully';
+};
+
 export const resetPasswordAPI = async (token, oldPassword, newPassword) => {
   try {
     const response = await fetch(`${USER_URL}/resetPassword`, {
@@ -63,24 +126,6 @@ export const resetForgotPassword = async (token, newPassword) => {
   } catch (error) {
     throw new Error(error.message);
   }
-}
-
-export const deleteAccountAPI = async (token, deleteProposals) => {
-  const response = await fetch(`${USER_URL}/deleteUser`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ deleteProposals }), 
-  });
-
-  if (!response.ok) {
-    const errorMessage = await response.json();
-    throw new Error(errorMessage.error);
-  }
-
-  return 'Account deleted successfully';
 };
 
 export const updateEmailAPI = async (token, newEmail) => {
@@ -99,95 +144,6 @@ export const updateEmailAPI = async (token, newEmail) => {
   }
 
   return 'Email updated successfully';
-};
-
-export const signupAPI = async (email, password) => {
-  try {
-    const response = await fetch(`${USER_URL}/signup`, {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-      headers: { 
-        'Content-Type': 'application/json' },
-    });
-  
-    if (!response.ok) {
-      const json = await response.json();
-      throw new Error(json.error);
-    }
-  
-    return response.json();
-  } catch (error) {
-    console.error('Error sign up:', error);
-    throw error;
-  }
-};
-
-export const loginAPI = async (email, password) => {
-  try {
-    const response = await fetch(`${USER_URL}/login`, {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-    
-    const json = await response.json();
-  
-    if (!response.ok) {
-      throw new Error(json.error);
-    }
-  
-    // Store token in local storage upon successful login
-    localStorage.setItem('token', json.token);
-   
-    return json;
-  } catch (error) {
-    console.error('Error log in:', error);
-    throw error;
-  }
-};
-
-export const fetchParticipatedProposalsAPI = async (token, includeOwnProposals = false) => {
-  try {
-    const response = await fetch(`${USER_URL}/getParticipatedProposals?includeOwnProposals=${includeOwnProposals}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Could not fetch participated proposals');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching participated proposals:', error.message);
-    throw new Error(error.message);
-  }
-};
-
-export const removeParticipatedProposalAPI = async (proposalId, token) => {
-  try {
-    const response = await fetch(`${USER_URL}/removeParticipatedProposal/${proposalId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to remove participated proposal');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error removing participated proposals:', error.message);
-    throw new Error(error.message);
-  }
 };
 
 export const checkVerificationStatusAPI = async (verificationToken) => {
@@ -242,10 +198,54 @@ export const cancelUserSubscription = async (token) => {
   }
 };
 
-// New API calls for proposal archiving
-export const archiveProposalAPI = async (token, proposalId) => {
+export const fetchParticipatedProposalsAPI = async (token, includeOwnProposals = false) => {
   try {
-    const response = await fetch(`${USER_URL}/archive/${proposalId}`, {
+    const response = await fetch(`${USER_URL}/getParticipatedProposals?includeOwnProposals=${includeOwnProposals}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Could not fetch participated proposals');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching participated proposals:', error.message);
+    throw new Error(error.message);
+  }
+};
+
+export const removeParticipatedProposalAPI = async (proposalId, token) => {
+  try {
+    const response = await fetch(`${USER_URL}/removeParticipatedProposal/${proposalId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to remove participated proposal');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error removing participated proposals:', error.message);
+    throw new Error(error.message);
+  }
+};
+
+export const toggleArchiveProposalAPI = async (proposalId, token) => {
+
+  try {
+    const response = await fetch(`${USER_URL}/archiveProposal/${proposalId}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -255,57 +255,18 @@ export const archiveProposalAPI = async (token, proposalId) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to archive proposal');
+      throw new Error(errorData.error || 'Failed to toggle archive state');
     }
 
-    return await response.json();
+    const result = await response.json();
+    return result;
   } catch (error) {
-    console.error('Error archiving proposal:', error.message);
+    console.error('Error toggling archive state:', error.message);
     throw new Error(error.message);
   }
 };
 
-export const fetchArchivedProposalsAPI = async (token) => {
-  try {
-    const response = await fetch(`${USER_URL}/archivedProposals`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch archived proposals');
-    }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching archived proposals:', error.message);
-    throw new Error(error.message);
-  }
-};
 
-export const removeArchivedProposalAPI = async (token, proposalId) => {
-  try {
-    const response = await fetch(`${USER_URL}/removeArchive/${proposalId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to remove archived proposal');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error removing archived proposal:', error.message);
-    throw new Error(error.message);
-  }
-};
 

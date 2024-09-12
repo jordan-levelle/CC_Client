@@ -38,12 +38,16 @@ const ProposalVote = () => {
   const [expandedRows, setExpandedRows] = useState({});
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
 
-
   useEffect(() => {
     const fetchDataAndHandleVotes = async () => {
       try {
         // Fetch proposal data
-        const { proposal: proposalData } = await fetchProposalData(uniqueUrl);
+        const proposalData = await fetchProposalData(uniqueUrl); // Directly destructure if response is the proposal object
+        console.log('Fetched proposal data:', proposalData); // Log the response for debugging
+        if (!proposalData || !proposalData._id) {
+          throw new Error('Invalid response structure');
+        }
+  
         setProposal(proposalData);
   
         // Fetch submitted votes
@@ -55,7 +59,7 @@ const ProposalVote = () => {
         setShowFirstRenderMessage(firstRender);
   
         // Handle initial vote submission if it's the first render
-        if (selectedTeam && proposalData && proposalData._id && !votesSubmitted && firstRender) {
+        if (selectedTeam && proposalData._id && !votesSubmitted && firstRender) {
           const votePromises = selectedTeam.members.map((member) => {
             const memberVote = { name: member.memberName, opinion: '', comment: '' };
             return submitNewTableEntry(proposalData._id, memberVote, setSubmittedVotes, setNewVote, setError);
@@ -70,6 +74,7 @@ const ProposalVote = () => {
           setVotesSubmitted(true); // Prevent multiple submissions
         }
       } catch (error) {
+        console.error('Error fetching data or submitting initial votes:', error);
         setError('Error fetching data or submitting initial votes: ' + error.message);
       } finally {
         setIsLoading(false);
@@ -78,6 +83,7 @@ const ProposalVote = () => {
   
     fetchDataAndHandleVotes();
   }, [uniqueUrl, selectedTeam, votesSubmitted]);
+  
   
   useEffect(() => {
     const handleResize = () => {
