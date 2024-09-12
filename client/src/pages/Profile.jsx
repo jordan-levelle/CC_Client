@@ -27,11 +27,9 @@ const Profile = () => {
     const fetchData = async () => {
       if (user) {
         try {
-          // Fetch all proposals
           const proposalsData = await fetchProposalListAPI(user.token);
           dispatch({ type: 'SET_PROPOSALS', payload: proposalsData });
-          
-          // Fetch participated proposals
+
           const participatedData = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
           dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participatedData });
         } catch (error) {
@@ -59,7 +57,7 @@ const Profile = () => {
     localStorage.setItem('showHidden', JSON.stringify(newShowHidden));
   };
 
-  // Use the filterProposals function from context
+  // Use the filteredProposals directly or from the state where it's updated
   const filteredProposals = filterProposals(proposals, selectedFilter);
 
   return (

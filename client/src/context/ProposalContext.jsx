@@ -50,16 +50,25 @@ const proposalsReducer = (state, action) => {
         ...state,
         participatedProposals: action.payload,
       };
-    case 'ARCHIVE_PROPOSAL':
-      return {
-        ...state,
-        archivedProposals: [...state.archivedProposals, action.payload],
-      };
-    case 'UNARCHIVE_PROPOSAL':
-      return {
-        ...state,
-        archivedProposals: state.archivedProposals.filter(proposal => proposal._id !== action.payload._id),
-      };
+      case 'ARCHIVE_PROPOSAL': {
+        const updatedProposals = state.proposals.map(p =>
+          p._id === action.payload._id ? { ...p, isArchived: true } : p
+        );
+        return { 
+          ...state, 
+          proposals: updatedProposals,
+        };
+      }
+      
+      case 'UNARCHIVE_PROPOSAL': {
+        const updatedProposals = state.proposals.map(p =>
+          p._id === action.payload._id ? { ...p, isArchived: false } : p
+        );
+        return { 
+          ...state, 
+          proposals: updatedProposals,
+        };
+      }      
     default:
       return state;
   }

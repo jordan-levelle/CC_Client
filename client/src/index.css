@@ -30,10 +30,10 @@ body {
 /**************************** Global Container Styles *******************************/
 .page-container {
   display: flex;
-  justify-content: space-between; /* Ensure space between the two containers */
-  gap: 20px; /* Space between the containers */
+  justify-content: space-between; 
+  gap: 20px; 
   padding: 20px;
-  flex-wrap: wrap; /* Allows containers to wrap to the next line */
+  flex-wrap: wrap;
 }
 
 .component-container-1,
@@ -42,15 +42,15 @@ body {
   border-radius: 5px;
   padding: 20px;
   flex: 1; 
-  min-width: 400px; /* Minimum width to maintain side-by-side layout */
+  min-width: 370px; 
   box-shadow: .1rem .1rem .2rem rgba(0, 0, 0, 0.5);
 }
 
 .cardlist-item {
-  width: 80%; /* Allow the card to take full width of the parent */
-  max-width: 480px; /* Optional: Keep a max-width to prevent it from getting too large */
-  box-sizing: border-box; /* Include padding and border in width */
-  margin: 0; /* No extra margin */
+  width: 80%; 
+  max-width: 480px; 
+  box-sizing: border-box; 
+  margin: 0; 
   padding: 20px;
   border-radius: 10px;
   background-color: #dddbdb;
@@ -58,12 +58,12 @@ body {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Allow the card to grow and shrink with its parent */
+  flex-grow: 1; 
 }
 
 @media (max-width: 950px) {
   .cardlist-item {
-    width: 100%; /* Make the card take up the full width */
+    width: 100%; 
   }
 }
 

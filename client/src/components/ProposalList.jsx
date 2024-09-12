@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { deleteProposalAPI } from 'src/api/proposals'; 
+import { deleteProposalAPI, fetchProposalListAPI } from 'src/api/proposals'; 
 import { toggleArchiveProposalAPI } from 'src/api/users';
 import { formatDate } from '../constants/HomeTextConstants';
 import '../styles/components/userdashboard.css';
@@ -55,18 +55,25 @@ const ProposalList = ({ proposal }) => {
 
   const handleArchiveClick = async () => {
     if (!user) return;
-
+  
     try {
       const response = await toggleArchiveProposalAPI(proposal._id, user.token);
-      if (response.isArchived) {
-        dispatch({ type: 'ARCHIVE_PROPOSAL', payload: proposal });
-      } else {
-        dispatch({ type: 'UNARCHIVE_PROPOSAL', payload: proposal });
-      }
+      
+      // Dispatch action to update the state
+      dispatch({ 
+        type: response.isArchived ? 'ARCHIVE_PROPOSAL' : 'UNARCHIVE_PROPOSAL', 
+        payload: proposal 
+      });
+  
+      // Refetch the proposals to get the latest state
+      const proposalsData = await fetchProposalListAPI(user.token);
+      dispatch({ type: 'SET_PROPOSALS', payload: proposalsData });
+  
     } catch (error) {
       console.error('Error toggling archive state:', error);
     }
   };
+  
 
   return (
     <section>
