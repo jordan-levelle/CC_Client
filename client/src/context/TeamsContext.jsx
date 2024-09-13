@@ -29,14 +29,20 @@ export const TeamsContextProvider = ({ children }) => {
   }, [user]);
 
   const updateSelectedTeam = (team) => {
-    setSelectedTeam(team || null); // Ensure null is set if no team is selected
-  }
+    setSelectedTeam(team || null);  
+  };
+
+  const clearSelectedTeam = () => {
+    setSelectedTeam(null);
+  };
 
   return (
-    <TeamsContext.Provider value={{ teams, fetchTeams, selectedTeam, updateSelectedTeam }}>
+    <TeamsContext.Provider value={{ teams, fetchTeams, selectedTeam, updateSelectedTeam, clearSelectedTeam }}>
       {children}
     </TeamsContext.Provider>
   );
 };
+
+
 
 

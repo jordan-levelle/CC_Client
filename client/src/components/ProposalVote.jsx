@@ -24,7 +24,7 @@ import '../styles/components/proposalvote.css';
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
   const { user } = useAuthContext();
-  const { selectedTeam } = useTeamsContext();
+  const { selectedTeam, clearSelectedTeam } = useTeamsContext();
 
   const [proposal, setProposal] = useState(null);
   const [submittedVotes, setSubmittedVotes] = useState([]);
@@ -42,19 +42,16 @@ const ProposalVote = () => {
     const fetchDataAndHandleVotes = async () => {
       try {
         // Fetch proposal data
-        const proposalData = await fetchProposalData(uniqueUrl); // Directly destructure if response is the proposal object
-        console.log('Fetched proposal data:', proposalData); // Log the response for debugging
+        const proposalData = await fetchProposalData(uniqueUrl); 
         if (!proposalData || !proposalData._id) {
           throw new Error('Invalid response structure');
         }
   
         setProposal(proposalData);
   
-        // Fetch submitted votes
         const votesData = await fetchSubmittedVotes(proposalData._id);
         setSubmittedVotes(votesData);
   
-        // Check if this is the first render
         const firstRender = await checkFirstRender(proposalData._id);
         setShowFirstRenderMessage(firstRender);
   
@@ -78,11 +75,12 @@ const ProposalVote = () => {
         setError('Error fetching data or submitting initial votes: ' + error.message);
       } finally {
         setIsLoading(false);
+        clearSelectedTeam();
       }
     };
   
     fetchDataAndHandleVotes();
-  }, [uniqueUrl, selectedTeam, votesSubmitted]);
+  }, [uniqueUrl, selectedTeam, votesSubmitted, clearSelectedTeam]);
   
   
   useEffect(() => {

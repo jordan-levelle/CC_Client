@@ -10,11 +10,9 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
   const [teamName, setTeamName] = useState(existingTeam ? existingTeam.teamName : '');
   const [rows, setRows] = useState(() =>
     existingTeam
-      ? existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail })).sort((a, b) => a.name.localeCompare(b.name))
-      : []
+      ? existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail }))
+      : [{ name: '', email: '' }]
   );
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
   const { fetchTeams } = useTeamsContext();
   const { user } = useAuthContext();
@@ -22,31 +20,33 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
   useEffect(() => {
     if (existingTeam) {
       setTeamName(existingTeam.teamName);
-      setRows(existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail })).sort((a, b) => a.name.localeCompare(b.name)));
+      setRows(
+        existingTeam.members.map(
+          member => ({ name: member.memberName, email: member.memberEmail })
+        )
+      );
     }
   }, [existingTeam]);
 
-  const handleAddRow = () => {
-    if (!name) {
-      setError('Name is required');
-      return;
-    }
-      setError('');
-      const newRow = { name, email };
-      setRows(prevRows => [...prevRows, newRow]);
-      setName('');
-      setEmail('');
-  }
-  
-  const handleDeleteRow = (index) => {
-    const updatedRows = rows.filter((_, i) => i !== index);
-    setRows(updatedRows.sort((a, b) => a.name.localeCompare(b.name)));
+  const handleRowChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    setRows(updatedRows);
   };
 
-  const handleEmailChange = (index, value) => {
-    const updatedRows = [...rows];
-    updatedRows[index].email = value;
-    setRows(updatedRows.sort((a, b) => a.name.localeCompare(b.name)));
+  const handleAddRow = () => {
+    setRows([...rows, { name: '', email: '' }]);
+  };
+
+  const handleDeleteRow = (index) => {
+    const updatedRows = rows.filter((_, i) => i !== index);
+    setRows(updatedRows);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && e.target.name === 'name') {
+      handleAddRow();
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -57,7 +57,14 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
       return;
     }
 
+    const requireName = rows.filter(row => !row.name.trim());
+    if (requireName.length > 0) {
+      setError('All names are required');
+      return;
+    }
+
     try {
+      // Sort members alphabetically by name
       const sortedRows = [...rows].sort((a, b) => a.name.localeCompare(b.name));
       const members = sortedRows.map(row => ({ memberName: row.name, memberEmail: row.email }));
 
@@ -67,10 +74,10 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
         await createTeam({ teamName, members }, user.token);
       }
       setTeamName('');
-      setRows([]);
+      setRows([{ name: '', email: '' }]);
       setError(null);
-      fetchTeams(); // Refresh team list after creating or editing a team
-      if (onClose) onClose(); // Call onClose if it is defined
+      fetchTeams();
+      if (onClose) onClose();
     } catch (error) {
       setError('Failed to save team');
     }
@@ -97,14 +104,26 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
         <tbody>
           {Array.isArray(rows) && rows.map((row, index) => (
             <tr key={index}>
-              <td>{row.name}</td>
+              <td>
+                <input
+                  id='name'
+                  name="name"
+                  type="text"
+                  value={row.name}
+                  onChange={(e) => handleRowChange(index, 'name', e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Name"
+                  className="input-field"
+                  required
+                />
+              </td>
               <td>
                 <input
                   type="email"
-                  value={row.email || ''}
-                  onChange={(e) => handleEmailChange(index, e.target.value)}
+                  value={row.email}
+                  onChange={(e) => handleRowChange(index, 'email', e.target.value)}
                   placeholder="Optional"
-                  className="email-input-field"
+                  className="input-field"
                 />
               </td>
               <td>
@@ -120,33 +139,14 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
             </tr>
           ))}
           <tr>
-            <td>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Name"
-                className="input-field"
-                
-              />
-            </td>
-            <td>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Optional"
-                className="input-field"
-              />
-            </td>
-            <td>
+            <td colSpan="3">
               <button
                 type="button"
                 className="icon-button add-button"
                 onClick={handleAddRow}
                 aria-label="Add Row"
               >
-                <FontAwesomeIcon icon={faPlus} />
+                <FontAwesomeIcon icon={faPlus} /> Add Member
               </button>
             </td>
           </tr>
@@ -164,3 +164,4 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
 };
 
 export default UserCreateTeams;
+

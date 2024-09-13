@@ -6,11 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { teamTooltips } from '../constants/Icons_Tooltips';
 import { Tooltip } from 'react-tooltip';
 import { faPencil, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
-import 'react-tooltip/dist/react-tooltip.css';
 import UserEditTeams from '../components/UserEditTeams'; // Import UserEditTeams
 import ProposalForm from './proposalForm';
 import Modal from './PopupOverlay';
-
+import 'react-tooltip/dist/react-tooltip.css';
 
 const UserTeams = () => {
   const { teams, fetchTeams, updateSelectedTeam } = useTeamsContext();
@@ -21,7 +20,7 @@ const UserTeams = () => {
 
   useEffect(() => {
     if (user) {
-      fetchTeams(); // Fetch teams when the component mounts and user is available
+      fetchTeams(); 
     }
   }, [fetchTeams, user]);
 
@@ -38,16 +37,14 @@ const UserTeams = () => {
   const handleFileIconClick = (team) => {
     updateSelectedTeam(team);
     setShowProposalForm(true);
-
   }
 
   const handleDeleteClick = async (teamId) => {
     try {
       await deleteTeam(teamId, user.token);
-      fetchTeams(); // Refresh the team list after deletion
+      fetchTeams(); 
     } catch (error) {
       console.error('Error deleting team:', error);
-      // Optionally, display an error message to the user here
     }
   };
 
@@ -63,7 +60,7 @@ const UserTeams = () => {
         <tbody>
           {Array.isArray(teams) && teams.length > 0 ? (
             teams
-              .filter(team => team !== null && team !== undefined) // Filter out null or undefined teams
+              .filter(team => team !== null && team !== undefined) 
               .map((team) => (
                 <tr key={team._id}>
                   <td>{team.teamName}</td>
@@ -97,7 +94,7 @@ const UserTeams = () => {
                     <div
                       data-tooltip-id="delete-tooltip"
                       data-tooltip-html={teamTooltips.Delete}
-                      onClick={() => handleDeleteClick(team._id)} // Pass teamId here
+                      onClick={() => handleDeleteClick(team._id)} 
                       style={{ cursor: 'pointer' }}
                     >
                       <FontAwesomeIcon icon={faTrash} className="action-icon" />
@@ -112,14 +109,11 @@ const UserTeams = () => {
         </tbody>
       </table>
       {showEditTeams && (
-        
           <UserEditTeams 
             selectedTeam={selectedTeam} 
             onClose={handleCancelEditTeams} 
           />
-
       )}
-
       {showProposalForm && (
         <Modal isOpen={showProposalForm} onClose={() => setShowProposalForm(false)}>
           <ProposalForm />

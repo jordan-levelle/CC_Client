@@ -70,13 +70,14 @@ export const deleteTeam = async (teamId, token) => {
 
 export const editTeam = async (teamId, { teamName, members }, token) => {
   try {
+
     const response = await fetch(`${TEAMS_URL}/editUserTeam/${teamId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ teamName, members }), // Ensure the payload matches what the backend expects
+      body: JSON.stringify({ teamName, members}), // Ensure the payload matches what the backend expects
     });
 
     if (!response.ok) {

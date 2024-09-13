@@ -50,15 +50,19 @@ const ProposalForm = () => {
     }
   }, []);
 
-  const options = teams.map((team) => ({
-    value: team._id,
-    label: team.teamName
-  }));
+  const options = [
+    { value: null, label: 'No Team' },
+    ...teams.map((team) => ({
+      value: team._id,
+      label: team.teamName
+    }))
+  ];
 
   const generateDummyUser = () => ({
     _id: process.env.REACT_APP_NON_AUTH_USER,
     token: process.env.REACT_APP_NON_AUTH_TOKEN
   });
+
 
   const handleTitleKeyPress = useCallback((event) => {
     if (event.key === 'Tab') {
@@ -77,6 +81,13 @@ const ProposalForm = () => {
   const onEditorStateChange = useCallback((content) => {
     setValue("description", content);
   }, [setValue]);
+
+  const handleTeamChange = (selectedOption) => {
+    const teamId = selectedOption?.value || null;
+    const team = teams.find(t => t._id === teamId);
+    updateSelectedTeam(team); // Update the context with the selected team
+    setValue('team', teamId); // Update the form value
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -100,8 +111,6 @@ const ProposalForm = () => {
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
       setSelectedProposalId(json._id);
-
-      updateSelectedTeam(selectedTeam);
 
       navigate(`/${json.uniqueUrl}`);
       reset();
@@ -153,7 +162,7 @@ const ProposalForm = () => {
               {...register('name')}
               tabIndex="3"
               aria-label="Proposed by"
-              name="name" // Add name attribute if `name` is used in `register`
+              name="name" 
             />
             <div>
               {isSubscribed ? (
@@ -161,8 +170,8 @@ const ProposalForm = () => {
                   <h6>Select Team</h6>
                   <Select 
                     options={options} 
-                    defaultValue={selectedTeam ? { value: selectedTeam._id, label: selectedTeam.teamName } : null}
-                    onChange={(selectedOption) => setValue('team', selectedOption)}
+                    defaultValue={selectedTeam ? { value: selectedTeam._id, label: selectedTeam.teamName } : { value: null, label: 'No Team' }}
+                    onChange={handleTeamChange} // Handle dropdown selection
                   />
                 </div>
               ) : null}
@@ -177,7 +186,7 @@ const ProposalForm = () => {
                 style={{ marginRight: '5px' }} // Adjust margin as needed
               />
               <label htmlFor="receiveNotifications">
-                Receive notifications at: {user.email}
+                Receive Notifications
               </label>
             </div>
             ) : (
@@ -218,4 +227,3 @@ const ProposalForm = () => {
 };
 
 export default ProposalForm;
-
