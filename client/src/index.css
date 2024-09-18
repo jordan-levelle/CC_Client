@@ -5,6 +5,7 @@
   --light-bg: lightgray;
   --font-family: Arial, sans-serif;
   --text-color: #ececec;
+  --secondary-text-color:#1b1b1b ;
   --border-color: #ccc;
   --focus-border-color: #007BFF;
   --focus-box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
@@ -40,14 +41,14 @@ body {
 .component-container-2 {
   border: 1px solid lightblue;
   border-radius: 5px;
-  padding: 20px;
+  padding: 15px;
   flex: 1; 
-  min-width: 370px; 
+  min-width: 300px;
   box-shadow: .1rem .1rem .2rem rgba(0, 0, 0, 0.5);
 }
 
 .cardlist-item {
-  width: 80%; 
+  width: 84%; 
   max-width: 480px; 
   box-sizing: border-box; 
   margin: 0; 
@@ -76,7 +77,7 @@ body {
   border: none; 
   border-radius: 5px; 
   padding: 5px 10px; 
-  margin-left: 5px;
+  margin-left: 3px;
   min-width: 60px;
   cursor: pointer; 
   font-size: 13px; 
@@ -99,11 +100,28 @@ body {
   transition: background-color 0.3s, transform 0.2s; 
 }
 
-
 .small-button:hover {
-  background-color: #0056b3;
+  background-color: #4e6f92;
 }
 
+.medium-button {
+  background-color: #3b8adfef; 
+  color: #ffffff; 
+  border: none; 
+  border-radius: 5px; 
+  padding: 10px 15px; 
+  margin-left: 3px;
+  min-width: 100px;
+  cursor: pointer; 
+  font-size: 13px; 
+  font-weight: bold; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  transition: background-color 0.3s, transform 0.2s; 
+}
+
+.medium-button:hover {
+  background-color: #547191;
+}
 
 
 /**************************** Global Pop Up Styles **********************************/
@@ -137,6 +155,25 @@ body {
   cursor: 'pointer';
   font-size: '1.5rem';
 };
+
+
+/**************************** Global Input Styles **********************************/
+.input-field {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.input-field:focus {
+  border-color: var(--focus-border-color);
+  box-shadow: var(--focus-box-shadow);
+  outline: var(--focus-outline);
+}
 
 
 
@@ -183,113 +220,6 @@ body {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*************** Styles for Proposal Form Component ***************/
-.proposal-form {
-  width: 90%;
-  max-width: 800px;
-  background-color: lightgray;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 50px auto 0;
-}
-
-.proposal-form label {
-  display: block;
-  padding: 5px;
-
-}
-
-.proposal-form input[type="text"],
-.proposal-form input[type="email"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.proposal-form button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.error {
-  color: red;
-  margin-top: 5px; /* Ensure some space between the editor and the error message */
-}
-
-.quill-editor {
-    width: 100%;
-    height: 35vh;
-    max-height: 40vh;
-    min-height: 20vh;
-    overflow-y:hidden; /* Ensures scrollbar only appears when needed */
-    background-color: #ffffff;
-    border: 1px solid #ccc; /* Add border for better visual separation */
-    border-radius: 5px; /* Match border-radius with other inputs */
-    box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
-}
-
-
-
 /* 
   *************Styles for Authentication Pages*************
 */
@@ -315,8 +245,9 @@ body {
 .auth-container button {
   width: calc(100% - 20px); /* Adjust button width */
   padding: 10px;
-  background-color: #007bff;
-  color: white;
+  color: #ebebeb;
+  font-size: medium;
+  --font-family: Arial, sans-serif;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -358,207 +289,6 @@ body {
 
 
 
-/* ************** Styles for Settings Page **************/
-.settings-container {
-  margin: 20px auto;
-  padding: 20px;
-  max-width: 75vw;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
-.settings-container h3 {
-  margin-bottom: 20px;
-  font-size: 1.5em;
-}
-
-.edit-profile {
-  margin-top: 30px;
-}
-
-.edit-userInfo-rows {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.edit-userInfo-rows p {
-  margin-right: 20px;
-  font-weight: bold;
-  font-size: 1.1em;
-}
-
-input.email {
-  height: 40px;
-  width: 200px;
-  padding: 0 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1em;
-  margin-right: 10px;
-}
-
-.edit-userInfo-buttons {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  margin-left: 10px;
-}
-
-.edit-userInfo-buttons:hover {
-  background-color: #0056b3;
-}
-
-.delete-cancel-button {
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  color: #fff;
-  margin-top: 20px;
-  background-color: #db293a;
-}
-
-.delete-cancel-button:hover {
-  background-color: #c82333;
-}
-
-/* Confirmation popup */
-.confirmation-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.confirmation-content {
-  text-align: center;
-}
-
-.confirmation-popup button {
-  margin: 0 10px;
-}
-
-.confirmation-popup p {
-  margin-bottom: 10px;
-}
-
-.confirmation-content label {
-  display: block;
-  margin-bottom: 15px;
-}
-
-/* Media Queries for Mobile */
-@media only screen and (max-width: 768px) {
-  .settings-container {
-    padding: 10px;
-    max-width: 90vw;
-  }
-
-  input.email {
-    width: 100%;
-    margin-right: 0;
-
-  }
-
-  .delete-button {
-    margin-top: 10px;
-  }
-}
-
-
-/* Row for password reset */
-.edit-password-row {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-
-/* Message and error styling */
-.message {
-  color: #28a745;
-}
-
-.error {
-  color: #dc3545;
-}
-
-/* Popup styling */
-.reset-password-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Close button styling */
-.close-button {
-  align-self: flex-end;
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-/* Label and input styling */
-.password-label {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.password-input {
-  padding: 8px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  width: 100%;
-}
-
-.password-input:focus {
-  border-color: #80bdff;
-  outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* Confirm button styling */
-.confirm-button {
-  padding: 10px 15px;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.confirm-button:hover {
-  background-color: #218838;
-}
 
 

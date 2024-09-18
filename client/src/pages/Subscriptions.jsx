@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import { STANDARD_CC_FEATURES, PRO_CC_FEATURES } from '../constants/TextConstants';
+import { STANDARD_CC_FEATURES, PRO_CC_FEATURES } from '../constants/Constants';
 import { useAuthContext } from '../hooks/useAuthContext';
 import '../styles/pages/subscription.css';
 
@@ -24,12 +24,12 @@ const Subscriptions = () => {
             </div>
           ))}
           {user ? (
-            <button className='small-button'>
+            <button className='medium-button'>
               <FontAwesomeIcon icon={faCheckCircle} className="text-success" />
             </button>
           ) : (
             <Link small-button to="/auth">
-              <button className='small-button'>Sign up</button>
+              <button className='medium-button'>Sign up</button>
             </Link>
           )}
         </div>
@@ -45,11 +45,11 @@ const Subscriptions = () => {
           ))}
           {!user ? (
             <Link to="/subscribe">
-              <button className='small-button'>Buy now</button>
+              <button className='medium-button'>Buy now</button>
             </Link>
           ) : (
             isSubscribed ? (
-              <button className='small-button'>
+              <button className='medium-button'>
                 <FontAwesomeIcon icon={faCheckCircle} className="text-success" />
               </button>
             ) : (

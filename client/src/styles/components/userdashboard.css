@@ -17,7 +17,7 @@
     justify-content: center;
     max-width: fit-content;
     flex-wrap: wrap; 
-    gap: 5px; 
+    gap: 2px; 
   }
   
   .confirmation-popup {

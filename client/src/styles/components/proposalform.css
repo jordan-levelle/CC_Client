@@ -1,0 +1,54 @@
+/*************** Styles for Proposal Form Component ***************/
+.proposal-form {
+    width: 90%;
+    max-width: 900px;
+    min-width: 700px;
+    background-color: lightgray;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 50px auto 0;
+  }
+  
+  .proposal-form label {
+    display: block;
+    padding: 5px;
+  
+  }
+  
+  .proposal-form input[type="text"],
+  .proposal-form input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .proposal-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 5px; /* Ensure some space between the editor and the error message */
+  }
+  
+  .quill-editor {
+      width: 100%;
+      height: 35vh;
+      max-height: 40vh;
+      min-height: 20vh;
+      overflow-y:hidden; /* Ensures scrollbar only appears when needed */
+      background-color: #ffffff;
+      border: 1px solid #ccc; /* Add border for better visual separation */
+      border-radius: 5px; /* Match border-radius with other inputs */
+      box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+  }
+  

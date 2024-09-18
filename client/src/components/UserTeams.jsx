@@ -3,7 +3,7 @@ import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { deleteTeam } from '../api/teams';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { teamTooltips } from '../constants/Icons_Tooltips';
+import { teamTooltips } from '../constants/Constants';
 import { Tooltip } from 'react-tooltip';
 import { faPencil, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import UserEditTeams from '../components/UserEditTeams'; // Import UserEditTeams

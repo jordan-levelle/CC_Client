@@ -64,7 +64,7 @@ const Profile = () => {
     <div className="dashboard">
       <div className="page-container">
         <div className="component-container-1">
-          <h4>Your Proposals</h4>
+          <h4>Proposals</h4>
           <div className="user-proposal-filter-options">
             <Form>
               <div key="inline-radio" className="mb-3">

@@ -98,7 +98,7 @@ const Header = () => {
                   </Link>
                   <FontAwesomeIcon
                     icon={faSquareCaretDown}
-                    className="dropdown-icon"
+                    className="header-dropdown-icon"
                     onClick={toggleDropdown}
                     style={{ cursor: 'pointer', fontSize: '16px', marginLeft: '8px' }}
                   />
@@ -133,5 +133,3 @@ const Header = () => {
 };
 
 export default Header;
-
-

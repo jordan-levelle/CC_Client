@@ -16,7 +16,7 @@ const AuthPage = () => {
         {isLogin
           ? "Don't have an account? "
           : "Already have an account? "}
-        <button onClick={handleToggle}>
+        <button className='small-button' onClick={handleToggle}>
           {isLogin ? 'Sign Up' : 'Log In'}
         </button>
       </p>

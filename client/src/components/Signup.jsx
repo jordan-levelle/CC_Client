@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { passwordCriteria } from '../constants/TextConstants';
+import { passwordCriteria } from '../constants/Constants';
 import { useSignup } from '../hooks/useSignup';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { Navigate } from 'react-router-dom';
@@ -66,12 +66,26 @@ const Signup = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email:</label>
-          <input type="email" id="email" name="email" value={email} onChange={handleEmailChange} required />
+          <input 
+            type="email" 
+            id="email" 
+            name="email"
+            className='input-field' 
+            value={email} 
+            onChange={handleEmailChange} 
+            required />
           {emailError && <div className="error small-text">{emailError}</div>}
         </div>
         <div>
           <label htmlFor="password">Password:</label>
-          <input type="password" id="password" name="password" value={password} onChange={handlePasswordChange} required />
+          <input 
+            type="password" 
+            id="password" 
+            name="password"
+            className='input-field'  
+            value={password} 
+            onChange={handlePasswordChange} 
+            required />
           <ul className="password-criteria">
             <li className="password-criteria-list">
               {passwordCriteria.map((criterion, index) => (
@@ -87,7 +101,14 @@ const Signup = () => {
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} required />
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="confirmPassword"
+            className='input-field'  
+            value={confirmPassword} 
+            onChange={handleConfirmPasswordChange} 
+            required />
           {!passwordMatch && <div className="error small-text">Passwords do not match</div>}
         </div>
         <div>
@@ -97,6 +118,7 @@ const Signup = () => {
             type="text"
             id="captchaInput"
             name="captchaInput"
+            className='input-field' 
             placeholder="Enter CAPTCHA"
             value={captchaInput}
             onChange={(e) => setCaptchaInput(DOMPurify.sanitize(e.target.value))}
@@ -104,7 +126,11 @@ const Signup = () => {
             aria-label="CAPTCHA"
           />
         </div>
-        <button type="submit" disabled={isLoading}>Sign up</button>
+        <button
+        className='medium-button' 
+          type="submit" 
+          disabled={isLoading}>Sign up
+        </button>
         {error && <div className="error small-text">{error}</div>}
       </form>
     </div>

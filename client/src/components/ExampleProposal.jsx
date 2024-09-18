@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
-import { icons, tooltips } from '../constants/Icons_Tooltips';
+import { icons, tooltips } from '../constants/Constants';
 import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'; 
 import exampleProposalData from '../constants/ExampleProposal.json'
 import {

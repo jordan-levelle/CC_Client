@@ -4,14 +4,16 @@ import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { deleteProposalAPI, fetchProposalListAPI } from 'src/api/proposals'; 
 import { toggleArchiveProposalAPI } from 'src/api/users';
-import { formatDate } from '../constants/HomeTextConstants';
+import { formatDate } from '../constants/Constants';
 import '../styles/components/userdashboard.css';
+import Modal from './PopupOverlay';
 
 const ProposalList = ({ proposal }) => {
   const { dispatch } = useProposalsContext();
   const { user, isSubscribed } = useAuthContext();
   const [daysLeft, setDaysLeft] = useState(0);
   const [isExpired, setIsExpired] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);  // State to manage modal visibility
 
   useEffect(() => {
     if (proposal.createdAt) {
@@ -36,6 +38,7 @@ const ProposalList = ({ proposal }) => {
     try {
       await deleteProposalAPI(proposal._id, user.token);
       dispatch({ type: 'DELETE_PROPOSAL', payload: proposal });
+      setIsModalOpen(false);  // Close modal after deletion
     } catch (error) {
       console.error('Error deleting proposal:', error);
     }
@@ -58,22 +61,16 @@ const ProposalList = ({ proposal }) => {
   
     try {
       const response = await toggleArchiveProposalAPI(proposal._id, user.token);
-      
-      // Dispatch action to update the state
       dispatch({ 
         type: response.isArchived ? 'ARCHIVE_PROPOSAL' : 'UNARCHIVE_PROPOSAL', 
         payload: proposal 
       });
-  
-      // Refetch the proposals to get the latest state
       const proposalsData = await fetchProposalListAPI(user.token);
       dispatch({ type: 'SET_PROPOSALS', payload: proposalsData });
-  
     } catch (error) {
       console.error('Error toggling archive state:', error);
     }
   };
-  
 
   return (
     <section>
@@ -119,12 +116,27 @@ const ProposalList = ({ proposal }) => {
           )}
           <button 
             className="small-delete-button" 
-            onClick={handleDeleteClick}
+            onClick={() => setIsModalOpen(true)}  // Open modal on delete click
           >
             Delete
           </button>
         </div>
       </div>
+
+      {/* Modal for delete confirmation */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div style={{ textAlign: 'center' }}>
+          <p>Are you sure you want to delete this proposal? It will delete all responses.</p>
+          <button
+            className='small-button' 
+            style={{ marginRight: '10px' }} 
+            onClick={handleDeleteClick}>Yes
+          </button>
+          <button
+            className='small-button' 
+            onClick={() => setIsModalOpen(false)}>No</button>
+        </div>
+      </Modal>
     </section>
   );
 };

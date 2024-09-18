@@ -9,5 +9,7 @@ export { default as ProtectedRoute } from './ProtectedRoute';
 export { default as UserTeams } from './UserTeams';
 export { default as UserCreateTeams } from './UserCreateTeams';
 export { default as UserEditTeams } from './UserEditTeams';
-export { default as EditProfile} from './EditProfile';
-export { default as AccountSettings } from './AccountSettings'; // Ensure this line exists
+export { default as EditProfile } from './EditProfile';
+export { default as AccountSettings } from './AccountSettings';
+
+

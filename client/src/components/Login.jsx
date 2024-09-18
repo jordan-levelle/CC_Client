@@ -50,6 +50,7 @@ const Login = () => {
             type="email"
             id="email"
             name="email"
+            className='input-field' 
             value={email}
             onChange={handleEmailChange}
             required
@@ -63,6 +64,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
+              className='input-field' 
               value={password}
               onChange={handlePasswordChange}
               required
@@ -71,7 +73,10 @@ const Login = () => {
           </div>
         )}
         <div>
-          <button type="submit" disabled={isLoading}>
+          <button 
+            type="submit"
+            className='medium-button' 
+            disabled={isLoading}>
             {isForgotPassword ? 'Send Reset Link' : 'Log in'}
           </button>
         </div>

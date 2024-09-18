@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
+import DropdownMenu from './DropdownMenu';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'; 
+import { faCommentDots, faTrashCan, faArrowDown, faArrowUp, faEllipsis } from '@fortawesome/free-solid-svg-icons'; 
 import { Tooltip } from 'react-tooltip';
-import { icons, tooltips } from '../constants/Icons_Tooltips';
-import { formatDate } from '../constants/HomeTextConstants';
+import { icons, tooltips, formatDate } from '../constants/Constants';
 import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from "../hooks/useAuthContext";
 import {
@@ -20,6 +21,7 @@ import {
   checkFirstRender
 } from '../api/proposals';
 import '../styles/components/proposalvote.css';
+
 
 const ProposalVote = () => {
   const { uniqueUrl } = useParams();
@@ -242,6 +244,20 @@ const ProposalVote = () => {
             <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
           </div>
         </div>
+        <div className="settings-dropdown">
+          <DropdownMenu icon={faEllipsis}>
+            <button onClick={() => alert('Create Team feature in development')} className='dropdown-item'>
+              Create Team
+            </button>
+            <button onClick={() => alert('Edit Proposal feature in development')} className="dropdown-item">
+              Edit Proposal
+            </button>
+            <button onClick={() => alert('Delete Proposal feature in development')} className="dropdown-item">
+              Delete Proposal
+            </button>
+          </DropdownMenu>
+        </div>
+     
         <div className="table-container">
           <table className="table">  
           <thead>
@@ -510,3 +526,5 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+
+

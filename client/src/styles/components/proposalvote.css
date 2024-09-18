@@ -24,7 +24,14 @@
   padding-bottom: 14px;
 }
 
+.settings-dropdown {
+  position: inherit;
+  padding-top: 10px;
+  padding-left: 3px;
+}
+
 .main-container {
+  position: relative; 
   margin: 15px auto; 
   padding: 7px;
   max-width: 92vw;
@@ -32,6 +39,7 @@
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  overflow: visible; 
 }
 
 .proposal-description {

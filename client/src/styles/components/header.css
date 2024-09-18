@@ -93,7 +93,7 @@
   display: none;
 }
 
-.dropdown-icon {
+.header-dropdown-icon {
   display: none;
 }
 
@@ -142,7 +142,7 @@
     left: 0;
   }
 
-  .dropdown-icon {
+  .header-dropdown-icon {
     display: inline-block;
     cursor: pointer;
     margin-left: 8px;

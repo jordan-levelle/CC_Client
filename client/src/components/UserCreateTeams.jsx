@@ -5,6 +5,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ErrorMessage from './ErrorMessage';
+import validator from 'validator';
 
 const UserCreateTeams = ({ existingTeam, onClose }) => {
   const [teamName, setTeamName] = useState(existingTeam ? existingTeam.teamName : '');
@@ -63,6 +64,11 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
       return;
     }
 
+    const invalidEmail = rows.filter(row => row.email && !validator.isEmail(row.email));
+    if (invalidEmail.length > 0) {
+      setError('One or more emails are invalid')
+    }
+
     try {
       // Sort members alphabetically by name
       const sortedRows = [...rows].sort((a, b) => a.name.localeCompare(b.name));
@@ -89,7 +95,7 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
       <input
         id="team-name"
         aria-label="Team Name"
-        className="team-name-input"
+        className="input-field"
         value={teamName}
         onChange={(e) => setTeamName(e.target.value)}
       />
@@ -119,6 +125,8 @@ const UserCreateTeams = ({ existingTeam, onClose }) => {
               </td>
               <td>
                 <input
+                  id='email'
+                  name='email'
                   type="email"
                   value={row.email}
                   onChange={(e) => handleRowChange(index, 'email', e.target.value)}

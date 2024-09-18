@@ -10,6 +10,7 @@ import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-s
 import ReactQuill from 'react-quill';
 import Select from 'react-select'
 import 'react-quill/dist/quill.snow.css';
+import '../styles/components/proposalform.css';
 
 const ProposalForm = () => {
   const { dispatch } = useProposalsContext();
@@ -103,9 +104,11 @@ const ProposalForm = () => {
       }
 
       const currentUser = user || generateDummyUser();
+
       const proposal = { 
         ...data, 
-        email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email, // Use the email based on the checkbox or input field
+        email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email,
+         
       };
 
       const json = await createProposal(proposal, currentUser.token);
@@ -174,6 +177,21 @@ const ProposalForm = () => {
                     onChange={handleTeamChange} // Handle dropdown selection
                   />
                 </div>
+              ) : null}
+            </div>
+            <div>
+              {isSubscribed ? (
+                <div style={{ paddingTop:'5px', display: 'flex', alignItems: 'center' }}>
+                <input
+                  type="checkbox"
+                  {...register('sendNotifications')}
+                  tabIndex="4"
+                  style={{ marginRight: '5px' }} // Adjust margin as needed
+                />
+                <label htmlFor="sendNotifications">
+                  Send Notifications
+                </label>
+              </div>
               ) : null}
             </div>
 
