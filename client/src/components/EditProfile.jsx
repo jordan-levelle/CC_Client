@@ -202,7 +202,7 @@ const EditProfile = () => {
                {/* Delete Account Modal */}
                <Modal isOpen={showConfirmation} onClose={cancelDeleteAccount}>
                    <div className='modal-content'>
-                       <div className='delete-account-content'>
+                       <div className='account-content'>
                        <label>
                            <p>Would you like to delete all proposals associated with this account?</p>
                            <input
@@ -241,10 +241,15 @@ const EditProfile = () => {
                    <button className='medium-button' onClick={confirmCancelSubscription}>Cancel Subscription</button>
                )}
                <Modal isOpen={showCancelConfirmation} onClose={cancelCancelSubscription}>
-                   <p>Are you sure you want to cancel your subscription?</p>
+                   <div  className='modal-content'>
+                    <div className='account-content'>
+                    <p>Are you sure you want to cancel your subscription?</p>
                    <button className='small-button' onClick={handleCancelSubscription}>Yes</button>
                    <button className='small-button' onClick={cancelCancelSubscription}>No</button>
-               </Modal>
+     
+                    </div>
+                   </div>
+                             </Modal>
 
 
                {error && <p className="error">{error}</p>}

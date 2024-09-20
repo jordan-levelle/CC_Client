@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,13 @@ import '../styles/pages/subscription.css';
 
 const Subscriptions = () => {
  const { user, isSubscribed } = useAuthContext();
+ const [showMessage, setShowMessage] = useState(false);
+
+ const handleClick = () => {
+  if (!user) {
+    setShowMessage(true);
+  }
+ }
 
 
  return (
@@ -45,21 +52,25 @@ const Subscriptions = () => {
              </span>
            </div>
          ))}
-         {!user ? (
-           <Link to="/subscribe">
-             <button className='medium-button'>Buy now</button>
-           </Link>
-         ) : (
-           isSubscribed ? (
-             <button className='medium-button'>
-               <FontAwesomeIcon icon={faCheckCircle} className="text-success" />
-             </button>
-           ) : (
-             <Link to="/subscribe">
-               <button className='small-button'>Upgrade</button>
-             </Link>
-           )
-         )}
+       {!user ? (
+        <div>
+          
+            <button className='medium-button' onClick={handleClick}>Buy now</button>
+          
+          {showMessage && <p>Please sign up or log in to upgrade.</p>}
+        </div>
+      ) : (
+        isSubscribed ? (
+          <button className='medium-button'>
+            <FontAwesomeIcon icon={faCheckCircle} className="text-success" />
+          </button>
+        ) : (
+          <Link to="/subscribe">
+            <button className='small-button'>Upgrade</button>
+          </Link>
+        )
+      )}
+
        </div>
      </div>
    </section>
