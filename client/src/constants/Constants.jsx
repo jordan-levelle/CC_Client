@@ -18,7 +18,7 @@ export const STANDARD_CC_FEATURES = [
   "Email Notifications",
   "Edit Your Active Proposals",
   "Proposals expire after a certain period",
-  "Limit of 15-20 respondents per proposal"
+  "Limit of 15 respondents per proposal"
 ];
 
 export const PRO_CC_FEATURES = [

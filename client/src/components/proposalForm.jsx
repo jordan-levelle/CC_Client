@@ -191,7 +191,7 @@ const ProposalForm = () => {
               ) : null}
             </div>
             <div>
-              {isSubscribed ? (
+              {isSubscribed && selectedTeam !== null ? (
                 <div style={{ paddingTop:'5px', display: 'flex', alignItems: 'center' }}>
                 <input
                   type="checkbox"
@@ -200,7 +200,7 @@ const ProposalForm = () => {
                   style={{ marginRight: '5px' }} // Adjust margin as needed
                 />
                 <label htmlFor="sendNotifications">
-                  Send Notifications
+                  Send Team Proposal Email?
                 </label>
               </div>
               ) : null}
@@ -215,7 +215,7 @@ const ProposalForm = () => {
                 style={{ marginRight: '5px' }} // Adjust margin as needed
               />
               <label htmlFor="receiveNotifications">
-                Receive Notifications
+                Receive Email Notifications?
               </label>
             </div>
             ) : (

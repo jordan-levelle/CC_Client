@@ -6,17 +6,13 @@ const USER_URL = process.env.REACT_APP_USERS_URL;
 
 
 const ProductDisplay = ({ handleCheckout }) => (
- <section className="subscription-section">
-     <div className="product">
-       <div className="description">
-         <h3>Consensus Check Subscription</h3>
-         <h5>$20.00/Annually</h5>
-       </div>
-     </div>
-     <button className="small-button" onClick={handleCheckout}>
+    <div>
+      <h3>Consensus Check Subscription</h3>
+      <h5>$20.00/Annually</h5>
+      <button className="small-button" onClick={handleCheckout}>
        Checkout
-     </button>
-   </section>
+      </button>
+    </div>
 );
 
 
