@@ -26,6 +26,9 @@ export const createProposal = async (proposalData, token) => {
     'Authorization': `Bearer ${token}`,
   };
 
+  // Log the proposal data being sent
+  console.log('Creating proposal with data:', proposalData);
+
   try {
     const response = await fetch(`${PROP_URL}`, {
       method: 'POST',
@@ -36,7 +39,11 @@ export const createProposal = async (proposalData, token) => {
     if (!response.ok) {
       throw new Error('Failed to create proposal');
     }
-    return response.json();
+
+    const result = await response.json();
+    // Log the response from the server
+    console.log('Proposal created successfully:', result);
+    return result;
   } catch (error) {
     console.error('Error creating proposal:', error);
     throw error;

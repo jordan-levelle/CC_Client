@@ -1,31 +1,46 @@
 /* ************** Styles for Settings Page **************/
 
+
 .edit-userInfo-rows {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+ .edit-userInfo-rows p {
+  margin-right: 20px;
+  font-size: 1.0em;
+}
+
+
+.modal-content {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;    /* Centers vertically */
+  height: 100%;           /* Takes full height of the modal */
+}
+
+
+.delete-account-content {
     padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .edit-userInfo-rows p {
-    margin-right: 20px;
-    font-size: 1.0em;
-  }
-  
-  .message {
-    color: #28a745;
-  }
-  
-  .error {
-    color: #dc3545;
-  }
-  
-  .password-label {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  
+    text-align: center;     /* Center text within the content */
+    /* Add any additional styling you want here */
+}
+
+
+.medium-button.red {
+  background-color: #dc3545;
+}
+ .message {
+  color: #28a745;
+}
+ .error {
+  color: #dc3545;
+}
+ .password-label {
+  display: flex;
+  flex-direction: column;
+}

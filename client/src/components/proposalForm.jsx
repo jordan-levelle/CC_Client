@@ -59,6 +59,13 @@ const ProposalForm = () => {
     }))
   ];
 
+  const handleTeamChange = (selectedOption) => {
+    const teamId = selectedOption?.value || null;
+    const team = teams.find(t => t._id === teamId);
+    updateSelectedTeam(team); // Update the context with the selected team
+    setValue('team', teamId); // Update the form value
+  };
+
   const generateDummyUser = () => ({
     _id: process.env.REACT_APP_NON_AUTH_USER,
     token: process.env.REACT_APP_NON_AUTH_TOKEN
@@ -83,44 +90,48 @@ const ProposalForm = () => {
     setValue("description", content);
   }, [setValue]);
 
-  const handleTeamChange = (selectedOption) => {
-    const teamId = selectedOption?.value || null;
-    const team = teams.find(t => t._id === teamId);
-    updateSelectedTeam(team); // Update the context with the selected team
-    setValue('team', teamId); // Update the form value
-  };
-
   const onSubmit = async (data) => {
     try {
       if (!data.title.trim() || !data.description.trim()) {
         throw new Error('Title and description are required');
       }
-
+  
       if (!user && !validateCaptcha(captchaInput)) {
         setCaptchaError('Invalid CAPTCHA');
         return; // Exit early if CAPTCHA is invalid
       } else {
         setCaptchaError(''); // Clear error if CAPTCHA is valid
       }
-
+  
       const currentUser = user || generateDummyUser();
-
+  
+      // Log the current user information
+      console.log("Submitting proposal as user:", currentUser.email || data.email);
+  
       const proposal = { 
         ...data, 
         email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email,
-         
+        teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : null
       };
-
+  
+      // Log whether notifications will be sent to a team
+      if (proposal.teamId) {
+        console.log("Sending notifications to team:", selectedTeam.teamName, "Team ID:", proposal.teamId);
+      } else {
+        console.log("No team selected for notifications.");
+      }
+  
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
       setSelectedProposalId(json._id);
-
+  
       navigate(`/${json.uniqueUrl}`);
       reset();
     } catch (error) {
       console.error('Error submitting proposal:', error.message);
     }
-  };
+  }; 
+  
 
   const descriptionValue = watch("description");
 

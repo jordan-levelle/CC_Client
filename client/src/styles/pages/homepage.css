@@ -1,107 +1,89 @@
 .home-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  
-  .rectangle {
-    width: 80%;
-    max-width: 700px;
-    background-color: lightgray;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+ .container1 {
+  width: 80%;
+  max-width: 700px;
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+ .container1 h1 {
+  margin-bottom: 10px;
+}
+ .container1 p {
+  margin-bottom: 20px;
+  line-height: 21px;
+}
+ .container1-link-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+ .container1-link-group a {
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+}
+ .small-button.green {
+  background-color: #5bb75b;
+}
+ .example-proposal-link {
+  background-color: #006dcc;
+}
+ .container1-link-group a:hover {
+  filter: brightness(90%);
+}
+ .container2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+ .container2-section {
+  flex: 1;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+}
+ .container2-section h2 {
+  margin-bottom: 10px;
+}
+ .container2-section p {
+  margin-bottom: 10px;
+}
+ .container2-section a {
+  display: block;
+  padding: 10px 0;
+  background-color: #007bff;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+}
+ .container2-section a:hover {
+  filter: brightness(90%);
+}
+ @media (max-width: 768px) {
+  .container1 {
+    width: 100%;
     margin-bottom: 20px;
   }
-  
-  .rectangle h1 {
-    margin-bottom: 10px;
+   .container2-section {
+    padding: 0 20px;
   }
-  
-  .rectangle p {
-    margin-bottom: 20px;
-    line-height: 21px;
+   .container2 {
+    flex: 1 1 100%;
+    max-width: none;
   }
-  
-  .rectangle-link-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .rectangle-link-group a {
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: #fff;
-    text-decoration: none;
-  }
-  
-  .create-proposal-link {
-    background-color: #5bb75b;
-  }
-  
-  .example-proposal-link {
-    background-color: #006dcc;
-  }
-  
-  .rectangle-link-group a:hover {
-    filter: brightness(90%);
-  }
-  
-  .sections-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .section {
-    flex: 1;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-  }
-  
-  .section h2 {
-    margin-bottom: 10px;
-  }
-  
-  .section p {
-    margin-bottom: 10px;
-  }
-  
-  .section a {
-    display: block;
-    padding: 10px 0;
-    background-color: #007bff;
-    color: #fff;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-  }
-  
-  .section a:hover {
-    filter: brightness(90%);
-  }
-  
-  @media (max-width: 768px) {
-    .rectangle {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-  
-    .sections-container {
-      padding: 0 20px;
-    }
-  
-    .section {
-      flex: 1 1 100%;
-      max-width: none;
-    }
-  }
-  
+}
