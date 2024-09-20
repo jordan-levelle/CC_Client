@@ -10,6 +10,6 @@ export { default as UserTeams } from './UserTeams';
 export { default as UserCreateTeams } from './UserCreateTeams';
 export { default as UserEditTeams } from './UserEditTeams';
 export { default as EditProfile } from './EditProfile';
-export { default as AccountSettings } from './AccountSettings';
+
 
 

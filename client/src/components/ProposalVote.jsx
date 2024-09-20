@@ -26,12 +26,7 @@ import {
 } from '../api/proposals';
 import '../styles/components/proposalvote.css';
 
-
-
-
-
-
-const ProposalVote = () => {
+ const ProposalVote = () => {
  const { dispatch } = useProposalsContext();
  const { uniqueUrl } = useParams();
  const { user } = useAuthContext();
@@ -51,9 +46,6 @@ const ProposalVote = () => {
  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
  const [isModalOpen, setIsModalOpen] = useState(false);
  const [isDeleted, setIsDeleted] = useState(false);
-
-
-
 
  useEffect(() => {
    const fetchDataAndHandleVotes = async () => {
@@ -86,7 +78,7 @@ const ProposalVote = () => {
      } finally {
        setIsLoading(false);
        clearSelectedTeam();
-     }
+     } 
    };
     fetchDataAndHandleVotes();
  }, [uniqueUrl, selectedTeam, votesSubmitted, clearSelectedTeam]);
@@ -126,16 +118,16 @@ const ProposalVote = () => {
 
  const handleDeleteProposalClick = async () => {
    if (!user) return;
+    try {
+      await deleteProposalAPI(proposal._id, user.token);
+      dispatch({ type: 'DELETE_PROPOSAL', payload: proposal });
+      setIsDeleted(true); // Set deletion status
+    } catch (error) {
+      console.error('Error deleting proposal:', error);
+    }
+  };
 
 
-   try {
-     await deleteProposalAPI(proposal._id, user.token);
-     dispatch({ type: 'DELETE_PROPOSAL', payload: proposal });
-     setIsDeleted(true); // Set deletion status
-   } catch (error) {
-     console.error('Error deleting proposal:', error);
-   }
- };
 
 
  const proposalLink = `${window.location.origin}/${uniqueUrl}`;
@@ -281,20 +273,18 @@ const ProposalVote = () => {
            <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
          </div>
        </div>
-       <div className="settings-dropdown">
-         <DropdownMenu icon={faEllipsis}>
-           <button onClick={() => alert('Create Team feature in development')} className='dropdown-item'>
-             Create Team
-           </button>
-           <button onClick={() => alert('Edit Proposal feature in development')} className="dropdown-item">
-             Edit Proposal
-           </button>
-           <button  onClick={() => setIsModalOpen(true)} className="dropdown-item">
-             Delete Proposal
-           </button>
-         </DropdownMenu>
-       </div>
-
+          <div className="settings-dropdown">
+            <DropdownMenu icon={faEllipsis}>
+              <button className="dropdown-item">Create Team</button>
+              <button className="dropdown-item">Edit Proposal</button>
+              <button
+                className="dropdown-item"
+                onClick={() => setIsModalOpen(true)}>
+                Delete Proposal
+              </button>
+            </DropdownMenu>
+          </div>
+ 
 
        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
        <div style={{ textAlign: 'center' }}>

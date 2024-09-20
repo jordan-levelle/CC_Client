@@ -13,7 +13,7 @@ const ProductDisplay = ({ handleCheckout }) => (
          <h5>$20.00/Annually</h5>
        </div>
      </div>
-     <button className="checkout-button" onClick={handleCheckout}>
+     <button className="small-button" onClick={handleCheckout}>
        Checkout
      </button>
    </section>
@@ -37,7 +37,7 @@ export default function Subscribe() {
 
 
    if (query.get("success")) {
-     setMessage("Order placed! You will receive an email confirmation.");
+     setMessage("Subscription to Consensus Check Successful!");
 
 
      // Fetch updated user information
