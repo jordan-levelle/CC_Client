@@ -17,11 +17,7 @@ const ProposalForm = () => {
   const { user, isSubscribed } = useAuthContext();
   const { teams, fetchTeams, selectedTeam, updateSelectedTeam } = useTeamsContext();
   const { setSelectedProposalId } = useVoteContext();
-  const { register, 
-          handleSubmit, 
-          setValue, 
-          watch, 
-          formState: { errors }, reset } = useForm();
+  const { register, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm();
 
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState('');
@@ -32,7 +28,7 @@ const ProposalForm = () => {
 
   useEffect(() => {
     if (user && isSubscribed) {
-      fetchTeams(); // Fetch teams when the component mounts and user is available and subscribed
+      fetchTeams(); // Fetch teams when the user is subscribed
     }
   }, [fetchTeams, user, isSubscribed]); 
 
@@ -71,7 +67,6 @@ const ProposalForm = () => {
     token: process.env.REACT_APP_NON_AUTH_TOKEN
   });
 
-
   const handleTitleKeyPress = useCallback((event) => {
     if (event.key === 'Tab') {
       event.preventDefault();
@@ -105,21 +100,11 @@ const ProposalForm = () => {
   
       const currentUser = user || generateDummyUser();
   
-      // Log the current user information
-      console.log("Submitting proposal as user:", currentUser.email || data.email);
-  
       const proposal = { 
         ...data, 
         email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email,
         teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : null
       };
-  
-      // Log whether notifications will be sent to a team
-      if (proposal.teamId) {
-        console.log("Sending notifications to team:", selectedTeam.teamName, "Team ID:", proposal.teamId);
-      } else {
-        console.log("No team selected for notifications.");
-      }
   
       const json = await createProposal(proposal, currentUser.token);
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
@@ -131,7 +116,6 @@ const ProposalForm = () => {
       console.error('Error submitting proposal:', error.message);
     }
   }; 
-  
 
   const descriptionValue = watch("description");
 
@@ -150,7 +134,7 @@ const ProposalForm = () => {
             onKeyDown={handleTitleKeyPress}
             aria-required="true"
             aria-label="Title"
-            name="title" // Add name attribute
+            name="title" 
           />
           {errors.title && <span className="error">{errors.title.message}</span>}
           
@@ -160,80 +144,78 @@ const ProposalForm = () => {
             className="quill-editor"
             value={descriptionValue}
             onChange={onEditorStateChange}
-            tabIndex="2" // Ensure tabIndex is set correctly
+            tabIndex="2" 
             aria-required="true"
             aria-label="Description"
-            onKeyDown={handleDescriptionKeyPress} // Add key down event handler
+            onKeyDown={handleDescriptionKeyPress}
             ref={descriptionInputRef}
           />
           <div className='error'>{errors.description && "Description is required"}</div>
 
           <label htmlFor="name">Proposed by:</label>
-            <input 
-              id="name"
-              type="text" 
-              placeholder="Your Name (Optional)" 
-              {...register('name')}
-              tabIndex="3"
-              aria-label="Proposed by"
-              name="name" 
-            />
-            <div>
-              {isSubscribed ? (
-                <div>
-                  <h6>Select Team</h6>
-                  <Select 
-                    options={options} 
-                    defaultValue={selectedTeam ? { value: selectedTeam._id, label: selectedTeam.teamName } : { value: null, label: 'No Team' }}
-                    onChange={handleTeamChange} // Handle dropdown selection
-                  />
-                </div>
-              ) : null}
-            </div>
-            <div>
-              {isSubscribed && selectedTeam !== null ? (
-                <div style={{ paddingTop:'5px', display: 'flex', alignItems: 'center' }}>
-                <input
-                  type="checkbox"
-                  {...register('sendNotifications')}
-                  tabIndex="4"
-                  style={{ marginRight: '5px' }} // Adjust margin as needed
-                />
-                <label htmlFor="sendNotifications">
-                  Send Team Proposal Email?
-                </label>
-              </div>
-              ) : null}
-            </div>
+          <input 
+            id="name"
+            type="text" 
+            placeholder="Your Name (Optional)" 
+            {...register('name')}
+            tabIndex="3"
+            aria-label="Proposed by"
+            name="name" 
+          />
 
-            {user ? (
-              <div style={{ paddingTop:'5px', display: 'flex', alignItems: 'center' }}>
+          {isSubscribed && (
+            <div>
+              <h6>Select Team</h6>
+              <Select 
+                options={options} 
+                defaultValue={selectedTeam ? { value: selectedTeam._id, label: selectedTeam.teamName } : { value: null, label: 'No Team' }}
+                onChange={handleTeamChange}
+              />
+            </div>
+          )}
+
+          {isSubscribed && selectedTeam !== null && (
+            <div style={{ paddingTop: '5px', display: 'flex', alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                {...register('sendNotifications')}
+                tabIndex="4"
+                style={{ marginRight: '5px' }}
+              />
+              <label htmlFor="sendNotifications">
+                Send {selectedTeam.teamName} an Email with this Proposal
+              </label>
+            </div>
+          )}
+
+          {user ? (
+            <div style={{ paddingTop: '5px', display: 'flex', alignItems: 'center' }}>
               <input
                 type="checkbox"
                 {...register('receiveNotifications')}
-                tabIndex="4"
-                style={{ marginRight: '5px' }} // Adjust margin as needed
+                tabIndex="5"
+                style={{ marginRight: '5px' }}
               />
               <label htmlFor="receiveNotifications">
-                Receive Email Notifications?
+                Receive Email Notifications
               </label>
             </div>
-            ) : (
+          ) : (
             <>
               <label htmlFor="email">Send notifications of new responses to:</label>
-                <input 
-                  id="email"
-                  type="email" 
-                  placeholder="Your Email (Optional)" 
-                  {...register('email')} 
-                  tabIndex="5"
-                  aria-label="Email"
-                  name="email" // Add name attribute
-                />
-              </>
-            )}
-            
-            {!user && (
+              <input 
+                id="email"
+                type="email" 
+                placeholder="Your Email (Optional)" 
+                {...register('email')} 
+                tabIndex="5"
+                aria-label="Email"
+                name="email" 
+              />
+            </>
+          )}
+          
+          {!user && (
             <>
               <LoadCanvasTemplate />
               <input

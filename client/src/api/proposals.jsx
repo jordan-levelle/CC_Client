@@ -103,13 +103,20 @@ export const deleteProposalAPI = async (proposalId, token) => {
   return response.json();
 };
 
-// GET Proposal Data API Call
-export const fetchProposalData = async (uniqueUrl) => {
+export const fetchProposalData = async (uniqueUrl, token) => {
   try {
-    const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
+    const response = await fetch(`${PROP_URL}/${uniqueUrl}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Include Authorization header if token exists
+      },
+    });
+
     if (!response.ok) {
       throw new Error('Failed to fetch proposal');
     }
+
     const data = await response.json();
     return data;
   } catch (error) {

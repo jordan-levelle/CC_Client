@@ -275,7 +275,7 @@ import '../styles/components/proposalvote.css';
        </div>
           <div className="settings-dropdown">
             <DropdownMenu icon={faEllipsis}>
-              <button className="dropdown-item">Create Team</button>
+              <button className="dropdown-item">Create Team from Current Respondents</button>
               <button className="dropdown-item">Edit Proposal</button>
               <button
                 className="dropdown-item"
