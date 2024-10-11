@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips, formatDate } from '../constants/Constants';
@@ -10,38 +10,64 @@ import { deleteTableEntry } from 'src/api/proposals';
 const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   const [expandedRows, setExpandedRows] = useState({});
   const [commentDrafts, setCommentDrafts] = useState({});
-  const [timeoutId, setTimeoutId] = useState(null); // state to manage timeout
+  const [timeoutIds, setTimeoutIds] = useState({}); // state to manage timeouts
 
   useEffect(() => {
-    // Cleanup function to cancel any pending timeout when component unmounts
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+    // Cleanup function to cancel any pending timeouts when component unmounts
+    Object.values(timeoutIds).forEach(clearTimeout);
+  }, [timeoutIds]);
+
+  useEffect(() => {
+    // Cleanup function to save pending comments before the user leaves the page
+    const handleBeforeUnload = () => {
+      Object.keys(commentDrafts).forEach((key) => {
+        // Save all unsaved comments immediately
+        if (commentDrafts[key]) {
+          updateComment(proposal._id, submittedVotes, setSubmittedVotes, submittedVotes.findIndex(vote => vote._id === key), commentDrafts[key]);
+        }
+      });
     };
-  }, [timeoutId]);
+
+    // Add beforeunload event listener
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup event listener when component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [commentDrafts, proposal._id, submittedVotes, setSubmittedVotes]);
+
+  const handleCommentChange = (index, newComment) => {
+    const voteId = submittedVotes[index]._id;
+
+    setCommentDrafts((prev) => ({
+      ...prev,
+      [voteId]: newComment,
+    }));
+
+    // Clear previous timeout for this specific comment
+    if (timeoutIds[voteId]) {
+      clearTimeout(timeoutIds[voteId]);
+    }
+
+    // Set a new timeout for this specific comment
+    const newTimeoutId = setTimeout(async () => {
+      await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
+      setCommentDrafts((prev) => ({
+        ...prev,
+        [voteId]: '',
+      }));
+    }, 30000);
+
+    // Update the timeoutIds state for this specific comment
+    setTimeoutIds((prevTimeouts) => ({
+      ...prevTimeouts,
+      [voteId]: newTimeoutId,
+    }));
+  };
 
   const handleOpinionUpdate = async (index, newOpinionValue) => {
     await updateOpinion(proposal._id, submittedVotes, setSubmittedVotes, index, newOpinionValue);
-  };
-
-  const handleCommentChange = (index, newComment) => {
-    setCommentDrafts((prev) => ({
-      ...prev,
-      [submittedVotes[index]._id]: newComment,
-    }));
-
-    // Clear previous timeout if it exists
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    // Set a new timeout to delay the update
-    const newTimeoutId = setTimeout(async () => {
-      await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
-    }, 30000);
-
-    setTimeoutId(newTimeoutId);
   };
 
   const handleNameUpdate = async (index, newName) => {
@@ -91,30 +117,30 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
                 )}
               </div>
               <div className='mobile-details-container'>
-                  {vote.opinion && (
-                    <span className="opinion-label">
-                      <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
-                    </span>
-                  )}
-                  {vote.comment ? (
-                    <FontAwesomeIcon
-                      icon={faCommentDots}
-                      data-tip={vote.comment}
-                      data-for={`comment-tooltip-${vote.comment}`}
-                    />
-                  ) : (
-                    <div className="comment-icon-placeholder"></div>
-                  )}
-                  <span
-                    onClick={() => toggleDetails(vote._id)}
-                    aria-label="Toggle Details"
-                    className="toggle-details-icon"
-                  >
-                    <FontAwesomeIcon
-                      icon={expandedRows[vote._id] ? faArrowUp : faArrowDown}
-                    />
+                {vote.opinion && (
+                  <span className="opinion-label">
+                    <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
                   </span>
-                </div>
+                )}
+                {vote.comment ? (
+                  <FontAwesomeIcon
+                    icon={faCommentDots}
+                    data-tip={vote.comment}
+                    data-for={`comment-tooltip-${vote.comment}`}
+                  />
+                ) : (
+                  <div className="comment-icon-placeholder"></div>
+                )}
+                <span
+                  onClick={() => toggleDetails(vote._id)}
+                  aria-label="Toggle Details"
+                  className="toggle-details-icon"
+                >
+                  <FontAwesomeIcon
+                    icon={expandedRows[vote._id] ? faArrowUp : faArrowDown}
+                  />
+                </span>
+              </div>
 
               <div className='opinion-container'>
                 <div className='opinion-buttons'>
