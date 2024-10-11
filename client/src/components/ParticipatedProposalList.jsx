@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useProposalsContext } from '../hooks/useProposalContext';
-import { archiveParticipatedProposalAPI, fetchParticipatedProposalsAPI } from 'src/api/users';
+import { archiveParticipatedProposalAPI } from 'src/api/users'; // Removed fetchParticipatedProposalsAPI as unnecessary
 import { useAuthContext } from '../hooks/useAuthContext';
 
 const ParticipatedProposalList = ({ proposal }) => {
@@ -17,24 +17,18 @@ const ParticipatedProposalList = ({ proposal }) => {
     try {
       const response = await archiveParticipatedProposalAPI(proposal._id, user.token);
       
-      // Toggle the state in the frontend using the response from the backend
       const isArchived = response.isArchived;
       
-      // Dispatch the correct action based on the updated archive state
+      // Optimistically update the state instead of refetching the list
       dispatch({
         type: isArchived ? 'ARCHIVE_PARTICIPATED_PROPOSAL' : 'UNARCHIVE_PARTICIPATED_PROPOSAL',
-        payload: { ...proposal, isArchived } // Pass the updated proposal
+        payload: { ...proposal, isArchived } // Pass the updated proposal with the new archive state
       });
-  
-      // Fetch updated participated proposals list (if you want to refresh the list)
-      const proposalData = await fetchParticipatedProposalsAPI(user.token);
-      dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: proposalData });
     } catch (error) {
       console.error('Error archiving/unarchiving participated proposal:', error);
     }
   };
   
-
   return (
     <div className="cardlist-item">
       <h4>{proposal.proposalTitle}</h4>

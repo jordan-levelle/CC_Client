@@ -138,8 +138,11 @@ const ProposalForm = () => {
 
   return (
     <div>
+      
       <form className="create" onSubmit={handleSubmit(onSubmit)}>
+      
         <div className="proposal-form">
+        <h4 style={{ textAlign: 'center' }}>Create Proposal</h4>
           <label htmlFor="title">Title:</label>
           <input 
             id="title"

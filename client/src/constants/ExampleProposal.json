@@ -2,6 +2,7 @@
     "title": "Lets get pizza for dinner!",
     "description": "<p>Let's get a half olive and half green pepper pizza for dinner tonight!</p>",
     "name": "Zach",
+    "createdAt": "2024-08-23T12:00:00.000Z",
     "votes": [
       {
         "name": "Zach",

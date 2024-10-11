@@ -29,6 +29,7 @@ const Profile = () => {
 
           const participatedData = await fetchParticipatedProposalsAPI(user.token);
           dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participatedData });
+          
         } catch (error) {
           console.error('Error fetching proposals:', error.message);
         }

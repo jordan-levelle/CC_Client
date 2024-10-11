@@ -1,4 +1,4 @@
-import React, { createContext, useReducer} from 'react';
+import React, { createContext, useReducer } from 'react';
 
 export const ProposalsContext = createContext();
 
@@ -51,12 +51,13 @@ const proposalsReducer = (state, action) => {
         selectedProposalId: action.payload,
       };
 
+    // Updated to filter out archived proposals
     case 'SET_PARTICIPATED_PROPOSALS':
       return {
         ...state,
-        participatedProposals: action.payload,
+        participatedProposals: action.payload.filter(p => !p.archived),
       };
-    
+
     case 'ARCHIVE_PROPOSAL': {
       const updatedProposals = state.proposals.map(p =>
         p._id === action.payload._id ? { ...p, isArchived: true } : p
@@ -66,7 +67,7 @@ const proposalsReducer = (state, action) => {
         proposals: updatedProposals,
       };
     }
-      
+
     case 'UNARCHIVE_PROPOSAL': {
       const updatedProposals = state.proposals.map(p =>
         p._id === action.payload._id ? { ...p, isArchived: false } : p
@@ -75,8 +76,8 @@ const proposalsReducer = (state, action) => {
         ...state, 
         proposals: updatedProposals,
       };
-    }  
-    
+    }
+
     case 'ARCHIVE_PARTICIPATED_PROPOSAL': {
       const updatedParticipatedProposals = state.participatedProposals.map(p =>
         p._id === action.payload._id ? { ...p, isArchived: true } : p
@@ -86,7 +87,7 @@ const proposalsReducer = (state, action) => {
         participatedProposals: updatedParticipatedProposals 
       };
     }
-    
+
     case 'UNARCHIVE_PARTICIPATED_PROPOSAL': {
       const updatedParticipatedProposals = state.participatedProposals.map(p =>
         p._id === action.payload._id ? { ...p, isArchived: false } : p
@@ -96,13 +97,13 @@ const proposalsReducer = (state, action) => {
         participatedProposals: updatedParticipatedProposals 
       };
     }
-    
+
     default:
       return state;
   }
 };
 
-// Add filterProposals function
+// Filtering functions
 const filterProposals = (proposals, filter) => {
   switch (filter) {
     case 'Active':
@@ -117,7 +118,6 @@ const filterProposals = (proposals, filter) => {
   }
 };
 
-
 const filterParticipatedProposals = (participatedProposals, filter) => {
   switch (filter) {
     case 'Archived':
@@ -128,11 +128,9 @@ const filterParticipatedProposals = (participatedProposals, filter) => {
   }
 };
 
-
 export const ProposalsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(proposalsReducer, initialState);
 
-  // Include filterProposals in the context
   const contextValue = {
     ...state,
     dispatch,
@@ -146,4 +144,3 @@ export const ProposalsContextProvider = ({ children }) => {
     </ProposalsContext.Provider>
   );
 };
-

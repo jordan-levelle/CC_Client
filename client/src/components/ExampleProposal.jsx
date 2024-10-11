@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips, formatDate } from '../constants/Constants';
 import { faCommentDots, faTrashCan, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'; 
-import exampleProposalData from '../constants/ExampleProposal.json'
+import exampleProposalData from '../constants/ExampleProposal.json';
 import {
   handleExistingOpinionUpdate,
   handleExistingCommentUpdate,
@@ -12,14 +12,15 @@ import {
   handleNewSubmission,
   handleNewTableEntry,
 } from '../utils/proposalUtils';
-
+import '../styles/components/proposalvotedescriptioncard.css';
+import '../styles/components/proposalvotesubmitcard.css';
+import '../styles/pages/proposalvote.css';
 
 const ExampleProposal = () => {
   const [exampleProposal, setExampleProposal] = useState(exampleProposalData);
   const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
-  const [expandedRows, setExpandedRows] = useState({}); // State to track expanded rows
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Initial check
-
+  const [expandedRows, setExpandedRows] = useState({});
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,256 +71,175 @@ const ExampleProposal = () => {
     }
   };
 
-  if (!exampleProposal) {
-    return <div>No example proposal found.</div>;
-  }
-
   const sanitizedProposal = DOMPurify.sanitize(exampleProposal.description);
+  const formattedDate = formatDate(new Date(exampleProposal.createdAt), 'MMMM d, yyyy');
 
   return (
-    <section>
-      <div className='example-alert alert-block'>
-        <p>
-          <strong>Note:</strong> This is an example proposal. Nothing you change will be saved.
-        </p>
+    <div>
+      <div style={{ backgroundColor: '#fff3cd', padding: '10px', borderRadius: '5px', marginBottom: '15px' }}>
+        <strong>This is an example proposal. Nothing you do here will be saved.</strong>
       </div>
-      <div className="main-container">
-        <div className="proposal-info">
-          <h3>{exampleProposal.title}</h3>
-          <p>Proposed by: {exampleProposal.name}</p>
-          <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
+      <div className='proposal-vote-page-container'>
+        {/* Ex. Proposal Description */}
+        <div className="description-card">
+          <div className="proposal-header">
+            <h3>{exampleProposal.title}</h3>
+          </div>
+          {exampleProposal.name && <p>Proposed by: {exampleProposal.name}</p>}
+          <p>Proposed On: {formattedDate}</p>
+          <div className="proposal-description">
+            <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
+          </div>
         </div>
-        <div className="table-container">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>
-                  <h9>Name</h9>
-                </th>
-                <th>
-                  <h9>Opinion</h9>
-                </th>
-                <th>
-                  <h9>Comment</h9>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="submit-section">
-                <td>
-                  <input
-                    id='name'
-                    type="text"
-                    name="name"
-                    value={newVote.name}
-                    onChange={newTableEntry}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Name"
-                    aria-label='Name'
-                    className='name-input'
-                  />
-                </td>
-                <td>
-                  <div className="opinion-buttons">
+
+        {/* Ex. Proposal Submit Card */}
+        <div className='vote-submit-card'>
+          <div className='vote-submit-items'>
+            <div className='name-and-details'>
+              <label htmlFor='name' className='input-label'>Name:</label>
+              <input
+                id='name'
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={newVote.name}
+                onChange={newTableEntry}
+                onKeyDown={handleKeyDown}
+                aria-label="Name"
+                className='name-input'
+              />
+            </div>
+
+            <div className='opinion-submit-container'>
+              <label htmlFor='opinion' className='input-label'>Opinion:</label>
+              <div className="opinion-submit-buttons">
+                {Object.keys(icons).map((opinionType) => (
+                  <div
+                    key={opinionType}
+                    data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
+                    data-tooltip-html={tooltips[opinionType]}
+                  >
+                    <button
+                      type="button"
+                      aria-label={`Vote ${opinionType}`}
+                      className={newVote.opinion === opinionType ? 'selected' : ''}
+                      onClick={() => setNewVote((prev) => ({ ...prev, opinion: opinionType }))}
+                    >
+                      <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
+                    </button>
+                    <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className='comment-submit-container'>
+              <label htmlFor='comment' className='input-label'>Comment:</label>
+              <textarea
+                name="comment"
+                value={newVote.comment}
+                onChange={newTableEntry}
+                className="comment-input"
+                placeholder="Explain your vote (optional)..."
+                aria-label="Comment"
+              />
+            </div>
+
+            <div className='action-submit-container'>
+              <button
+                aria-label="Submit New Entry"
+                className="small-button"
+                onClick={newSubmission}
+                disabled={!newVote.name || !newVote.opinion}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Ex. Proposal Vote Card */}
+        <div className='vote-card'>
+          {exampleProposal.votes.length > 0 &&
+            exampleProposal.votes.map((vote, index) => (
+              <div key={index} className={`vote-items ${expandedRows[vote.name] ? 'details-visible' : ''}`}>
+                <div className="name-and-details">
+                  <span className='name-span'>{vote.name}</span>
+                </div>
+                <div className='mobile-details-container'>
+                  {vote.opinion && (
+                    <span className="opinion-label">
+                      <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
+                    </span>
+                  )}
+                  {vote.comment ? (
+                    <FontAwesomeIcon
+                      icon={faCommentDots}
+                      data-tip={vote.comment}
+                      data-for={`comment-tooltip-${vote.comment}`}
+                    />
+                  ) : (
+                    <div className="comment-icon-placeholder"></div>
+                  )}
+                  <span
+                    onClick={() => toggleDetails(vote.name)}
+                    aria-label="Toggle Details"
+                    className="toggle-details-icon"
+                  >
+                    <FontAwesomeIcon
+                      icon={expandedRows[vote.name] ? faArrowUp : faArrowDown}
+                    />
+                  </span>
+                </div>
+
+                <div className='opinion-container'>
+                  <div className='opinion-buttons'>
                     {Object.keys(icons).map((opinionType) => (
-                      <div
-                        key={opinionType}
-                        data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
-                        data-tooltip-html={tooltips[opinionType]}
-                      >
+                      <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`} data-tooltip-html={tooltips[opinionType]}>
                         <button
-                          id='opinion'
                           type="button"
-                          className={newVote.opinion === opinionType ? 'selected' : ''}
-                          onClick={() => setNewVote({ ...newVote, opinion: opinionType })}
-                          data-tip={tooltips[opinionType]} 
+                          className={vote.opinion === opinionType ? 'selected' : ''}
+                          onClick={() => updateOpinion(index, opinionType)}
+                          aria-label={`Vote ${opinionType}`}
                         >
-                          <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
+                          <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
                         </button>
                         <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
                       </div>
                     ))}
                   </div>
-                </td>
-                <td>
+                  <small className='vote-date'>
+                    {formatDate(new Date(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt))}
+                  </small>
+                </div>
+
+                <div className='comment-container'>
                   <textarea
-                    id='comment'
-                    type="text"
-                    name="comment"
-                    value={newVote.comment}
-                    onChange={newTableEntry}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Comment"
-                    aria-label='Comment'
                     className="comment-input"
+                    value={vote.comment} 
+                    onChange={(e) => updateComment(index, e.target.value)} 
                   />
-                </td>
-                <td>
-                  <button 
-                    onClick={newSubmission} 
-                    aria-label='Submit'
-                    className="small-button">Submit</button>
-                </td>
-              </tr>
-              {exampleProposal.votes.map((vote, index) => (
-                <React.Fragment key={index}>
-                  <tr>
-                    <td className="info-container">
-                      <div className="name-container">
-                        {vote.name ? (
-                          <span>{vote.name}</span>
-                        ): (
-                          <input
-                            className='name-input' 
-                            type='text'
-                          />
-                        )}
-                      </div>
-                      {/* Opinion Text Label */}
-                      <div className="details-container">
-                        <span className="opinion-label-container show-mobile">
-                          {vote.opinion && (
-                            <span className="opinion-label">
-                              <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}
-                            </span>
-                          )}
-                        </span>
-                      
-                      {/* Conditional rendering of the comment icon */}
-                      {vote.comment && (
-                        <div className='comment-tooltip show-mobile'>
-                          <FontAwesomeIcon
-                            icon={faCommentDots}
-                            className="comment-icon"
-                            data-tip={vote.comment}
-                            data-for={`tooltip-comment-${vote._id}`}
-                          />
-                            <Tooltip
-                            id={`comment-tooltip-${vote._id}`}
-                            place="top"
-                            effect="solid"
-                            className="tooltip"
-                          >
-                          <span>{vote.comment}</span>
-                        </Tooltip>
-                        </div>
-                      )}
-                      <div className="show-mobile">
-                      <span 
-                        onClick={() => toggleDetails(index)} 
-                        aria-label="Toggle Details"
-                        className="toggle-details-icon"
-                      >
-                        <FontAwesomeIcon 
-                          icon={expandedRows[vote._id] ? faArrowUp : faArrowDown} 
-                        />
-                      </span>
-                    </div>
-                      </div>
-                    </td>
+                </div>
 
-                    {/* Opinion Buttons */}
-                    <td>
-                      <div className="hide-mobile opinion-buttons">
-                        {Object.keys(icons).map((opinionType) => (
-                          <div
-                            key={opinionType}
-                            data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
-                            data-tooltip-html={tooltips[opinionType]}
-                          >
-                            <button
-                              type="button"
-                              className={vote.opinion === opinionType ? 'selected' : ''}
-                              onClick={() => updateOpinion(index, opinionType)}
-                              data-tip={tooltips[opinionType]} // Add data-tip attribute
-                            >
-                              <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
-                            </button>
-                            <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
-                          </div>
-                        ))}
-                      </div>
-                      <div className='hide-mobile'>
-                        <small>{formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}</small>
-                      </div>
-                    </td>
-
-                    {/* Comment */}
-                    <td className="hide-mobile">
-                      <div className="comment-container hide-mobile">
-                        <textarea
-                          type="text"
-                          value={vote.comment}
-                          onChange={(e) => updateComment(index, e.target.value)}
-                          placeholder='Explain your vote...'
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <span 
-                        onClick={() => deleteSubmission(index)}
-                        aria-label="Delete Entry"
-                        style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                      >
-                        <FontAwesomeIcon className="hide-mobile" icon={faTrashCan} />
-                      </span>
-                     
-                    </td>
-                  </tr>
-                  {expandedRows[index] && (
-                    <tr className="show-mobile">
-                      <td>
-                        <div className="expanded-details">
-                          <div className="opinion-buttons-mobile">
-                            {Object.keys(icons).map((opinionType) => (
-                              <div
-                                key={opinionType}
-                                data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`}
-                                data-tooltip-html={tooltips[opinionType]}
-                              >
-                                <button
-                                  type="button"
-                                  className={vote.opinion === opinionType ? 'selected' : ''}
-                                  onClick={() => updateOpinion(index, opinionType)}
-                                  data-tip={tooltips[opinionType]} // Add data-tip attribute
-                                >
-                                  <FontAwesomeIcon icon={icons[opinionType]} /> {opinionType}
-                                </button>
-                                <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
-                              </div>
-                            ))}
-                          </div>
-                          <div className='comment-container'>
-                            <textarea
-                              className="comment-input-mobile"
-                              type="text"
-                              value={vote.comment}
-                              onChange={(e) => updateComment(index, e.target.value)}
-                              placeholder='Explain your vote...'
-                            /> 
-                            <td className="hide-mobile">
-                              <span 
-                                onClick={() => deleteSubmission(index)}
-                                 aria-label="Delete Entry"
-                                style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-                              >
-                                <FontAwesomeIcon icon={faTrashCan} />
-                              </span>
-                            </td>
-                          </div>           
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+                <div className='action-container'>
+                  <span
+                    aria-label="Delete Entry"
+                    className='delete-icon'
+                    onClick={() => deleteSubmission(index)}
+                  >
+                    <FontAwesomeIcon icon={faTrashCan} />
+                  </span>
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
 export default ExampleProposal;
+
+
 

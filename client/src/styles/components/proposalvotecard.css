@@ -105,9 +105,8 @@
 
     .action-container {
         min-width: 75px; /* Define the width of the container */
+        padding-top: 25px;
         display: flex;
-        align-items: center;
-        justify-content: flex-end;
     }
 
     .delete-icon {

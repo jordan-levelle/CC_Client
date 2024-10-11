@@ -74,8 +74,7 @@
 .action-submit-container {
   min-width: 75px; /* Define the width of the container */
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  padding-top: 25px;
 }
 
 
