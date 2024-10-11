@@ -18,12 +18,14 @@ import {
  fetchSubmittedVotes,
  submitNewTableEntry,
  deleteTableEntry,
- updateComment,
- updateOpinion,
- updateName,
+ 
  checkFirstRender,
  deleteProposalAPI
 } from '../api/proposals';
+
+import {updateComment,
+  updateOpinion,
+  updateName, } from '../utils/proposalUtils';
 import '../styles/components/proposalvote.css';
 
  const ProposalVote = () => {
@@ -56,11 +58,13 @@ import '../styles/components/proposalvote.css';
          throw new Error('Invalid response structure');
        }
         setProposal(proposalData);
+        
         const votesData = await fetchSubmittedVotes(proposalData._id);
-       setSubmittedVotes(votesData);
+          setSubmittedVotes(votesData);
+        
         const firstRender = await checkFirstRender(proposalData._id);
-       setShowFirstRenderMessage(firstRender);
-        // Handle initial vote submission if it's the first render
+          setShowFirstRenderMessage(firstRender);
+        
        if (selectedTeam && proposalData._id && !votesSubmitted && firstRender) {
          const votePromises = selectedTeam.members.map((member) => {
            const memberVote = { name: member.memberName, opinion: '', comment: '' };
@@ -429,7 +433,7 @@ import '../styles/components/proposalvote.css';
                  </div>
                  <div className="details-container">
                    {/* Opinion Text Label */}
-                   <div className="opinion-label-container show-mobile">
+                   <div className="opinion-label-container">
                      {vote.opinion && (
                        <span className="opinion-label">
                          <FontAwesomeIcon icon={icons[vote.opinion]} /> {vote.opinion}

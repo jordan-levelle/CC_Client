@@ -7,12 +7,14 @@ import { faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ErrorMessage from './ErrorMessage';
 import validator from 'validator';
 
-const UserCreateTeams = ({ existingTeam, onClose }) => {
+const UserCreateTeams = ({ existingTeam, defaultMembers = [], onClose }) => {
   const [teamName, setTeamName] = useState(existingTeam ? existingTeam.teamName : '');
   const [rows, setRows] = useState(() =>
     existingTeam
       ? existingTeam.members.map(member => ({ name: member.memberName, email: member.memberEmail }))
-      : [{ name: '', email: '' }]
+      : defaultMembers.length > 0 // Populate from defaultMembers if provided
+        ? defaultMembers
+        : [{ name: '', email: '' }]
   );
   const [error, setError] = useState(null);
   const { fetchTeams } = useTeamsContext();

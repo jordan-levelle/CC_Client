@@ -1,0 +1,187 @@
+    /* General styling stays the same for desktop */
+    .vote-card {
+        display: flex;
+        flex-direction: column;
+        background-color: #ffffff;
+        width: 100%;
+    }
+
+    .vote-items {
+        display: flex;
+        align-items: flex-start; 
+        justify-content: space-between;
+        background-color: #fff;
+        padding: 15px 10px;
+        margin-top: 5px;
+        border-radius: 8px;
+      }
+      
+
+    .name-and-details {
+        display: flex;
+        flex-direction: column;
+        min-width: 165px;
+        width: 215px;
+        max-width: 245px;
+        margin-right: 5px;   
+    }
+
+
+    .name-input {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.5;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .name-input:focus {
+        border-color: var(--focus-border-color);
+        box-shadow: var(--focus-box-shadow);
+        outline: var(--focus-outline);
+    }
+    
+    .opinion-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 5px;
+    }
+  
+    .opinion-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: .7vw .8vw; 
+    }
+    
+    .opinion-buttons button {
+        flex: 1; 
+        min-width: 0; 
+        padding: .8vw .9vw; 
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
+    }
+    
+    .selected {
+        background-color: #007bff;
+        color: #fff;
+        border: 1px solid #007bff;
+    }
+    
+    .comment-input {
+        width: 100%; 
+        padding: 10px; 
+        border-radius: 4px; 
+        border: 1px solid #ccc; 
+        resize: vertical; 
+        height: 70px; 
+        font-family: inherit; 
+        font-size: 1rem; 
+        line-height: 1.5; 
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); 
+        transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+    }
+    
+    .comment-input:focus {
+        border-color: var(--focus-border-color);
+        box-shadow: var(--focus-box-shadow);
+        outline: var(--focus-outline);
+    }
+
+    .vote-date {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .comment-container {
+        min-width: 200px;
+        width: 550px;
+    }
+
+    .action-container {
+        min-width: 75px; /* Define the width of the container */
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .delete-icon {
+        cursor: pointer;
+        display: flex;
+        font-size: 18px; /* Adjust the icon size */
+    }
+
+    .mobile-details-container {
+        display: none;
+    }
+
+@media (max-width: 868px) {
+    /* Layout for non-expanded items: Row layout */
+    .vote-items {
+        display: flex;
+        flex-direction: row; /* Row layout when not expanded */
+        justify-content: space-between;
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 5px;
+
+    }
+
+
+    /* When expanded, stack only the content containers (not the name and mobile details) */
+    .details-visible.vote-items {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+
+    .mobile-details-container {
+        display: flex;
+        justify-content: flex-end;
+
+    }
+    
+
+    /* Hide the opinion, comment, and action sections initially */
+    .opinion-container,
+    .comment-container,
+    .action-container {
+        display: none;
+    }
+
+    /* When expanded, show the opinion, comment, and action sections stacked */
+    .details-visible .opinion-container,
+    .details-visible .comment-container,
+    .details-visible .action-container {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 10px; /* Adds space between stacked items */
+    }
+
+    .details-visible .comment-container {
+        margin-bottom: 10px;
+    }
+
+
+    .opinion-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 8.5px;
+    }
+    
+    .opinion-buttons button {
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
+    }
+
+    
+}

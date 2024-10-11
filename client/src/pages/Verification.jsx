@@ -1,37 +1,53 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Verification = () => {
   const { token } = useParams();
   const [verificationStatus, setVerificationStatus] = useState('');
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyAccount = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_USERS}/verify/${token}`, {
+        const response = await fetch(`${process.env.REACT_APP_USERS_URL}/verify/${token}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
         });
+
+        let data;
 
         if (response.ok) {
           setVerificationStatus('success');
         } else {
-          setVerificationStatus('error');
+          setVerificationStatus(data?.error || 'error');
         }
       } catch (error) {
-        console.error('Error verifying account:', error);
         setVerificationStatus('error');
+      } finally {
+        setLoading(false);
       }
     };
+
     verifyAccount();
-  }, [token]);
+
+    const timeoutId = setTimeout(() => {
+      if (verificationStatus === 'success') {
+        navigate('/auth'); // Change this to your actual login route
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
+  }, [token, verificationStatus, navigate]);
 
   return (
     <div>
-      {verificationStatus === 'success' && <p>Thank you. Your account has been verified. Please return to your browser to login.</p>}
+      {loading && <p>Verifying your account, please wait...</p>}
+      {verificationStatus === 'success' && <p>Thank you. Your account has been verified. You will be redirected to the login page shortly.</p>}
       {verificationStatus === 'error' && <p>There was an error verifying your account. Please try again later.</p>}
     </div>
   );
 };
 
 export default Verification;
+

@@ -148,33 +148,24 @@ export const updateEmailAPI = async (token, newEmail) => {
 
 export const checkVerificationStatusAPI = async (verificationToken) => {
   try {
-    let verified = false;
+    const response = await fetch(`${USER_URL}/verify/status/${verificationToken}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-    while (!verified) {
-      const response = await fetch(`${USER_URL}/verify/status/${verificationToken}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        verified = data.verified;
-        if (verified) {
-          return { verified: true, user: data.user };
-        }
-      } else {
-        const error = await response.json();
-        throw new Error(error.error);
-      }
-
-      // Poll every 2 seconds
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    if (response.ok) {
+      const data = await response.json();
+      return { verified: data.verified, user: data.user }; // Return verification status and user info
+    } else {
+      const error = await response.json();
+      throw new Error(error.error);
     }
   } catch (error) {
     console.error('Error checking verification status:', error);
     throw error;
   }
 };
+
 
 export const cancelUserSubscription = async (token) => {
   try {
@@ -198,9 +189,9 @@ export const cancelUserSubscription = async (token) => {
   }
 };
 
-export const fetchParticipatedProposalsAPI = async (token, includeOwnProposals = false) => {
+export const fetchParticipatedProposalsAPI = async (token) => {
   try {
-    const response = await fetch(`${USER_URL}/getParticipatedProposals?includeOwnProposals=${includeOwnProposals}`, {
+    const response = await fetch(`${USER_URL}/getParticipatedProposals`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -265,6 +256,37 @@ export const toggleArchiveProposalAPI = async (proposalId, token) => {
     throw new Error(error.message);
   }
 };
+
+export const archiveParticipatedProposalAPI = async (proposalId, token) => {
+  console.log("Sending archive request for proposal:", proposalId); // Log before making the request
+
+  try {
+    const response = await fetch(`${USER_URL}/archiveParticipatedProposal/${proposalId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Failed response:", errorData); // Log error response
+      throw new Error(errorData.error || 'Failed to toggle archive state of participated proposal');
+    }
+
+    const result = await response.json();
+    
+    // Log the result from the API response
+    console.log("Archive API success:", result);
+    
+    return result; // Return the result directly
+  } catch (error) {
+    console.error(`Error toggling archive state of participated proposal ${proposalId}:`, error.message);
+    throw new Error(error.message);
+  }
+};
+
 
 
 

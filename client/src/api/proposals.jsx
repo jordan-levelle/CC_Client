@@ -104,18 +104,31 @@ export const deleteProposalAPI = async (proposalId, token) => {
 };
 
 // GET Proposal Data API Call
-export const fetchProposalData = async (uniqueUrl) => {
+export const fetchProposalData = async (uniqueUrl, token) => {
   try {
-    const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    // Conditionally include the Authorization header if a token is provided
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${PROP_URL}/${uniqueUrl}`, { headers }); // Pass headers to the fetch call
+
     if (!response.ok) {
       throw new Error('Failed to fetch proposal');
     }
+
     const data = await response.json();
+    console.log('Fetching Proposal Data:', data); // Logs the proposal and isOwner flag
     return data;
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 
 // GET Check First Render API Call
 export const checkFirstRender = async (proposalId) => {
@@ -145,8 +158,7 @@ export const fetchSubmittedVotes = async (proposalId) => {
   }
 };
 
-// POST New Proposal Table Entry API Call
-export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, setNewVote, setError) => {
+export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes) => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
@@ -166,11 +178,15 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
 
     const voteData = await response.json();
 
-    const fetchedVotes = await fetchSubmittedVotes(proposalId);
-    const sortedVotes = fetchedVotes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    setSubmittedVotes(sortedVotes);
-    setNewVote({ name: '', opinion: '', comment: '' });
+    if (voteData && voteData.addedVote) {
+      setSubmittedVotes((prevVotes) => {
+        const isVoteAlreadySubmitted = prevVotes.some(vote => vote._id === voteData.addedVote._id);
+        if (!isVoteAlreadySubmitted) {
+          return [voteData.addedVote, ...prevVotes]; // Add new vote to the current state
+        }
+        return prevVotes; // If vote is already there, do nothing
+      });
+    }
 
     if (token) {
       const userResponseUpdate = await fetch(`${USER_URL}/setParticipatedProposal`, {
@@ -187,26 +203,10 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
         throw new Error('Error updating user participated proposals');
       }
     }
+
+    return voteData;
   } catch (error) {
     console.error('Error in submitNewTableEntry:', error.message);
-    setError(error.message);
-  }
-};
-
-// DELETE Table Entry API Call
-export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes, setError) => {
-  try {
-    const response = await fetch(`${PROP_URL}/votes/${voteId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error deleting vote: ${response.statusText}`);
-    }
-
-    setSubmittedVotes(submittedVotes.filter(vote => vote._id !== voteId));
-  } catch (error) {
-    setError(error.message);
   }
 };
 
@@ -240,119 +240,25 @@ export const handleSubmittedVoteUpdate = async (proposalId, voteId, voteData) =>
   }
 };
 
-export const updateOpinion = async (proposalId, submittedVotes, setSubmittedVotes, index, newOpinionValue) => {
+// DELETE Table Entry API Call
+export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes) => {
   try {
-    const updatedVotes = [...submittedVotes];
-    updatedVotes[index] = {
-      ...updatedVotes[index],
-      opinion: newOpinionValue,
-      updatedAt: new Date(),
-    };
-    setSubmittedVotes(updatedVotes);
-    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]._id, updatedVotes[index]);
+    const response = await fetch(`${PROP_URL}/votes/${voteId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error deleting vote: ${response.statusText}`);
+    }
+
+    setSubmittedVotes(submittedVotes.filter(vote => vote._id !== voteId));
   } catch (error) {
-    console.error('Error updating opinion:', error.message);
-  }
-};
-
-export const updateComment = async (proposalId, submittedVotes, setSubmittedVotes, index, newComment) => {
-  try {
-    const updatedVotes = [...submittedVotes];
-    updatedVotes[index] = {
-      ...updatedVotes[index],
-      comment: newComment,
-      updatedAt: new Date(),
-    };
-    setSubmittedVotes(updatedVotes);
-    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]._id, updatedVotes[index]);
-  } catch (error) {
-    console.error('Error updating comment:', error.message);
-  }
-};
-
-export const updateName = async (proposalId, submittedVotes, setSubmittedVotes, index, newName) => {
-  try {
-    const updatedVotes = [...submittedVotes];
-    updatedVotes[index] = {
-      ...updatedVotes[index],
-      name: newName,
-      updatedAt: new Date(),
-    };
-    setSubmittedVotes(updatedVotes);
-    await handleSubmittedVoteUpdate(proposalId, updatedVotes[index]._id, updatedVotes[index]);
-  } catch (error) {
-    console.error('Error updating name:', error.message);
   }
 };
 
 
-/* Example Proposal Util Functions */
-export const handleExistingOpinionUpdate = (index, newVoteValue, exampleProposal, setExampleProposal) => {
-  const updatedVotes = [...exampleProposal.votes];
-  const currentDate = new Date().toISOString();
-  updatedVotes[index].opinion = newVoteValue;
-  updatedVotes[index].updatedAt = currentDate;
-  setExampleProposal(prevProposal => ({
-    ...prevProposal,
-    votes: updatedVotes,
-  }));
-};
 
-export const handleExistingCommentUpdate = (index, newComment, exampleProposal, setExampleProposal) => {
-  const updatedVotes = [...exampleProposal.votes];
-  const currentDate = new Date().toISOString();
-  updatedVotes[index].comment = newComment;
-  updatedVotes[index].updatedAt = currentDate;
-  setExampleProposal(prevProposal => ({
-    ...prevProposal,
-    votes: updatedVotes,
-  }));
-};
 
-export const handleExistingSubmissionDelete = (index, exampleProposal, setExampleProposal) => {
-  const updatedVotes = exampleProposal.votes.filter((_, i) => i !== index);
-  setExampleProposal(prevProposal => ({
-    ...prevProposal,
-    votes: updatedVotes,
-  }));
-};
 
-export const handleNewTableEntry = (e, newVote, setNewVote) => {
-  const { name, value } = e.target;
-  setNewVote(prevVote => ({
-    ...prevVote,
-    [name]: value,
-  }));
-};
-
-export const handleNewSubmission = (exampleProposal, newVote, setExampleProposal, setNewVote) => {
-  const currentDate = new Date().toISOString();
-  const updatedNewVote = {
-    ...newVote,
-    updatedAt: currentDate
-  };
-  const updatedVotes = [...exampleProposal.votes, updatedNewVote];
-  setExampleProposal(prevProposal => ({
-    ...prevProposal,
-    votes: updatedVotes,
-  }));
-  setNewVote({ name: '', opinion: '', comment: '' });
-};
-
-export const formatDate = (dateString) => {
-  if (!dateString || !Date.parse(dateString)) {
-    return '';
-  }
-  const options = {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true
-  };
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('en-US', options).format(date);
-};
 
 

@@ -64,13 +64,17 @@ export const passwordCriteria = [
 ];
 
 export const formatDate = (dateString) => {
+  if (!dateString || !Date.parse(dateString)) {
+    return '';
+  }
   const options = {
-    year: 'numeric',
     month: 'numeric',
     day: 'numeric',
+    year: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
     hour12: true
   };
-  return new Date(dateString).toLocaleString('en-US', options);
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-US', options).format(date);
 };

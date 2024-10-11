@@ -8,7 +8,7 @@ import { useTeamsContext } from '../context/TeamsContext';
 import { useNavigate } from 'react-router-dom'; 
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import ReactQuill from 'react-quill';
-import Select from 'react-select'
+import Select from 'react-select';
 import 'react-quill/dist/quill.snow.css';
 import '../styles/components/proposalform.css';
 
@@ -105,32 +105,33 @@ const ProposalForm = () => {
   
       const currentUser = user || generateDummyUser();
   
-      // Log the current user information
-      console.log("Submitting proposal as user:", currentUser.email || data.email);
+      // Log the selected team before submission
+      console.log('Selected Team:', selectedTeam);
   
       const proposal = { 
         ...data, 
         email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email,
-        teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : null
+        teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : null // Attach team ID if present
       };
   
-      // Log whether notifications will be sent to a team
-      if (proposal.teamId) {
-        console.log("Sending notifications to team:", selectedTeam.teamName, "Team ID:", proposal.teamId);
-      } else {
-        console.log("No team selected for notifications.");
-      }
-  
       const json = await createProposal(proposal, currentUser.token);
+      
+      // Dispatch to update context
       dispatch({ type: 'CREATE_PROPOSAL', payload: json });
+      
+      // Store the selected proposal ID in the vote context
       setSelectedProposalId(json._id);
   
+      // Navigate to the ProposalVote page
       navigate(`/${json.uniqueUrl}`);
+      
+      // Clear form
       reset();
     } catch (error) {
       console.error('Error submitting proposal:', error.message);
     }
-  }; 
+  };
+  
   
 
   const descriptionValue = watch("description");
@@ -200,7 +201,7 @@ const ProposalForm = () => {
                   style={{ marginRight: '5px' }} // Adjust margin as needed
                 />
                 <label htmlFor="sendNotifications">
-                  Send Team Proposal Email?
+                  Notify Team Members of Proposal Creation
                 </label>
               </div>
               ) : null}
@@ -215,7 +216,7 @@ const ProposalForm = () => {
                 style={{ marginRight: '5px' }} // Adjust margin as needed
               />
               <label htmlFor="receiveNotifications">
-                Receive Email Notifications?
+                Receive Email Notifications
               </label>
             </div>
             ) : (

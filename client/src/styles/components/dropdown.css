@@ -1,76 +1,82 @@
-/* dropdown.css */
-
-/* Dropdown Container */
+/* Dropdown Trigger (icon) */
 .dropdown-trigger {
+  position: relative;
   cursor: pointer;
+  display: inline-block;
+  outline: none;
 }
 
-/* Dropdown icon styling */
 .dropdown-icon {
   font-size: 1.5rem;
-  color: var(--icon-color);
+  color: #999;
+  transition: color 0.3s ease;
 }
 
-/* Hidden dropdown menu */
+.dropdown-trigger:hover .dropdown-icon {
+  color: #333; /* On hover */
+}
+
+/* Dropdown Menu */
 .custom-dropdown-menu {
+  display: none;
   position: absolute;
   top: 100%;
-  left: 0;
-  display: none;
-  background-color: white;
-  border: 1px solid #ccc;
-  min-width: 160px;
-  z-index: 1;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Show dropdown on hover (for desktop) */
-.dropdown-trigger:hover .custom-dropdown-menu {
-  display: block;
-}
-
-/* Show dropdown on focus (for mobile click) */
-.dropdown-trigger:focus-within .custom-dropdown-menu {
-  display: block;
-}
-
-/* Dropdown items styling */
-.dropdown-item {
-  color: var(--secondary-text-color);
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  white-space: nowrap;
-}
-
-.dropdown-item:hover {
-  background-color: var(--dropdown-hover-color);
-}
-
-/* Add some styling for positioning in specific cases */
-.header-dropdown-position {
-  right: 10px;
-}
-
-.proposalvote-dropdown-position {
-  right: 20px;
-}
-
-
-/* Show dropdown when the 'active' class is present */
-.custom-dropdown-menu.active {
-  display: block;
-}
-
-/* Optional transition for smooth open/close */
-.custom-dropdown-menu {
-  transition: all 0.3s ease-in-out;
+  right: 0; /* Align to the right of the icon */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 10px 0;
+  width: 200px;
+  z-index: 10;
   opacity: 0;
   visibility: hidden;
 }
 
 .custom-dropdown-menu.active {
+  display: block;
   opacity: 1;
   visibility: visible;
 }
+
+.dropdown-item {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  word-wrap: break-word;
+  white-space: normal; /* This allows wrapping */
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0; /* Change background on hover */
+}
+
+.dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #eaeaea; /* Divider between items */
+}
+
+/* Default dropdown position - right aligned */
+.dropdown-right .custom-dropdown-menu {
+  right: 0; /* Align to the right of the icon */
+  left: auto;
+  
+}
+
+/* If you want to align the dropdown to the left instead */
+.dropdown-left .custom-dropdown-menu {
+  left: 0;
+  right: auto;
+}
+
+/* If you want to center the dropdown below the icon */
+.dropdown-center .custom-dropdown-menu {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header-dropdown-position {
+  right: 10px;
+}
+
 

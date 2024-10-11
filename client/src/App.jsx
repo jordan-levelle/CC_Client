@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Header, Footer } from './components';
-import { ExampleProposal, ProposalVote, EditProposal, ForgotPassword, ProtectedRoute } from './components';
-import { Home, Profile, Create, Basics, Subscriptions, Subscribe, Settings, Teams, AuthPage, Verification, VerifyLoadingPage } from './pages';
+import { ExampleProposal, EditProposal, ForgotPassword, ProtectedRoute } from './components';
+import { Home, Profile, Create, Basics, Subscriptions, Subscribe, Settings, Teams, AuthPage, Verification, VerifyLoadingPage, ProposalVote
+ } from './pages';
 import { useAuthContext } from './hooks/useAuthContext';
 
 export default function App() {
@@ -32,8 +33,8 @@ export default function App() {
             <Route path='/basics' element={<Basics />} />
             <Route path='/subscriptions' element={<Subscriptions />} />
             <Route path='/subscribe' element={<Subscribe />} />
-            <Route path='/:uniqueUrl' element={<ProposalVote />} />
             <Route path='/example' element={<ExampleProposal />} />
+            <Route path='/:uniqueUrl' element={<ProposalVote />} />
             
             {/* Redirect any unknown paths to home */}
             <Route path="*" element={<Navigate to="/" />} />

@@ -5,7 +5,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import ReactQuill from 'react-quill'; 
 import 'react-quill/dist/quill.snow.css'; 
 
-const EditProposal = () => {
+const EditProposal = ({ onUpdate, onClose}) => {
   const { uniqueUrl } = useParams(); 
   const { user } = useAuthContext();
   const navigate = useNavigate();
@@ -19,12 +19,12 @@ const EditProposal = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const proposalData = await fetchEditProposalAPI(uniqueUrl);
-        setTitle(proposalData.title || '');
-        setDescription(proposalData.description || '');
-        setName(proposalData.name || '');
-        setEmail(proposalData.email || '');
-        setReceiveNotifications(!!proposalData.email); // Set receiveNotifications based on whether email is present
+        const { proposal } = await fetchEditProposalAPI(uniqueUrl); // Destructure proposal object
+        setTitle(proposal.title || '');
+        setDescription(proposal.description || '');
+        setName(proposal.name || '');
+        setEmail(proposal.email || '');
+        setReceiveNotifications(!!proposal.email);
       } catch (error) {
         setError(error.message);
       }
@@ -41,23 +41,26 @@ const EditProposal = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const updatedProposal = {
       title,
       description,
       name,
-      email: receiveNotifications ? (user ? user.email : email) : '', // Set email based on receiveNotifications and user status
+      email: receiveNotifications ? (user ? user.email : email) : '', 
     };
-
+  
     try {
-      const response = await updateProposalAPI(uniqueUrl, updatedProposal);
-      setError(null);
-      navigate(`/${response.uniqueUrl}`);
+      const response = await updateProposalAPI(uniqueUrl, updatedProposal, user.token);
+      onUpdate(response); // Pass the updated proposal to the parent component
+      onClose();          // Close the modal after update
+  
+      // Use the unique URL or updated one to navigate to the proposal page
+      navigate(`/${response.uniqueUrl || uniqueUrl}`);
     } catch (error) {
-      setError(error.message);
+      setError('Failed to update proposal');
     }
   };
-
+  
   // Function to handle non-authenticated user's email input
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -92,13 +95,13 @@ const EditProposal = () => {
           />
 
           {user ? (
-            <div>
+            <div  style={{ paddingTop:'5px', display: 'flex', alignItems: 'center' }}>
               <input
                 type="checkbox"
                 onChange={(e) => setReceiveNotifications(e.target.checked)}
                 checked={receiveNotifications}
               />
-              <label>Receive response notifications at: {user.email}</label>
+              <label>Receive Email Notifications</label>
             </div>
           ) : (
             <div>

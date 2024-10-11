@@ -12,16 +12,13 @@ import {
 } from '../api/proposals';
 
 const Profile = () => {
-  const { proposals, participatedProposals, dispatch, filterProposals } = useProposalsContext();
+  const { proposals, participatedProposals, dispatch, filterProposals, filterParticipatedProposals } = useProposalsContext();
   const { user, isSubscribed } = useAuthContext();
 
-  const [includeOwnProposals, setIncludeOwnProposals] = useState(() => {
-    return JSON.parse(localStorage.getItem('includeOwnProposals')) || false;
-  });
+
   const [selectedFilter, setSelectedFilter] = useState('All');
-  const [showHidden, setShowHidden] = useState(() => {
-    return JSON.parse(localStorage.getItem('showHidden')) || false;
-  });
+  const [participatedFilter, setParticipatedFilter] = useState('All');
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +27,7 @@ const Profile = () => {
           const proposalsData = await fetchProposalListAPI(user.token);
           dispatch({ type: 'SET_PROPOSALS', payload: proposalsData });
 
-          const participatedData = await fetchParticipatedProposalsAPI(user.token, includeOwnProposals);
+          const participatedData = await fetchParticipatedProposalsAPI(user.token);
           dispatch({ type: 'SET_PARTICIPATED_PROPOSALS', payload: participatedData });
         } catch (error) {
           console.error('Error fetching proposals:', error.message);
@@ -39,26 +36,21 @@ const Profile = () => {
     };
 
     fetchData();
-  }, [selectedFilter, includeOwnProposals, user, dispatch]);
+  }, [user, dispatch]);
 
-  const handleParticipatedPropsFilter = () => {
-    const persistToggleState = !includeOwnProposals;
-    setIncludeOwnProposals(persistToggleState);
-    localStorage.setItem('includeOwnProposals', JSON.stringify(persistToggleState));
-  };
+
 
   const handlePropFilter = (event) => {
     setSelectedFilter(event.target.value);
   };
 
-  const handleShowHiddenToggle = () => {
-    const newShowHidden = !showHidden;
-    setShowHidden(newShowHidden);
-    localStorage.setItem('showHidden', JSON.stringify(newShowHidden));
-  };
+  const handleParticipatedPropFilter = (event) => {
+    setParticipatedFilter(event.target.value);
+  }
 
   // Use the filteredProposals directly or from the state where it's updated
   const filteredProposals = filterProposals(proposals, selectedFilter);
+  const filteredParticipatedProposals = filterParticipatedProposals(participatedProposals, participatedFilter)
 
   return (
     <div className="dashboard">
@@ -143,43 +135,46 @@ const Profile = () => {
               <ProposalList key={proposal._id} proposal={proposal} />
             ))
           ) : (
-            <p>No Proposals</p>
+            <p key='no-proposals'>No Proposals</p>
           )}
         </div>
         <div className="component-container-2">
           <h4>Participated Proposals</h4>
           <div className="participated-proposal-filter-options">
             <Form>
-              <Form.Check
-                type="switch"
-                id="custom-switch"
-                label="Your Proposals"
-                checked={includeOwnProposals}
-                onChange={handleParticipatedPropsFilter}
-              />
-            </Form>
-            <Form>
-              <Form.Check
-                type="switch"
-                id="show-hidden-switch"
-                label="Hidden"
-                checked={showHidden}
-                onChange={handleShowHiddenToggle}
-              />
+              <div key="inline-radio" className="mb-3">
+                <Form.Check
+                  inline
+                  label="All"
+                  name="group2"
+                  type="radio"
+                  id="inline-radio-7"
+                  value="All"
+                  checked={participatedFilter === 'All'}
+                  onChange={handleParticipatedPropFilter}
+                />
+                <Form.Check
+                  inline
+                  label="Archived"
+                  name="group2"
+                  type="radio"
+                  id="inline-radio-8"
+                  value="Archived"
+                  checked={participatedFilter === 'Archived'}
+                  onChange={handleParticipatedPropFilter}
+                />
+              </div>
             </Form>
           </div>
 
-          {participatedProposals && participatedProposals.length > 0 ? (
-            participatedProposals.map((proposal) => (
-              <ParticipatedProposalList
-                key={proposal.proposalId}
-                proposal={proposal}
-                showHidden={showHidden}
-              />
-            ))
-          ) : (
-            <p>No participated proposals.</p>
-          )}
+          {filteredParticipatedProposals && filteredParticipatedProposals.length > 0 ? (
+          filteredParticipatedProposals.map((proposal) => {
+            return <ParticipatedProposalList key={proposal._id} proposal={proposal} />
+          })
+        ) : (
+          <p>No participated proposals.</p>
+        )}
+
         </div>
       </div>
       <div className="user-details">

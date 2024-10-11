@@ -13,6 +13,9 @@ const VerifyLoadingPage = () => {
         const { verified } = await checkVerificationStatusAPI(token);
         if (verified) {
           setVerificationStatus('success');
+        }else {
+          setVerificationStatus('error');
+          console.error('Verification failed for token:', token);
         }
       } catch (error) {
         console.error('Error checking verification status:', error);
