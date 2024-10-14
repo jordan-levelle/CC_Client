@@ -12,5 +12,6 @@ export { default as EditProfile } from './EditProfile';
 export { default as VoteCard } from './ProposalVoteCard';
 export { default as VoteSubmitCard } from './ProposalVoteSubmitCard';
 export { default as DescriptionCard } from './ProposalVoteDescriptionCard';
+export { default as Notification } from './Notification';
 
 

@@ -4,7 +4,7 @@ import { useTeamsContext } from '../context/TeamsContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import ErrorMessage from './ErrorMessage';
+import Notification from './Notification';
 import validator from 'validator';
 
 const UserCreateTeams = ({ existingTeam, defaultMembers = [], onClose }) => {
@@ -162,7 +162,7 @@ const UserCreateTeams = ({ existingTeam, defaultMembers = [], onClose }) => {
           </tr>
         </tbody>
       </table>
-      <ErrorMessage message={error} />
+      <Notification message={error} />
       <button
         type="submit"
         className="small-button"

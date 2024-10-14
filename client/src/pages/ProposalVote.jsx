@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { VoteCard, VoteSubmitCard, DescriptionCard } from '../components';
+import { VoteCard, VoteSubmitCard, DescriptionCard, Notification } from '../components';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useTeamsContext } from '../context/TeamsContext';
-import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender, } from '../api/proposals';
+import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender } from '../api/proposals';
 import '../styles/pages/proposalvote.css';
 
 const ProposalVote = () => {
@@ -19,6 +19,8 @@ const ProposalVote = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationType, setNotificationType] = useState('');
 
   const handleProposalUpdate = (updatedProposal) => {
     setProposal(updatedProposal); 
@@ -34,8 +36,6 @@ const ProposalVote = () => {
           throw new Error('Invalid response structure');
         }
         setProposal(proposal);
-        
-        // Set isOwner in state
         setIsOwner(isOwner);
   
         const votes = await fetchSubmittedVotes(proposal._id);
@@ -53,10 +53,6 @@ const ProposalVote = () => {
     getProposalData();
   }, [uniqueUrl, user]);
   
-  
-  
-  
-
   useEffect(() => {
     const submitTeamVotes = async () => {
       if (selectedTeam && proposal && !teamVotesSubmitted) {
@@ -72,10 +68,13 @@ const ProposalVote = () => {
           // Fetch updated votes after submission
           const updatedVotes = await fetchSubmittedVotes(proposal._id);
           setSubmittedVotes(updatedVotes);
-
           setTeamVotesSubmitted(true); // Mark as submitted
+          setNotificationMessage('Team votes submitted successfully!'); // Set success notification message
+          setNotificationType('success'); // Set notification type to success
         } catch (error) {
           console.error('Error submitting team votes:', error);
+          setNotificationMessage('Failed to submit team votes.'); // Set error message
+          setNotificationType('error'); // Set notification type to error
         } finally {
           setLoading(false);
         }
@@ -92,22 +91,28 @@ const ProposalVote = () => {
     }
   }, [teamVotesSubmitted, clearSelectedTeam]);
 
-
-  
   const handleNewTableEntry = async (newVote) => {
     try {
-
-        // Now submit the vote to the server
-        await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes);
-
+      const response = await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes);
+    
+      // Check if the response indicates limit reached
+      if (response && response.limitReached) {
+        setNotificationMessage('Limit of 15 votes reached. Upgrade subscription for unlimited votes.'); // Set error message
+        setNotificationType('error'); // Set notification type to error
+      } else {
+        setNotificationMessage('Vote submitted successfully!'); // Set success notification message
+        setNotificationType('success'); // Set notification type to success
+      }
     } catch (error) {
-        console.error('Error submitting new entry:', error);
+      console.error('Error submitting new entry:', error);
+      setNotificationMessage('An error occurred while submitting your vote. Please try again.'); // Set error message
+      setNotificationType('error'); // Set notification type to error
     }
-};
+  };
 
-  
   return (
     <div className="proposal-vote-page-container">
+      <Notification message={notificationMessage} type={notificationType} /> {/* Pass the notification message and type */}
       {loading ? (
         <div>Loading...</div>
       ) : proposal ? (
@@ -123,17 +128,16 @@ const ProposalVote = () => {
             onUpdateProposal={handleProposalUpdate}
             isOwner={isOwner} 
           />
-
-
           <VoteSubmitCard 
             proposal={proposal} 
             setSubmittedVotes={setSubmittedVotes} 
-            handleNewTableEntry={handleNewTableEntry} />
-
+            handleNewTableEntry={handleNewTableEntry}
+          />
           <VoteCard 
             proposal={proposal} 
             submittedVotes={submittedVotes} 
-            setSubmittedVotes={setSubmittedVotes} />
+            setSubmittedVotes={setSubmittedVotes} 
+          />
         </>
       ) : (
         <div>No proposal selected</div>

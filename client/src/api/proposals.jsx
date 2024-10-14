@@ -1,5 +1,4 @@
 const PROP_URL = process.env.REACT_APP_PROPOSALS_URL;
-const USER_URL = process.env.REACT_APP_USERS_URL;
 
 // GET All User Proposal List API Call
 export const fetchProposalListAPI = async (token) => {
@@ -26,8 +25,6 @@ export const createProposal = async (proposalData, token) => {
     'Authorization': `Bearer ${token}`,
   };
 
-  // Log the proposal data being sent
-  console.log('Creating proposal with data:', proposalData);
 
   try {
     const response = await fetch(`${PROP_URL}`, {
@@ -41,8 +38,6 @@ export const createProposal = async (proposalData, token) => {
     }
 
     const result = await response.json();
-    // Log the response from the server
-    console.log('Proposal created successfully:', result);
     return result;
   } catch (error) {
     console.error('Error creating proposal:', error);
@@ -122,7 +117,6 @@ export const fetchProposalData = async (uniqueUrl, token) => {
     }
 
     const data = await response.json();
-    console.log('Fetching Proposal Data:', data); // Logs the proposal and isOwner flag
     return data;
   } catch (error) {
     throw new Error(error.message);
@@ -158,7 +152,8 @@ export const fetchSubmittedVotes = async (proposalId) => {
   }
 };
 
-export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes) => {
+
+export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, setErrorMessage) => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
@@ -172,43 +167,41 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
       headers: headers,
     });
 
+    // Check if the response indicates the vote limit has been reached
+    if (response.status === 403) {
+      const errorData = await response.json();
+      setErrorMessage(errorData.error);  // Pass the error message to the frontend
+      return { limitReached: true }; // Return a consistent response format
+    }
+
     if (!response.ok) {
-      throw new Error('Error submitting vote');
+      const errorData = await response.json();
+      setErrorMessage(errorData.error || 'Error submitting vote');
+      return; // Do not return any data on error
     }
 
     const voteData = await response.json();
-
+    
+    // Update submitted votes in state
     if (voteData && voteData.addedVote) {
       setSubmittedVotes((prevVotes) => {
         const isVoteAlreadySubmitted = prevVotes.some(vote => vote._id === voteData.addedVote._id);
         if (!isVoteAlreadySubmitted) {
-          return [voteData.addedVote, ...prevVotes]; // Add new vote to the current state
+          return [voteData.addedVote, ...prevVotes];
         }
-        return prevVotes; // If vote is already there, do nothing
+        return prevVotes;
       });
     }
 
-    if (token) {
-      const userResponseUpdate = await fetch(`${USER_URL}/setParticipatedProposal`, {
-        method: 'POST',
-        body: JSON.stringify({
-          proposalId,
-          voteId: voteData.addedVote._id,
-        }),
-        headers: headers,
-      });
-
-      if (!userResponseUpdate.ok) {
-        console.error('Error response from /setParticipatedProposal:', userResponseUpdate);
-        throw new Error('Error updating user participated proposals');
-      }
-    }
-
-    return voteData;
+    return voteData; // Return the vote data if submission was successful
   } catch (error) {
     console.error('Error in submitNewTableEntry:', error.message);
+    setErrorMessage('An error occurred while submitting your vote. Please try again.');
+    return; // Return nothing or handle it accordingly
   }
 };
+
+
 
 // UPDATE Existing Table Entry API Call
 export const handleSubmittedVoteUpdate = async (proposalId, voteId, voteData) => {
