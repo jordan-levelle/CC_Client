@@ -1,10 +1,13 @@
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Header, Footer } from './components';
 import { ExampleProposal, EditProposal, ForgotPassword, ProtectedRoute } from './components';
 import { Home, Profile, Create, Basics, Subscriptions, Subscribe, Settings, Teams, AuthPage, Verification, VerifyLoadingPage, ProposalVote
  } from './pages';
 import { useAuthContext } from './hooks/useAuthContext';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function App() {
   const { user } = useAuthContext();
@@ -14,6 +17,16 @@ export default function App() {
       <div className="d-flex flex-column min-vh-100">
         <Header />
         <main className="flex-grow-1">
+        <ToastContainer
+         position="top-center"
+         autoClose={5000}
+         hideProgressBar={false}
+         newestOnTop={false}
+         closeOnClick
+         rtl={false}
+         pauseOnFocusLoss
+         draggable
+         pauseOnHover />
           <Routes>
             <Route path='/' element={<Home />} />
 

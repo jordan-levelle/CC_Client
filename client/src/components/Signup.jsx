@@ -4,6 +4,7 @@ import { useSignup } from '../hooks/useSignup';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { Navigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import '../styles/components/authentication.css';
 
 const Signup = () => {
   const [email, setEmail] = useState('');

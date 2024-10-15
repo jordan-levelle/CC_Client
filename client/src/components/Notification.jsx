@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 
 const Notification = ({ message }) => {
-  const [isVisible, setIsVisible] = useState(!!message); // Track visibility based on message
+  const [isVisible, setIsVisible] = useState(!!message); 
 
   useEffect(() => {
     if (message) {
-      setIsVisible(true); // Show the notification
+      setIsVisible(true); 
       const timer = setTimeout(() => {
-        setIsVisible(false); // Hide the notification after 3 seconds
-      }, 5000); // Duration in milliseconds
+        setIsVisible(false); 
+      }, 5000); 
 
-      return () => clearTimeout(timer); // Cleanup timeout on unmount or message change
+      return () => clearTimeout(timer); 
     } else {
-      setIsVisible(false); // Hide if there is no message
+      setIsVisible(false); 
     }
   }, [message]);
 
-  if (!isVisible) return null; // Don't render if not visible
+  if (!isVisible) return null; 
 
   return (
     <div className="error-message">

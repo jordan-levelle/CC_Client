@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { VoteCard, VoteSubmitCard, DescriptionCard, Notification } from '../components';
+import { VoteCard, VoteSubmitCard, DescriptionCard } from '../components';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useTeamsContext } from '../context/TeamsContext';
+import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender } from '../api/proposals';
 import '../styles/pages/proposalvote.css';
 
@@ -19,8 +20,6 @@ const ProposalVote = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [notificationMessage, setNotificationMessage] = useState('');
-  const [notificationType, setNotificationType] = useState('');
 
   const handleProposalUpdate = (updatedProposal) => {
     setProposal(updatedProposal); 
@@ -69,12 +68,10 @@ const ProposalVote = () => {
           const updatedVotes = await fetchSubmittedVotes(proposal._id);
           setSubmittedVotes(updatedVotes);
           setTeamVotesSubmitted(true); // Mark as submitted
-          setNotificationMessage('Team votes submitted successfully!'); // Set success notification message
-          setNotificationType('success'); // Set notification type to success
+          showSuccessToast('teamVoteSuccess'); // Call the toast function with a message key
         } catch (error) {
           console.error('Error submitting team votes:', error);
-          setNotificationMessage('Failed to submit team votes.'); // Set error message
-          setNotificationType('error'); // Set notification type to error
+          showErrorToast('teamVoteError'); // Call the error toast
         } finally {
           setLoading(false);
         }
@@ -97,22 +94,18 @@ const ProposalVote = () => {
     
       // Check if the response indicates limit reached
       if (response && response.limitReached) {
-        setNotificationMessage('Limit of 15 votes reached. Upgrade subscription for unlimited votes.'); // Set error message
-        setNotificationType('error'); // Set notification type to error
+        showErrorToast('voteLimitError'); // Show limit error toast
       } else {
-        setNotificationMessage('Vote submitted successfully!'); // Set success notification message
-        setNotificationType('success'); // Set notification type to success
+        showSuccessToast('voteSuccess'); // Show success toast
       }
     } catch (error) {
       console.error('Error submitting new entry:', error);
-      setNotificationMessage('An error occurred while submitting your vote. Please try again.'); // Set error message
-      setNotificationType('error'); // Set notification type to error
+      showErrorToast('voteError'); // Show error toast
     }
   };
 
   return (
     <div className="proposal-vote-page-container">
-      <Notification message={notificationMessage} type={notificationType} /> {/* Pass the notification message and type */}
       {loading ? (
         <div>Loading...</div>
       ) : proposal ? (
@@ -147,3 +140,4 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+

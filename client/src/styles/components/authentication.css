@@ -1,0 +1,72 @@
+ /*
+  *************Styles for Authentication Pages*************
+ */
+ .auth-container {
+    width: 320px; /* Smaller width */
+    background-color: lightgray;
+    padding: 40px; /* Add padding */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 50px auto 0; /* Center horizontally and add space from the top */
+    text-align: center; /* Center contents */
+   }
+   
+   
+   .auth-container input {
+    width: calc(100%); /* Adjust input width */
+    padding: 13px;
+    margin-bottom: 20px; /* Increase margin */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+   }
+   
+   
+   .auth-container button {
+    width: calc(100% - 20px); /* Adjust button width */
+    padding: 10px;
+    color: #ebebeb;
+    font-size: medium;
+    --font-family: Arial, sans-serif;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+   }
+   
+   
+   .forgot-password {
+    margin-top: 10px;
+    text-align: center;
+    color: #007bff;
+    cursor: pointer;
+   }
+   
+   
+   .forgot-password:hover {
+    text-decoration: underline;
+   }
+   
+   
+   .password-criteria {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+   }
+   .password-criteria li {
+    font-size: 0.7rem;
+    margin: 4px 0;
+   }
+   .password-criteria .valid {
+    color: green;
+   }
+   .password-criteria .invalid {
+    color: red;
+   }
+   .error {
+    color: red;
+    margin-top: 4px;
+   }
+   .small-text {
+    font-size: 0.8rem;
+   }
+   

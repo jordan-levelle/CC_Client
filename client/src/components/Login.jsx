@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
 import { sendForgotPasswordLinkAPI } from 'src/api/users';
+import '../styles/components/authentication.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');

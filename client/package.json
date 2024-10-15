@@ -30,7 +30,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
     "react-simple-captcha": "^9.3.1",
-    "react-toastify": "^10.0.5",
+    "react-toastify": "^10.0.6",
     "react-tooltip": "^5.26.3",
     "stripe": "^16.4.0",
     "validator": "^13.12.0",

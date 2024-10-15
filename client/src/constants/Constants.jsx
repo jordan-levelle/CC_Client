@@ -1,4 +1,5 @@
-import { faThumbsUp, faThumbsDown, faBan, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown, faBan, faHandPointRight} from '@fortawesome/free-solid-svg-icons';
+
 
 export const HomePageText = {
   welcomeMessage: "Welcome to Consensus Check",

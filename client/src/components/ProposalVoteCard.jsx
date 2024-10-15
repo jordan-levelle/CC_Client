@@ -4,6 +4,7 @@ import { Tooltip } from 'react-tooltip';
 import { icons, tooltips, formatDate } from '../constants/Constants';
 import { faTrashCan, faCommentDots, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { updateComment, updateOpinion, updateName } from '../utils/proposalUtils';
+import { showDeleteToast, showErrorToast } from 'src/utils/toastNotifications';
 import '../styles/components/proposalvotecard.css';
 import { deleteTableEntry } from 'src/api/proposals';
 
@@ -75,8 +76,15 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   };
 
   const handleDeleteEntry = async (voteId) => {
-    await deleteTableEntry(voteId, setSubmittedVotes, submittedVotes);
+    try {
+      await deleteTableEntry(voteId, setSubmittedVotes, submittedVotes);  // Assuming deleteTableEntry removes the vote from the database.
+      showDeleteToast('voteDelete');  // Show success toast on deletion
+    } catch (error) {
+      console.error('Error deleting vote:', error);
+      showErrorToast('voteError');  // Show error toast on failure
+    }
   };
+  
 
   const toggleDetails = (voteId) => {
     setExpandedRows((prev) => ({
