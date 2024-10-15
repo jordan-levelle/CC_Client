@@ -121,6 +121,7 @@
         display: none;
     }
 
+
 @media (max-width: 868px) {
     /* Layout for non-expanded items: Row layout */
     .vote-items {
@@ -130,7 +131,13 @@
         border: 1px solid #ccc;
         padding: 15px;
         margin-bottom: 5px;
+    }
 
+    .mobile-toggle-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
     }
 
 
@@ -144,7 +151,15 @@
     .mobile-details-container {
         display: flex;
         justify-content: flex-end;
+        padding-right: 5px;
+        align-items: center;
 
+    }
+
+    .comment-icon-placeholder {
+        width: 18px; /* Set the width equal to the size of the comment icon */
+        height: 18px; /* Set the height to match the comment icon */
+        display: inline-block; /* Ensures the placeholder takes up space */
     }
     
 
@@ -172,12 +187,11 @@
 
     .opinion-buttons {
         display: flex;
-        flex-direction: row;
-        gap: 8.5px;
+        flex-direction: row;     
     }
     
     .opinion-buttons button {
-        padding: 15px;
+        padding: 10px;
         border: none;
         border-radius: 5px;
         cursor: pointer;

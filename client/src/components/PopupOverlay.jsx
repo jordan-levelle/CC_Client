@@ -29,7 +29,7 @@ const overlayStyles = {
   left: 0,
   width: '100%',
   height: '100%',
-  padding: '30px',
+  padding: '18px',
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
   display: 'flex',
   justifyContent: 'center',
@@ -40,7 +40,7 @@ const overlayStyles = {
 const modalStyles = {
   position: 'relative',
   backgroundColor: '#fff',
-  padding: '35px',
+  padding: '15px',
   borderRadius: '8px',
   width: 'fit-content',
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',

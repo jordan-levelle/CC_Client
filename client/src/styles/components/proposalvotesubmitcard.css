@@ -91,11 +91,10 @@
   .opinion-submit-buttons {
     display: flex;
     flex-direction: row;
-    gap: 8.5px;
 }
 
 .opinion-submit-buttons button {
-    padding: 15px;
+    padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;

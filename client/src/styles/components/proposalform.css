@@ -1,10 +1,9 @@
 /*************** Styles for Proposal Form Component ***************/
 .proposal-form {
-    width: 90%;
     max-width: 900px;
-    min-width: 700px;
+    min-width: 325px;
     background-color: lightgray;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 40px auto 25px;

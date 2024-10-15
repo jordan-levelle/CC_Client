@@ -99,6 +99,11 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
         submittedVotes.map((vote, index) => {
           return (
             <div key={vote._id} className={`vote-items ${expandedRows[vote._id] ? 'details-visible' : ''}`}>
+              
+              
+              <div className='mobile-toggle-row'>
+
+              
               <div className="name-and-details">
                 {vote.name ? (
                   <span className='name-span'>{vote.name}</span>
@@ -148,6 +153,8 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
                     icon={expandedRows[vote._id] ? faArrowUp : faArrowDown}
                   />
                 </span>
+              </div>
+
               </div>
 
               <div className='opinion-container'>
