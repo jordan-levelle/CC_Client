@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips, formatDate } from '../constants/Constants';
-import { faTrashCan, faCommentDots, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faCommentDots, faArrowUp, faArrowDown, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { updateComment, updateOpinion, updateName } from '../utils/proposalUtils';
 import { showDeleteToast, showErrorToast } from 'src/utils/toastNotifications';
 import '../styles/components/proposalvotecard.css';
@@ -12,6 +12,8 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   const [expandedRows, setExpandedRows] = useState({});
   const [commentDrafts, setCommentDrafts] = useState({});
   const [timeoutIds, setTimeoutIds] = useState({}); // state to manage timeouts
+  const [isEditing, setIsEditing] = useState({});
+  const [localName, setLocalName] = useState({});
 
   useEffect(() => {
     // Cleanup function to cancel any pending timeouts when component unmounts
@@ -66,6 +68,17 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
       [voteId]: newTimeoutId,
     }));
   };
+  
+  const toggleEditName = (voteId, currentName) => {
+    setIsEditing((prev) => ({
+      ...prev,
+      [voteId]: !prev[voteId],
+    }));
+    setLocalName((prev) => ({
+      ...prev,
+      [voteId]: currentName || '', // Set the current name to localName when editing starts
+    }));
+  };
 
   const handleOpinionUpdate = async (index, newOpinionValue) => {
     await updateOpinion(proposal._id, submittedVotes, setSubmittedVotes, index, newOpinionValue);
@@ -103,30 +116,36 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
               
               <div className='mobile-toggle-row'>
 
-              
               <div className="name-and-details">
-                {vote.name ? (
-                  <span className='name-span'>{vote.name}</span>
-                ) : (
+                {isEditing[vote._id] ? (
                   <input
                     className='name-input'
                     type="text"
-                    value={vote.localName || ''}
+                    value={localName[vote._id] || ''}
                     onChange={(e) => {
                       const { value } = e.target;
-                      setSubmittedVotes((prevVotes) => {
-                        const updatedVotes = [...prevVotes];
-                        updatedVotes[index].localName = value;
-                        return updatedVotes;
-                      });
+                      setLocalName((prev) => ({
+                        ...prev,
+                        [vote._id]: value,
+                      }));
                     }}
                     onBlur={() => {
-                      if (vote.localName) {
-                        handleNameUpdate(index, vote.localName);
+                      if (localName[vote._id]) {
+                        handleNameUpdate(index, localName[vote._id]);
                       }
+                      toggleEditName(vote._id); // Switch back to span after editing
                     }}
-                    placeholder="Name"
+                    autoFocus // Automatically focus on input when editing
                   />
+                ) : (
+                  <span className='name-span'>
+                    {vote.name || 'No Name'}
+                    <FontAwesomeIcon
+                      icon={faPencil}
+                      style={{ marginLeft: '5px', cursor: 'pointer' }} // Cursor pointer for the pencil icon
+                      onClick={() => toggleEditName(vote._id, vote.name)}
+                    />
+                  </span>
                 )}
               </div>
               <div className='mobile-details-container'>

@@ -153,7 +153,7 @@ export const fetchSubmittedVotes = async (proposalId) => {
 };
 
 
-export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, setErrorMessage) => {
+export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes) => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
@@ -167,21 +167,14 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
       headers: headers,
     });
 
-    // Check if the response indicates the vote limit has been reached
-    if (response.status === 403) {
-      const errorData = await response.json();
-      setErrorMessage(errorData.error);  // Pass the error message to the frontend
-      return { limitReached: true }; // Return a consistent response format
-    }
-
     if (!response.ok) {
-      const errorData = await response.json();
-      setErrorMessage(errorData.error || 'Error submitting vote');
+      const errorResponse = await response.json(); // Rename to avoid shadowing
+      console.error('Error response:', errorResponse); // Log the error for debugging
       return; // Do not return any data on error
     }
 
     const voteData = await response.json();
-    
+
     // Update submitted votes in state
     if (voteData && voteData.addedVote) {
       setSubmittedVotes((prevVotes) => {
@@ -196,10 +189,10 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     return voteData; // Return the vote data if submission was successful
   } catch (error) {
     console.error('Error in submitNewTableEntry:', error.message);
-    setErrorMessage('An error occurred while submitting your vote. Please try again.');
     return; // Return nothing or handle it accordingly
   }
 };
+
 
 
 

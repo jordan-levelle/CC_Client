@@ -4,6 +4,7 @@ import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons';
+import logo from '../assets/logo.png'
 import '../styles/components/header.css';
 
 const Header = () => {
@@ -53,12 +54,15 @@ const Header = () => {
   return (
     <header className="header">
       <nav className="navbar">
-        <Link to="/" className="logo-link">
-          <h1 className="logo">
-            Consensus Check
-            <span className="beta">(beta)</span>
-          </h1>
-        </Link>
+      
+      <Link to="/" className="logo-link">
+        <img src={logo} alt="logo" className="logo-img" />
+        <h1 className="logo">
+          Consensus Check
+          <span className="beta">(beta)</span>
+        </h1>
+      </Link>
+
 
         <button className="hamburger" onClick={toggleMenu}>
           <span className="hamburger-icon">&#9776;</span>

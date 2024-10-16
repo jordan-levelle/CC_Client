@@ -1,12 +1,23 @@
 /*************** Styles for Proposal Form Component ***************/
+.form-container {
+  border-radius: 5px;
+  border: 1px solid #c5c5c5;
+  padding: 10px; /* Adds space between the form and the container */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow effect */
+  background-color: white; /* Optional: Sets background color inside the form container */
+  max-width: 900px;
+  width: 750px;
+  min-width: 325px;
+  margin: 30px auto 25px;
+}
+
+
 .proposal-form {
-    max-width: 900px;
-    min-width: 325px;
     background-color: lightgray;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 40px auto 25px;
+    
   }
   
   .proposal-form label {

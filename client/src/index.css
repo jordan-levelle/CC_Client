@@ -37,7 +37,7 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  padding: 20px;
+  padding: 10px;
   flex-wrap: wrap;
  }
  
@@ -48,14 +48,15 @@
   border-radius: 5px;
   padding: 15px;
   flex: 1;
-  min-width: 300px;
+  min-width: 330px;
   box-shadow: .1rem .1rem .2rem rgba(0, 0, 0, 0.5);
  }
  
  
  .cardlist-item {
-  width: 84%;
+  width: 90%;
   max-width: 480px;
+  min-height: 180px;
   box-sizing: border-box;
   margin: 0;
   padding: 20px;

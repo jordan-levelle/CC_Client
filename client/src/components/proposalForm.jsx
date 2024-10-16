@@ -137,7 +137,7 @@ const ProposalForm = () => {
   const descriptionValue = watch("description");
 
   return (
-    <div>
+    <div className='form-container'>
       
       <form className="create" onSubmit={handleSubmit(onSubmit)}>
       

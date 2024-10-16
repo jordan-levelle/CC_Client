@@ -1,11 +1,19 @@
 /*************************** Styles for header ***************************/
 .header {
   background-color: var(--dark-bg);
-  height: 50px;
+  height: 60px;
 }
 
 .logo-link {
+  display: flex; /* Aligns the image and text horizontally */
+  align-items: center; /* Vertically centers the items */
   text-decoration: none;
+}
+
+.logo-img {
+  width: 35px; /* Adjust this size as needed */
+  height: auto; /* Maintain aspect ratio */
+  margin: 10px;
 }
 
 .logo {
@@ -13,7 +21,6 @@
   font-size: 24px;
   font-weight: bold;
   color: #ececec;
-  margin-left: 45px;
 }
 
 .beta {
@@ -21,6 +28,7 @@
   color: gray; 
   margin-left: 0.5rem; 
 }
+
 
 .logo:hover {
   text-decoration: underline;
@@ -106,7 +114,7 @@
 
   .logo-link {
     margin: 0 auto;
-    transform: translateY(16%);
+    transform: translateY(0%);
   }
 
   .nav-menu {
@@ -117,7 +125,7 @@
     display: block;
     position: absolute;
     right: 5%;
-    transform: translateY(10%);
+    transform: translateY(20%);
     background: transparent;
     border: none;
     cursor: pointer;
