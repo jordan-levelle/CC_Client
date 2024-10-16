@@ -105,9 +105,6 @@ const ProposalForm = () => {
   
       const currentUser = user || generateDummyUser();
   
-      // Log the selected team before submission
-      console.log('Selected Team:', selectedTeam);
-  
       const proposal = { 
         ...data, 
         email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email,

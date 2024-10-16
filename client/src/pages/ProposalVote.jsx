@@ -6,6 +6,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useTeamsContext } from '../context/TeamsContext';
 import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender } from '../api/proposals';
+import { setParticipatedProposal } from 'src/api/users';
 import '../styles/pages/proposalvote.css';
 
 const ProposalVote = () => {
@@ -88,21 +89,39 @@ const ProposalVote = () => {
     }
   }, [teamVotesSubmitted, clearSelectedTeam]);
 
-  const handleNewTableEntry = async (newVote) => {
+  const handleNewTableEntry = async (newVote, isOwner) => {
     try {
+      // First, submit the new vote
       const response = await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes);
-    
-      // Check if the response indicates limit reached
+      
+      // Check if the response indicates the vote limit was reached
       if (response && response.limitReached) {
         showErrorToast('voteLimitError'); // Show limit error toast
       } else {
         showSuccessToast('voteSuccess'); // Show success toast
+        
+        // Skip the setParticipatedProposal API call if isOwner is true
+        if (!isOwner) {
+
+          try {
+            const participationResponse = await setParticipatedProposal(proposal._id, response.addedVote._id, user.token);
+            if (participationResponse && participationResponse.success) {
+            } else {
+              console.error('Failed to update participated proposal:', participationResponse.message);
+            }
+          } catch (error) {
+            console.error('Error calling setParticipatedProposal API:', error);
+            showErrorToast('participationError'); // Show participation error toast
+          }
+        } else {
+        }
       }
     } catch (error) {
       console.error('Error submitting new entry:', error);
-      showErrorToast('voteError'); // Show error toast
+      showErrorToast('voteError'); // Show error toast for vote submission
     }
   };
+  
 
   return (
     <div className="proposal-vote-page-container">

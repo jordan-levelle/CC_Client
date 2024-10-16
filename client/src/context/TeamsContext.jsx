@@ -29,12 +29,10 @@ export const TeamsContextProvider = ({ children }) => {
   }, [user]);
 
   const updateSelectedTeam = (team) => {
-    console.log('Setting Selected Team:', team);
     setSelectedTeam(team || null);  
   };
 
   const clearSelectedTeam = () => {
-    console.log('Clearing Selected Team');
     setSelectedTeam(null);
   };
 

@@ -128,6 +128,7 @@ const filterParticipatedProposals = (participatedProposals, filter) => {
   }
 };
 
+
 export const ProposalsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(proposalsReducer, initialState);
 
