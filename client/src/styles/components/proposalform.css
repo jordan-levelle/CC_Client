@@ -5,8 +5,8 @@
   padding: 10px; /* Adds space between the form and the container */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow effect */
   background-color: white; /* Optional: Sets background color inside the form container */
-  max-width: 900px;
-  width: 750px;
+  max-width: 950px;
+  width: 850px;
   min-width: 325px;
   margin: 30px auto 25px;
 }

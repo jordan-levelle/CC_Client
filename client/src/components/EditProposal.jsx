@@ -68,6 +68,7 @@ const EditProposal = ({ onUpdate, onClose}) => {
   };
 
   return (
+    <div className='form-container'>
     <div className="edit-proposal">
       <h4>Edit Proposal</h4>  
       <form className="edit" onSubmit={handleSubmit}>
@@ -120,6 +121,7 @@ const EditProposal = ({ onUpdate, onClose}) => {
           {error && <div className="error">{error}</div>}
         </div>
       </form>
+    </div>
     </div>
   );
 };
