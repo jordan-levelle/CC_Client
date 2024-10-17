@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useProposalsContext } from '../hooks/useProposalContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { deleteProposalAPI, fetchProposalListAPI } from 'src/api/proposals'; 
-import { toggleArchiveProposalAPI } from 'src/api/users';
+import { archiveProposalAPI } from 'src/api/users';
 import { formatDate } from '../constants/Constants';
 import '../styles/components/userdashboard.css';
 import Modal from './PopupOverlay';
@@ -60,7 +60,7 @@ const ProposalList = ({ proposal }) => {
     if (!user) return;
   
     try {
-      const response = await toggleArchiveProposalAPI(proposal._id, user.token);
+      const response = await archiveProposalAPI(proposal._id, user.token);
       dispatch({ 
         type: response.isArchived ? 'ARCHIVE_PROPOSAL' : 'UNARCHIVE_PROPOSAL', 
         payload: proposal 

@@ -212,7 +212,6 @@ export const setParticipatedProposal = async (proposalId, voteId, token) => {
   }
 };
 
-
 export const fetchParticipatedProposalsAPI = async (token) => {
   try {
     const response = await fetch(`${USER_URL}/getParticipatedProposals`, {
@@ -228,12 +227,15 @@ export const fetchParticipatedProposalsAPI = async (token) => {
     }
 
     const data = await response.json();
+    
     return data;
   } catch (error) {
     console.error('Error fetching participated proposals:', error.message);
     throw new Error(error.message);
   }
 };
+
+
 
 export const removeParticipatedProposalAPI = async (proposalId, token) => {
   try {
@@ -257,7 +259,7 @@ export const removeParticipatedProposalAPI = async (proposalId, token) => {
   }
 };
 
-export const toggleArchiveProposalAPI = async (proposalId, token) => {
+export const archiveProposalAPI = async (proposalId, token) => {
 
   try {
     const response = await fetch(`${USER_URL}/archiveProposal/${proposalId}`, {

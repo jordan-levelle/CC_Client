@@ -51,11 +51,10 @@ const proposalsReducer = (state, action) => {
         selectedProposalId: action.payload,
       };
 
-    // Updated to filter out archived proposals
     case 'SET_PARTICIPATED_PROPOSALS':
       return {
         ...state,
-        participatedProposals: action.payload.filter(p => !p.archived),
+        participatedProposals: action.payload,
       };
 
     case 'ARCHIVE_PROPOSAL': {
@@ -87,7 +86,7 @@ const proposalsReducer = (state, action) => {
         participatedProposals: updatedParticipatedProposals 
       };
     }
-
+    
     case 'UNARCHIVE_PARTICIPATED_PROPOSAL': {
       const updatedParticipatedProposals = state.participatedProposals.map(p =>
         p._id === action.payload._id ? { ...p, isArchived: false } : p
@@ -97,6 +96,7 @@ const proposalsReducer = (state, action) => {
         participatedProposals: updatedParticipatedProposals 
       };
     }
+    
 
     default:
       return state;

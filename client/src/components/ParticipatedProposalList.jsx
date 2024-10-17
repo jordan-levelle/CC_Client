@@ -13,22 +13,18 @@ const ParticipatedProposalList = ({ proposal }) => {
 
   const handleArchiveParticipatedProposal = async () => {
     if (!user) return;
-  
+
     try {
       const response = await archiveParticipatedProposalAPI(proposal._id, user.token);
-      
-      const isArchived = response.isArchived;
-      
-      // Optimistically update the state instead of refetching the list
       dispatch({
-        type: isArchived ? 'ARCHIVE_PARTICIPATED_PROPOSAL' : 'UNARCHIVE_PARTICIPATED_PROPOSAL',
-        payload: { ...proposal, isArchived } // Pass the updated proposal with the new archive state
+        type: response.isArchived ? 'ARCHIVE_PARTICIPATED_PROPOSAL' : 'UNARCHIVE_PARTICIPATED_PROPOSAL',
+        payload: { ...proposal, isArchived: response.isArchived }, // Ensure the proposal gets updated correctly
       });
     } catch (error) {
       console.error('Error archiving/unarchiving participated proposal:', error);
     }
   };
-  
+
   return (
     <div className="cardlist-item">
       <h4>{proposal.proposalTitle}</h4>
@@ -54,7 +50,7 @@ const ParticipatedProposalList = ({ proposal }) => {
           className="small-button"
           onClick={handleArchiveParticipatedProposal}
         >
-          {proposal.isArchived ? 'Unarchive' : 'Archive'}
+          {proposal.isArchived ? "Unarchive" : "Archive"}
         </button>
       </div>
     </div>
