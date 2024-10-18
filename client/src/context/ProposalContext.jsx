@@ -122,7 +122,8 @@ const filterParticipatedProposals = (participatedProposals, filter) => {
   switch (filter) {
     case 'Archived':
       return participatedProposals.filter(p => p.isArchived);
-    case 'All':
+    case 'Active':
+      return participatedProposals.filter(p => !p.isArchived);
     default:
       return participatedProposals;
   }

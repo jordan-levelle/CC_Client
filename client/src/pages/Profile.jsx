@@ -17,7 +17,7 @@ const Profile = () => {
 
 
   const [selectedFilter, setSelectedFilter] = useState('All');
-  const [participatedFilter, setParticipatedFilter] = useState('All');
+  const [participatedFilter, setParticipatedFilter] = useState('Active');
 
 
   useEffect(() => {
@@ -147,12 +147,12 @@ const Profile = () => {
               <div key="inline-radio" className="mb-3">
                 <Form.Check
                   inline
-                  label="All"
+                  label="Active"
                   name="group2"
                   type="radio"
                   id="inline-radio-7"
-                  value="All"
-                  checked={participatedFilter === 'All'}
+                  value="Active"
+                  checked={participatedFilter === 'Active'}
                   onChange={handleParticipatedPropFilter}
                 />
                 <Form.Check
