@@ -1,29 +1,25 @@
 /*************** Styles for Proposal Form Component ***************/
-.form-container {
-  border-radius: 5px;
-  border: 1px solid #c5c5c5;
-  padding: 10px; /* Adds space between the form and the container */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow effect */
-  background-color: white; /* Optional: Sets background color inside the form container */
-  max-width: 950px;
-  width: 850px;
-  min-width: 325px;
-  margin: 30px auto 25px;
-}
+  .form-container {
+    border-radius: 8px;
+    border: 1px solid #c5c5c5;
+    padding: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background-color: white; 
+    max-width: 950px;
+    min-width: 325px;
+    margin: 30px auto 25px;
+  }
 
-
-.proposal-form {
+  .proposal-form {
     background-color: lightgray;
     padding: 10px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   }
   
   .proposal-form label {
     display: block;
     padding: 5px;
-  
   }
   
   .proposal-form input[type="text"],
@@ -51,14 +47,14 @@
   }
   
   .quill-editor {
-      width: 100%;
-      height: 35vh;
-      max-height: 40vh;
-      min-height: 20vh;
-      overflow-y:hidden; /* Ensures scrollbar only appears when needed */
-      background-color: #ffffff;
-      border: 1px solid #ccc; /* Add border for better visual separation */
-      border-radius: 5px; /* Match border-radius with other inputs */
-      box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+    width: 100%;
+    height: 35vh;
+    max-height: 40vh;
+    min-height: 20vh;
+    overflow-y:hidden; /* Ensures scrollbar only appears when needed */
+    background-color: #ffffff;
+    border: 1px solid #ccc; /* Add border for better visual separation */
+    border-radius: 5px; /* Match border-radius with other inputs */
+    box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
   }
   

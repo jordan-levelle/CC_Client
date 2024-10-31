@@ -7,6 +7,7 @@ import { useTeamsContext } from '../context/TeamsContext';
 import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender } from '../api/proposals';
 import { setParticipatedProposal } from 'src/api/users';
+import { connectToProposalRoom, disconnectFromProposalRoom } from 'src/utils/socket';
 import '../styles/pages/proposalvote.css';
 
 const ProposalVote = () => {
@@ -21,7 +22,7 @@ const ProposalVote = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [showFirstRenderMessage, setShowFirstRenderMessage] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  
   const handleProposalUpdate = (updatedProposal) => {
     setProposal(updatedProposal); 
   };
@@ -49,10 +50,21 @@ const ProposalVote = () => {
         setLoading(false);
       }
     };
-  
     getProposalData();
+    // Cleanup socket connection on unmount
+    return () => {
+      disconnectFromProposalRoom();
+    };
   }, [uniqueUrl, user]);
-  
+
+  useEffect(() => {
+    if (uniqueUrl) {
+      connectToProposalRoom(uniqueUrl, (newVote) => {
+        setSubmittedVotes((prevVotes) => [...prevVotes, newVote]);
+      });
+    }
+  }, [uniqueUrl]);
+
   useEffect(() => {
     const submitTeamVotes = async () => {
       if (selectedTeam && proposal && !teamVotesSubmitted) {
@@ -72,7 +84,7 @@ const ProposalVote = () => {
           showSuccessToast('teamVoteSuccess'); // Call the toast function with a message key
         } catch (error) {
           console.error('Error submitting team votes:', error);
-          showErrorToast('teamVoteError'); // Call the error toast
+          showErrorToast('teamVoteError'); 
         } finally {
           setLoading(false);
         }
@@ -82,7 +94,6 @@ const ProposalVote = () => {
     submitTeamVotes();
   }, [proposal, selectedTeam, teamVotesSubmitted]);
 
-  // Call clearSelectedTeam after team votes are submitted
   useEffect(() => {
     if (teamVotesSubmitted) {
       clearSelectedTeam(); // Clear selected team
@@ -91,18 +102,14 @@ const ProposalVote = () => {
 
   const handleNewTableEntry = async (newVote, isOwner) => {
     try {
-      // First, submit the new vote
-      const response = await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes);
-      
-      // Check if the response indicates the vote limit was reached
+      const response = await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes, uniqueUrl);
+  
       if (response && response.limitReached) {
         showErrorToast('voteLimitError'); // Show limit error toast
       } else {
         showSuccessToast('voteSuccess'); // Show success toast
         
-        // Skip the setParticipatedProposal API call if isOwner is true
-        if (!isOwner) {
-
+        if (user && !isOwner) {
           try {
             const participationResponse = await setParticipatedProposal(proposal._id, response.addedVote._id, user.token);
             if (participationResponse && participationResponse.success) {
@@ -113,15 +120,15 @@ const ProposalVote = () => {
             console.error('Error calling setParticipatedProposal API:', error);
             showErrorToast('participationError'); // Show participation error toast
           }
-        } else {
         }
+        const votes = await fetchSubmittedVotes(proposal._id);
+        setSubmittedVotes(votes); 
       }
     } catch (error) {
       console.error('Error submitting new entry:', error);
       showErrorToast('voteError'); // Show error toast for vote submission
     }
   };
-  
 
   return (
     <div className="proposal-vote-page-container">
@@ -159,4 +166,3 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
-

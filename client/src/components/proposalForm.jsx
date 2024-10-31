@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
+import ReactQuill from 'react-quill';
+import Select from 'react-select';
+import DropzoneUploader from './DropzoneUploader';
 import { useForm } from 'react-hook-form';
-import { createProposal } from "../api/proposals";
+import { createProposal } from 'src/api/proposals';
+import { uploadDocument } from 'src/api/documents';
 import { useProposalsContext } from "../hooks/useProposalContext";
 import { useVoteContext } from "../hooks/useVoteContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useTeamsContext } from '../context/TeamsContext';
 import { useNavigate } from 'react-router-dom'; 
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
-import ReactQuill from 'react-quill';
-import Select from 'react-select';
 import 'react-quill/dist/quill.snow.css';
 import '../styles/components/proposalform.css';
 
@@ -25,6 +27,7 @@ const ProposalForm = () => {
 
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState('');
+  const [uploadedFile, setuploadedFile] = useState(null);
 
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
@@ -40,6 +43,7 @@ const ProposalForm = () => {
     if (!user) {
       loadCaptchaEnginge(6);
     }
+    register("title", {required: true});
     register("description", { required: true });
     register("email");
     register("name");
@@ -71,7 +75,6 @@ const ProposalForm = () => {
     token: process.env.REACT_APP_NON_AUTH_TOKEN
   });
 
-
   const handleTitleKeyPress = useCallback((event) => {
     if (event.key === 'Tab') {
       event.preventDefault();
@@ -92,36 +95,51 @@ const ProposalForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      if (!data.title.trim() || !data.description.trim()) {
+      console.log('Form data before submission:', data);
+  
+      if (errors.title || errors.description) {
         throw new Error('Title and description are required');
       }
   
       if (!user && !validateCaptcha(captchaInput)) {
         setCaptchaError('Invalid CAPTCHA');
-        return; // Exit early if CAPTCHA is invalid
+        return;
       } else {
-        setCaptchaError(''); // Clear error if CAPTCHA is valid
+        setCaptchaError('');
       }
   
       const currentUser = user || generateDummyUser();
   
-      const proposal = { 
-        ...data, 
-        email: user ? (data.receiveNotifications ? currentUser.email : null) : data.email,
-        teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : null // Attach team ID if present
+      // Create formData for proposal data only (no file)
+      const proposalData = {
+        title: data.title,
+        description: data.description,
+        name: data.name || '',
+        email: user ? (data.receiveNotifications ? currentUser.email : '') : data.email || '',
+        teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : '',
       };
   
-      const json = await createProposal(proposal, currentUser.token);
-      
+      // Send proposal data without the file
+      const createdProposal = await createProposal(proposalData, currentUser.token);
+      console.log("Proposal created:", createdProposal);
+  
       // Dispatch to update context
-      dispatch({ type: 'CREATE_PROPOSAL', payload: json });
-      
+      dispatch({ type: 'CREATE_PROPOSAL', payload: createdProposal });
+  
       // Store the selected proposal ID in the vote context
-      setSelectedProposalId(json._id);
+      setSelectedProposalId(createdProposal._id);
+  
+      // Upload the document if a file is uploaded
+      if (uploadedFile) {
+        const formData = new FormData();
+        formData.append('file', uploadedFile); // Append the uploaded file
+        await uploadDocument(createdProposal._id, formData);
+        console.log('Document uploaded successfully');
+      }
   
       // Navigate to the ProposalVote page
-      navigate(`/${json.uniqueUrl}`);
-      
+      navigate(`/${createdProposal.uniqueUrl}`);
+  
       // Clear form
       reset();
     } catch (error) {
@@ -129,15 +147,11 @@ const ProposalForm = () => {
     }
   };
   
-  
-
   const descriptionValue = watch("description");
 
   return (
     <div className='form-container'>
-      
       <form className="create" onSubmit={handleSubmit(onSubmit)}>
-      
         <div className="proposal-form">
         <h4 style={{ textAlign: 'center' }}>Create Proposal</h4>
           <label htmlFor="title">Title:</label>
@@ -168,6 +182,10 @@ const ProposalForm = () => {
             ref={descriptionInputRef}
           />
           <div className='error'>{errors.description && "Description is required"}</div>
+          
+          {isSubscribed ? (
+            <DropzoneUploader onFileUpload={setuploadedFile} />
+          ) : null}
 
           <label htmlFor="name">Proposed by:</label>
             <input 
@@ -233,7 +251,6 @@ const ProposalForm = () => {
                 />
               </>
             )}
-            
             {!user && (
             <>
               <LoadCanvasTemplate />

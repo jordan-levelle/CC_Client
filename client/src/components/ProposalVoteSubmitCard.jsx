@@ -13,8 +13,6 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
   const handleOpinionSelect = async (opinionType) => {
     const updatedVote = { ...newVote, opinion: opinionType };
     setNewVote(updatedVote);
-
-    // Submit the vote immediately when an opinion is selected
     await handleSubmit(updatedVote);
   };
 
@@ -27,6 +25,8 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
     try {
       // Call the function passed in props to submit the vote
       await handleNewTableEntry(voteData); // Pass setErrorMessage to update the state in case of an error
+
+        // socket.emit('new vote', voteData);
   
         setNewVote({ name: '', opinion: '', comment: '' });
       

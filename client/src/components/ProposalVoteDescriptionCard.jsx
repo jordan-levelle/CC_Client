@@ -14,8 +14,6 @@ import '../styles/components/dropdown.css';
 import { deleteProposalAPI } from '../api/proposals';
 
 const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, dispatch, submittedVotes, onUpdateProposal, isOwner }) => {
-  
-  
   const [isEditProposalModalOpen, setIsEditProposalModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setIsCreateTeamModalOpen] = useState(false);
   const [isTeamCreated, setIsTeamCreated] = useState(false);
@@ -123,7 +121,6 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
 
       <div className="proposal-header">
         <h3>{proposal.title}</h3>
-        {/* Only show the dropdown if the user is the owner */}
         {isOwner && (
           <div className="settings-dropdown">
             <DropdownMenu icon={faEllipsis} positionClass="dropdown-right">
@@ -147,12 +144,25 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
         <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
       </div>
 
-      <div className="three-column-layout">
-        <div className="left-column">
-  
+      {/* Display the uploaded file if it exists */}
+      {proposal.file && (
+        <div className="uploaded-file">
+          <h4>Uploaded File:</h4>
+          {proposal.file.type.startsWith('image/') ? (
+            <img src={proposal.file.url} alt="Uploaded" style={{ maxWidth: '100%', height: 'auto' }} />
+          ) : proposal.file.type === 'application/pdf' ? (
+            <a href={proposal.file.url} target="_blank" rel="noopener noreferrer">
+              View PDF
+            </a>
+          ) : (
+            <p>File: <a href={proposal.file.url} target="_blank" rel="noopener noreferrer">{proposal.file.name}</a></p>
+          )}
         </div>
-        <div className="middle-column">
+      )}
 
+      <div className="three-column-layout">
+        <div className="left-column"></div>
+        <div className="middle-column">
           <div className="opinion-tally-container">
             {Object.keys(icons).map((opinionType) => (
               <div key={opinionType} className="opinion-content">
@@ -163,14 +173,11 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
               </div>
             ))}
           </div>
-        
         </div>
-        
-        <div className="right-column">
-          
-        </div>
+        <div className="right-column"></div>
       </div>
-            {/* Modal For Create Team */}
+
+      {/* Modal For Create Team */}
       {isCreateTeamModalOpen && (
         <Modal isOpen={isCreateTeamModalOpen} onClose={() => setIsCreateTeamModalOpen(false)}>
           <UserCreateTeams
@@ -178,8 +185,8 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
             defaultMembers={respondentNames}
             onClose={() => setIsCreateTeamModalOpen(false)}
             onCreate={() => {
-              setIsTeamCreated(true);  // Trigger confirmation modal when the team is created
-              setIsCreateTeamModalOpen(false); // Optionally close the create modal
+              setIsTeamCreated(true);
+              setIsCreateTeamModalOpen(false);
             }}
           />
         </Modal>
@@ -195,8 +202,6 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
           </div>
         </Modal>
       )}
-
-
 
       {/* Modal For Edit Proposal */}
       {isEditProposalModalOpen && (
@@ -215,22 +220,14 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
           {isDeleted ? (
             <div>
               <p>Proposal deleted successfully!</p>
-              <Link
-                to="/profile"
-                className="profile-link"
-                onClick={() => setIsDeleted(false)}
-              >
+              <Link to="/profile" className="profile-link" onClick={() => setIsDeleted(false)}>
                 Go to Profile
               </Link>
             </div>
           ) : (
             <>
               <p>Are you sure you want to delete this proposal? It will delete all responses.</p>
-              <button
-                className="small-button"
-                style={{ marginRight: '10px' }}
-                onClick={handleDeleteProposal}
-              >
+              <button className="small-button" style={{ marginRight: '10px' }} onClick={handleDeleteProposal}>
                 Yes
               </button>
               <button className="small-button" onClick={() => setIsModalOpen(false)}>

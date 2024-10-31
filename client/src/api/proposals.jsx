@@ -1,3 +1,4 @@
+
 const PROP_URL = process.env.REACT_APP_PROPOSALS_URL;
 
 // GET All User Proposal List API Call
@@ -24,8 +25,6 @@ export const createProposal = async (proposalData, token) => {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`,
   };
-
-
   try {
     const response = await fetch(`${PROP_URL}`, {
       method: 'POST',
@@ -105,12 +104,11 @@ export const fetchProposalData = async (uniqueUrl, token) => {
       'Content-Type': 'application/json',
     };
 
-    // Conditionally include the Authorization header if a token is provided
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${PROP_URL}/${uniqueUrl}`, { headers }); // Pass headers to the fetch call
+    const response = await fetch(`${PROP_URL}/${uniqueUrl}`, { headers }); 
 
     if (!response.ok) {
       throw new Error('Failed to fetch proposal');
@@ -153,27 +151,36 @@ export const fetchSubmittedVotes = async (proposalId) => {
 };
 
 
-export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes) => {
+export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, uniqueUrl,) => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`,
   };
 
+  // Include uniqueUrl in the newVote object
+  const voteDataToSend = {
+    ...newVote,    // Spread existing vote properties
+    uniqueUrl,    // Add uniqueUrl to the request body
+  };
+
+  console.log('Submitting new vote:', voteDataToSend); // Log the new vote being submitted
+
   try {
     const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
       method: 'POST',
-      body: JSON.stringify(newVote),
+      body: JSON.stringify(voteDataToSend), // Send updated vote data
       headers: headers,
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json(); // Rename to avoid shadowing
-      console.error('Error response:', errorResponse); // Log the error for debugging
-      return; // Do not return any data on error
+      const errorResponse = await response.json();
+      console.error('Error response from API:', errorResponse); // Log the error response
+      return;
     }
 
     const voteData = await response.json();
+    console.log('Vote submitted successfully, response:', voteData); // Log the response data
 
     // Update submitted votes in state
     if (voteData && voteData.addedVote) {
@@ -189,9 +196,11 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     return voteData; // Return the vote data if submission was successful
   } catch (error) {
     console.error('Error in submitNewTableEntry:', error.message);
-    return; // Return nothing or handle it accordingly
+    return;
   }
 };
+
+
 
 
 
@@ -226,7 +235,8 @@ export const handleSubmittedVoteUpdate = async (proposalId, voteId, voteData) =>
   }
 };
 
-// DELETE Table Entry API Call
+
+
 export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes) => {
   try {
     const response = await fetch(`${PROP_URL}/votes/${voteId}`, {
@@ -239,6 +249,8 @@ export const deleteTableEntry = async (voteId, setSubmittedVotes, submittedVotes
 
     setSubmittedVotes(submittedVotes.filter(vote => vote._id !== voteId));
   } catch (error) {
+    console.error('Error in deleteTableEntry:', error);
+    throw error; // Re-throw to handle in the calling function
   }
 };
 

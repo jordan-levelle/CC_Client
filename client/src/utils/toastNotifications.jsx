@@ -13,6 +13,9 @@ const messages = {
   teamVoteError: 'Failed to submit team votes.',
   voteLimitError: 'Limit of 15 votes reached. Upgrade subscription for unlimited votes.',
   voteSuccess: 'Vote submitted successfully!',
+  voteNameSuccess: 'Name updated successfully!',
+  voteOpinionSuccess: 'Opinion updated successfully!',
+  voteCommentSuccess: 'Comment updated successfully!',
   voteDelete: 'Vote deleted successfully',
   voteError: 'An error occurred while submitting your vote. Please try again.',
 };
