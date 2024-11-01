@@ -1,14 +1,15 @@
 /*************** Styles for Proposal Form Component ***************/
-  .form-container {
-    border-radius: 8px;
-    border: 1px solid #c5c5c5;
-    padding: 10px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    background-color: white; 
-    max-width: 950px;
-    min-width: 325px;
-    margin: 30px auto 25px;
-  }
+.form-container {
+  border-radius: 8px;
+  border: 1px solid #c5c5c5;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  max-width: 95%; /* Adjusted for smaller screens */
+  width: 90%; /* Relative to viewport for better responsiveness */
+  min-width: 300px; /* Slightly adjusted to maintain minimum readability */
+  margin: 0 auto;
+}
 
   .proposal-form {
     background-color: lightgray;
@@ -57,4 +58,12 @@
     border-radius: 5px; /* Match border-radius with other inputs */
     box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
   }
+
+
+  @media (min-width: 1024px) {
+    .form-container {
+        max-width: 950px; /* Maximum width when there's enough space */
+        width: 80%; /* Maintain relative sizing */
+    }
+}
   

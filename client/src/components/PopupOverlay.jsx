@@ -42,7 +42,7 @@ const modalStyles = {
   backgroundColor: '#fff',
   padding: '15px',
   borderRadius: '8px',
-  width: 'fit-content',
+  width: '750px',
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 };
 

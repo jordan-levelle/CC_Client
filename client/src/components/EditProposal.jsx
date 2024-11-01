@@ -68,9 +68,9 @@ const EditProposal = ({ onUpdate, onClose, isModal }) => {
   };
 
   return (
-    <div className={isModal ? 'modal-form-container' : 'form-container'}>
+    <div className='form-container'>
       <div className="edit-proposal">
-        <h4>{isModal ? "Edit Proposal in Modal" : "Edit Proposal on Main Page"}</h4>
+      <h4 style={{ textAlign: 'center' }}>Edit Proposal</h4>
         <form className="edit" onSubmit={handleSubmit}>
           <div className="proposal-form">
             <label>Title:</label>
