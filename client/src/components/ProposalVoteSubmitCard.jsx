@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from 'react-tooltip';
 import { icons, tooltips } from '../constants/Constants';
+import { showErrorToast, messages } from 'src/utils/toastNotifications';
 import '../styles/components/proposalvotecard.css';
 import '../styles/components/proposalvotesubmitcard.css';
 
@@ -9,41 +10,38 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
   const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle opinion selection and auto-submit
+  const handleNewVoteChange = (e) => {
+    const { name, value } = e.target;
+    setNewVote((prevVote) => ({ ...prevVote, [name]: value }));
+  };
+
   const handleOpinionSelect = async (opinionType) => {
     const updatedVote = { ...newVote, opinion: opinionType };
     setNewVote(updatedVote);
     await handleSubmit(updatedVote);
   };
 
-  // Submit the vote when all conditions are met
   const handleSubmit = async (voteData = newVote) => {
     if (isSubmitting) {
       return;
     }
+    
+    if (!voteData.name.trim()) {
+      showErrorToast(messages.voteErrorName);
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
-      // Call the function passed in props to submit the vote
-      await handleNewTableEntry(voteData); // Pass setErrorMessage to update the state in case of an error
-
-        // socket.emit('new vote', voteData);
-  
-        setNewVote({ name: '', opinion: '', comment: '' });
-      
+      await handleNewTableEntry(voteData); 
+      setNewVote({ name: '', opinion: '', comment: '' });
     } catch (error) {
-      console.error("Error while submitting vote:", error);
+      showErrorToast(`Error while submitting vote: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Handle form input changes (name, comment)
-  const handleNewVoteChange = (e) => {
-    const { name, value } = e.target;
-    setNewVote((prevVote) => ({ ...prevVote, [name]: value }));
-  };
-
-  // Handle 'Enter' key submission for the 'name' input
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && e.target.name === 'name') {
       handleSubmit();
@@ -67,7 +65,6 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
             className='name-input'
           />
         </div>
-
         <div className='opinion-submit-container'>
           <label htmlFor='opinion' className='input-label'>Opinion:</label>
           <div className="opinion-submit-buttons">
@@ -90,7 +87,6 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
             ))}
           </div>
         </div>
-
         <div className='comment-submit-container'>
           <label htmlFor='comment' className='input-label'>Comment:</label>
           <textarea
@@ -102,7 +98,6 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
             aria-label="Comment"
           />
         </div>
-
         <div className='action-submit-container'>
           <button
             aria-label="Submit New Entry"
