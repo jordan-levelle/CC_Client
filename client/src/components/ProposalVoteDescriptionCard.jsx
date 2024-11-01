@@ -13,7 +13,16 @@ import '../styles/components/proposalvotedescriptioncard.css';
 import '../styles/components/dropdown.css';
 import { deleteProposalAPI } from '../api/proposals';
 
-const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, dispatch, submittedVotes, onUpdateProposal, isOwner }) => {
+const DescriptionCard = ({
+  proposal,
+  user,
+  uniqueUrl,
+  showFirstRenderMessage,
+  dispatch,
+  submittedVotes,
+  onUpdateProposal,
+  isOwner,
+}) => {
   const [isEditProposalModalOpen, setIsEditProposalModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setIsCreateTeamModalOpen] = useState(false);
   const [isTeamCreated, setIsTeamCreated] = useState(false);
@@ -49,7 +58,7 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
       dispatch({ type: 'DELETE_PROPOSAL', payload: proposal });
       setIsDeleted(true);
     } catch (error) {
-      console.error('Error deleting proposal:', error);
+      // Handle error appropriately
     }
   };
 
@@ -144,7 +153,6 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
         <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
       </div>
 
-      {/* Display the uploaded file if it exists */}
       {proposal.file && (
         <div className="uploaded-file">
           <h4>Uploaded File:</h4>
@@ -177,7 +185,6 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
         <div className="right-column"></div>
       </div>
 
-      {/* Modal For Create Team */}
       {isCreateTeamModalOpen && (
         <Modal isOpen={isCreateTeamModalOpen} onClose={() => setIsCreateTeamModalOpen(false)}>
           <UserCreateTeams
@@ -203,18 +210,17 @@ const DescriptionCard = ({ proposal, user, uniqueUrl, showFirstRenderMessage, di
         </Modal>
       )}
 
-      {/* Modal For Edit Proposal */}
       {isEditProposalModalOpen && (
         <Modal isOpen={isEditProposalModalOpen} onClose={() => setIsEditProposalModalOpen(false)}>
           <EditProposal
             proposal={proposal}
             onClose={() => setIsEditProposalModalOpen(false)}
             onUpdate={handleProposalUpdate}
+            isModal={true}
           />
         </Modal>
       )}
 
-      {/* Modal For Delete Proposal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div style={{ textAlign: 'center' }}>
           {isDeleted ? (
