@@ -7,7 +7,7 @@ import { useTeamsContext } from '../context/TeamsContext';
 import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender } from '../api/proposals';
 import { setParticipatedProposal } from 'src/api/users';
-import { connectToProposalRoom, disconnectFromProposalRoom } from 'src/utils/socket';
+// import { connectToProposalRoom, disconnectFromProposalRoom } from 'src/utils/socket';
 import '../styles/pages/proposalvote.css';
 
 const ProposalVote = () => {
@@ -52,18 +52,18 @@ const ProposalVote = () => {
     };
     getProposalData();
     // Cleanup socket connection on unmount
-    return () => {
-      disconnectFromProposalRoom();
-    };
+    // return () => {
+    //   disconnectFromProposalRoom();
+    // };
   }, [uniqueUrl, user]);
 
-  useEffect(() => {
-    if (uniqueUrl) {
-      connectToProposalRoom(uniqueUrl, (newVote) => {
-        setSubmittedVotes((prevVotes) => [...prevVotes, newVote]);
-      });
-    }
-  }, [uniqueUrl]);
+  // useEffect(() => {
+  //   if (uniqueUrl) {
+  //     connectToProposalRoom(uniqueUrl, (newVote) => {
+  //       setSubmittedVotes((prevVotes) => [...prevVotes, newVote]);
+  //     });
+  //   }
+  // }, [uniqueUrl]);
 
   useEffect(() => {
     const submitTeamVotes = async () => {

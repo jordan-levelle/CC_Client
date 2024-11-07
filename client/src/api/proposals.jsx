@@ -151,7 +151,7 @@ export const fetchSubmittedVotes = async (proposalId) => {
 };
 
 
-export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, uniqueUrl,) => {
+export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes, uniqueUrl) => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
@@ -163,8 +163,6 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     ...newVote,    // Spread existing vote properties
     uniqueUrl,    // Add uniqueUrl to the request body
   };
-
-  console.log('Submitting new vote:', voteDataToSend); // Log the new vote being submitted
 
   try {
     const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
@@ -180,7 +178,6 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
     }
 
     const voteData = await response.json();
-    console.log('Vote submitted successfully, response:', voteData); // Log the response data
 
     // Update submitted votes in state
     if (voteData && voteData.addedVote) {

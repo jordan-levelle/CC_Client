@@ -10,3 +10,4 @@ export { default as Verification } from './Verification';
 export { default as VerifyLoadingPage } from './VerificationLoadingPage';
 export { default as Subscribe } from './Subscribe';
 export { default as ProposalVote } from './ProposalVote';
+export { default as Admin } from './Admin';

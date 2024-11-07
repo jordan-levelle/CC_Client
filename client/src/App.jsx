@@ -3,7 +3,19 @@ import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Header, Footer } from './components';
 import { ExampleProposal, EditProposal, ForgotPassword, ProtectedRoute } from './components';
-import { Home, Profile, Create, Basics, Subscriptions, Subscribe, Settings, Teams, AuthPage, Verification, VerifyLoadingPage, ProposalVote
+import { Home, 
+         Profile, 
+         Create, 
+         Basics, 
+         Subscriptions, 
+         Subscribe, 
+         Settings, 
+         Teams, 
+         AuthPage, 
+         Verification, 
+         VerifyLoadingPage, 
+         ProposalVote,
+         Admin
  } from './pages';
 import { useAuthContext } from './hooks/useAuthContext';
 import 'react-toastify/dist/ReactToastify.css';
@@ -39,6 +51,7 @@ export default function App() {
             <Route path='/settings' element={ <ProtectedRoute redirectTo='/auth'><Settings /></ProtectedRoute> } />
             <Route path='/teams' element={ <ProtectedRoute redirectTo='/auth'><Teams /></ProtectedRoute> } />
             <Route path='/reset/:token' element={<ForgotPassword />} />
+            <Route path='/admin' element={<Admin />} />
 
             {/* Public Routes */}
             <Route path='/create' element={<Create />} />

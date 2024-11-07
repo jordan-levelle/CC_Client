@@ -9,10 +9,16 @@ import '../styles/components/proposalvotesubmitcard.css';
 const VoteSubmitCard = ({ handleNewTableEntry }) => {
   const [newVote, setNewVote] = useState({ name: '', opinion: '', comment: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nameError, setNameError] = useState(false); // Track if name is missing
 
   const handleNewVoteChange = (e) => {
     const { name, value } = e.target;
     setNewVote((prevVote) => ({ ...prevVote, [name]: value }));
+    
+    // Reset name error if user starts typing in the name field
+    if (name === 'name' && value.trim()) {
+      setNameError(false);
+    }
   };
 
   const handleOpinionSelect = async (opinionType) => {
@@ -27,6 +33,7 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
     }
     
     if (!voteData.name.trim()) {
+      setNameError(true); // Set name error to true
       showErrorToast(messages.voteErrorName);
       return;
     }
@@ -62,8 +69,9 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
             onChange={handleNewVoteChange}
             onKeyDown={handleKeyDown}
             aria-label="Name"
-            className='name-input'
+            className={`name-input ${nameError ? 'input-error' : ''}`} // Apply red outline when error occurs
           />
+          {nameError && <small className="error-text">Name is required.</small>} {/* Display error message */}
         </div>
         <div className='opinion-submit-container'>
           <label htmlFor='opinion' className='input-label'>Opinion:</label>

@@ -15,6 +15,7 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   const [isEditing, setIsEditing] = useState({});
   const [localName, setLocalName] = useState({});
   const nameInputRefs = useRef({});
+  const nameUpdateRef = useRef({});  // Ref to track name update status
 
   useEffect(() => {
     // Cleanup function to clear all timeouts when component unmounts
@@ -40,12 +41,20 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   }, [commentDrafts, proposal._id, submittedVotes, setSubmittedVotes]);
 
   const handleNameUpdate = async (index, newName) => {
+    const voteId = submittedVotes[index]._id;
+
+    if (nameUpdateRef.current[voteId]) return;  // Prevent duplicate updates
+
+    nameUpdateRef.current[voteId] = true;  // Mark as updated
+
     try {
       await updateName(proposal._id, submittedVotes, setSubmittedVotes, index, newName);
       showSuccessToast('voteNameSuccess');
     } catch (error) {
       console.error('Error updating name:', error);
       showErrorToast('voteError');
+    } finally {
+      nameUpdateRef.current[voteId] = false;  // Reset after update
     }
   };
 
@@ -90,7 +99,6 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
 
     const newTimeoutId = setTimeout(async () => {
       await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
-      showSuccessToast('voteCommentSuccess');
       setCommentDrafts((prev) => ({
         ...prev,
         [voteId]: '',
@@ -101,6 +109,15 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
       ...prevTimeouts,
       [voteId]: newTimeoutId,
     }));
+  };
+
+  const handleBlurComment = async (index, voteId) => {
+    const newComment = commentDrafts[voteId] || '';
+    if (newComment) {
+      // Save comment immediately and show success toast
+      await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
+      showSuccessToast('voteCommentSuccess');
+    }
   };
 
   const handleDeleteEntry = async (voteId) => {
@@ -189,19 +206,20 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
             </div>
             <div className='opinion-container'>
               <div className='opinion-buttons'>
-                {Object.keys(icons).map((opinionType) => (
-                  <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`} data-tooltip-html={tooltips[opinionType]}>
-                    <button
-                      type="button"
-                      className={vote.opinion === opinionType ? 'selected' : ''}
-                      onClick={() => handleOpinionUpdate(index, opinionType)}
-                      aria-label={`Vote ${opinionType}`}
-                    >
-                      <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
-                    </button>
-                    <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
-                  </div>
-                ))}
+              {Object.keys(icons).map((opinionType) => (
+                <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`} data-tooltip-html={tooltips[opinionType]}>
+                  <button
+                    type="button"
+                    className={vote.opinion === opinionType ? 'selected' : ''}
+                    onClick={() => handleOpinionUpdate(index, opinionType)}
+                    aria-label={`Vote ${opinionType}`}
+                  >
+                    <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
+                  </button>
+                  <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
+                </div>
+              ))}
+
               </div>
               <small className='vote-date'>
                 {formatDate(vote.updatedAt !== vote.createdAt ? vote.updatedAt : vote.createdAt)}
@@ -212,6 +230,7 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
                 className="comment-input"
                 value={commentDrafts[vote._id] || vote.comment || ''} 
                 onChange={(e) => handleCommentChange(index, e.target.value)} 
+                onBlur={() => handleBlurComment(index, vote._id)} // Immediate save on blur
               />
             </div>
             <div className='action-container'>
