@@ -7,7 +7,6 @@ import { useTeamsContext } from '../context/TeamsContext';
 import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender } from '../api/proposals';
 import { setParticipatedProposal } from 'src/api/users';
-// import { connectToProposalRoom, disconnectFromProposalRoom } from 'src/utils/socket';
 import '../styles/pages/proposalvote.css';
 
 const ProposalVote = () => {
@@ -51,19 +50,7 @@ const ProposalVote = () => {
       }
     };
     getProposalData();
-    // Cleanup socket connection on unmount
-    // return () => {
-    //   disconnectFromProposalRoom();
-    // };
   }, [uniqueUrl, user]);
-
-  // useEffect(() => {
-  //   if (uniqueUrl) {
-  //     connectToProposalRoom(uniqueUrl, (newVote) => {
-  //       setSubmittedVotes((prevVotes) => [...prevVotes, newVote]);
-  //     });
-  //   }
-  // }, [uniqueUrl]);
 
   useEffect(() => {
     const submitTeamVotes = async () => {
@@ -100,15 +87,14 @@ const ProposalVote = () => {
     }
   }, [teamVotesSubmitted, clearSelectedTeam]);
 
-  const handleNewTableEntry = async (newVote, isOwner) => {
+  const handleNewTableEntry = async (voteData, isOwner) => {
     try {
-      const response = await submitNewTableEntry(proposal._id, newVote, setSubmittedVotes, uniqueUrl);
+      const response = await submitNewTableEntry(proposal._id, voteData, setSubmittedVotes, uniqueUrl);
   
       if (response && response.limitReached) {
-        showErrorToast('voteLimitError'); // Show limit error toast
+        showErrorToast('voteLimitError'); 
       } else {
-        showSuccessToast('voteSuccess'); // Show success toast
-        
+        showSuccessToast('voteSuccess'); 
         if (user && !isOwner) {
           try {
             const participationResponse = await setParticipatedProposal(proposal._id, response.addedVote._id, user.token);
@@ -166,3 +152,4 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+

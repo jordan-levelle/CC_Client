@@ -70,7 +70,7 @@
 
 
 .action-submit-container {
-  min-width: 75px; /* Define the width of the container */
+  width: 85px; /* Define the width of the container */
   display: flex;
   padding-top: 25px;
 }

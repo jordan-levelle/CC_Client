@@ -7,8 +7,12 @@ const deleteIcon = <FontAwesomeIcon icon={faTrashCan} style={{ color: 'green', f
 const warningIcon = <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: 'orange', fontSize: '20px' }} />;
 
 export const messages = {
+  teamCreateSuccess: 'Team Successfully Created',
   teamVoteSuccess: 'Team votes submitted successfully!',
   teamVoteError: 'Failed to submit team votes.',
+
+  proposalUpdateSuccess: 'Proposal Updated!',
+
   voteLimitError: 'Limit of 15 votes reached. Upgrade subscription for unlimited votes.',
   voteSuccess: 'Vote submitted successfully!',
   voteNameSuccess: 'Name updated successfully!',

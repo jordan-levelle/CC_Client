@@ -122,3 +122,4 @@ const VoteSubmitCard = ({ handleNewTableEntry }) => {
 };
 
 export default VoteSubmitCard;
+

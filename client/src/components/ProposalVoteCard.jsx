@@ -15,7 +15,7 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   const [isEditing, setIsEditing] = useState({});
   const [localName, setLocalName] = useState({});
   const nameInputRefs = useRef({});
-  const nameUpdateRef = useRef({});  // Ref to track name update status
+  const nameUpdateRef = useRef({}); 
 
   useEffect(() => {
     // Cleanup function to clear all timeouts when component unmounts
@@ -34,7 +34,6 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
         }
       });
     };
-    window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
@@ -44,8 +43,7 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
     const voteId = submittedVotes[index]._id;
 
     if (nameUpdateRef.current[voteId]) return;  // Prevent duplicate updates
-
-    nameUpdateRef.current[voteId] = true;  // Mark as updated
+      nameUpdateRef.current[voteId] = true;  
 
     try {
       await updateName(proposal._id, submittedVotes, setSubmittedVotes, index, newName);
@@ -92,32 +90,31 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
       ...prev,
       [voteId]: newComment,
     }));
-
+  
+    // Clear any existing timeout to avoid race conditions
     if (timeoutIds[voteId]) {
       clearTimeout(timeoutIds[voteId]);
     }
-
+  
+    // Set up a timeout to save the comment after 30 seconds
     const newTimeoutId = setTimeout(async () => {
-      await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
-      setCommentDrafts((prev) => ({
-        ...prev,
-        [voteId]: '',
-      }));
+      if (newComment !== '') {  // Only update if comment isn't empty
+        await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
+      }
     }, 30000);
-
+  
+    // Update the timeout ID in state
     setTimeoutIds((prevTimeouts) => ({
       ...prevTimeouts,
       [voteId]: newTimeoutId,
     }));
   };
-
+  
   const handleBlurComment = async (index, voteId) => {
     const newComment = commentDrafts[voteId] || '';
-    if (newComment) {
       // Save comment immediately and show success toast
       await updateComment(proposal._id, submittedVotes, setSubmittedVotes, index, newComment);
       showSuccessToast('voteCommentSuccess');
-    }
   };
 
   const handleDeleteEntry = async (voteId) => {
@@ -140,7 +137,10 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   return (
     <div className='vote-card'>
       {submittedVotes.length > 0 &&
-        submittedVotes.map((vote, index) => (
+        submittedVotes.map((vote, index) => 
+          
+          (
+          
           <div key={vote._id} className={`vote-items ${expandedRows[vote._id] ? 'details-visible' : ''}`}>
             <div className='mobile-toggle-row'>
             <div className="name-and-details">
@@ -207,7 +207,11 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
             <div className='opinion-container'>
               <div className='opinion-buttons'>
               {Object.keys(icons).map((opinionType) => (
-                <div key={opinionType} data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`} data-tooltip-html={tooltips[opinionType]}>
+                <div 
+                  key={opinionType} 
+                  data-tooltip-id={`${opinionType.toLowerCase()}-tooltip`} 
+                  data-tooltip-html={tooltips[opinionType]}
+                >
                   <button
                     type="button"
                     className={vote.opinion === opinionType ? 'selected' : ''}
@@ -216,7 +220,7 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
                   >
                     <FontAwesomeIcon icon={icons[opinionType]} /> <span>{opinionType}</span>
                   </button>
-                  <Tooltip id={`${opinionType.toLowerCase()}-tooltip`} />
+                  <Tooltip key={`${opinionType}-tooltip`} id={`${opinionType.toLowerCase()}-tooltip`} />
                 </div>
               ))}
 
