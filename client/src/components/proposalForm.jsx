@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import ReactQuill from 'react-quill';
 import Select from 'react-select';
-import DropzoneUploader from './DropzoneUploader';
+// import DropzoneUploader from './DropzoneUploader';
 import { useForm } from 'react-hook-form';
 import { createProposal } from 'src/api/proposals';
-import { uploadDocument } from 'src/api/documents';
+// import { uploadDocument } from 'src/api/documents';
 import { useProposalsContext } from "../hooks/useProposalContext";
 import { useVoteContext } from "../hooks/useVoteContext";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -27,7 +27,7 @@ const ProposalForm = () => {
 
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState('');
-  const [uploadedFile, setuploadedFile] = useState(null);
+  // const [uploadedFile, setuploadedFile] = useState(null);
 
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
@@ -35,7 +35,7 @@ const ProposalForm = () => {
 
   useEffect(() => {
     if (user && isSubscribed) {
-      fetchTeams(); // Fetch teams when the component mounts and user is available and subscribed
+      fetchTeams();
     }
   }, [fetchTeams, user, isSubscribed]); 
 
@@ -66,8 +66,8 @@ const ProposalForm = () => {
   const handleTeamChange = (selectedOption) => {
     const teamId = selectedOption?.value || null;
     const team = teams.find(t => t._id === teamId);
-    updateSelectedTeam(team); // Update the context with the selected team
-    setValue('team', teamId); // Update the form value
+    updateSelectedTeam(team);
+    setValue('team', teamId);
   };
 
   const generateDummyUser = () => ({
@@ -95,8 +95,6 @@ const ProposalForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log('Form data before submission:', data);
-  
       if (errors.title || errors.description) {
         throw new Error('Title and description are required');
       }
@@ -110,7 +108,6 @@ const ProposalForm = () => {
   
       const currentUser = user || generateDummyUser();
   
-      // Create formData for proposal data only (no file)
       const proposalData = {
         title: data.title,
         description: data.description,
@@ -119,28 +116,21 @@ const ProposalForm = () => {
         teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : '',
       };
   
-      // Send proposal data without the file
       const createdProposal = await createProposal(proposalData, currentUser.token);
-      console.log("Proposal created:", createdProposal);
   
-      // Dispatch to update context
       dispatch({ type: 'CREATE_PROPOSAL', payload: createdProposal });
   
-      // Store the selected proposal ID in the vote context
       setSelectedProposalId(createdProposal._id);
   
-      // Upload the document if a file is uploaded
-      if (uploadedFile) {
-        const formData = new FormData();
-        formData.append('file', uploadedFile); // Append the uploaded file
-        await uploadDocument(createdProposal._id, formData);
-        console.log('Document uploaded successfully');
-      }
-  
-      // Navigate to the ProposalVote page
+      // Commented out document upload functionality
+      // if (uploadedFile) {
+      //   const formData = new FormData();
+      //   formData.append('file', uploadedFile);
+      //   await uploadDocument(createdProposal._id, formData);
+      // }
+
       navigate(`/${createdProposal.uniqueUrl}`);
   
-      // Clear form
       reset();
     } catch (error) {
       console.error('Error submitting proposal:', error.message);
@@ -165,7 +155,7 @@ const ProposalForm = () => {
             onKeyDown={handleTitleKeyPress}
             aria-required="true"
             aria-label="Title"
-            name="title" // Add name attribute
+            name="title"
           />
           {errors.title && <span className="error">{errors.title.message}</span>}
           
@@ -175,17 +165,19 @@ const ProposalForm = () => {
             className="quill-editor"
             value={descriptionValue}
             onChange={onEditorStateChange}
-            tabIndex="2" // Ensure tabIndex is set correctly
+            tabIndex="2"
             aria-required="true"
             aria-label="Description"
-            onKeyDown={handleDescriptionKeyPress} // Add key down event handler
+            onKeyDown={handleDescriptionKeyPress}
             ref={descriptionInputRef}
           />
           <div className='error'>{errors.description && "Description is required"}</div>
           
-          {isSubscribed ? (
+
+
+          {/* TODO:  {isSubscribed ? (
             <DropzoneUploader onFileUpload={setuploadedFile} />
-          ) : null}
+          ) : null} */}
 
           <label htmlFor="name">Proposed by:</label>
             <input 
@@ -204,7 +196,7 @@ const ProposalForm = () => {
                   <Select 
                     options={options} 
                     defaultValue={selectedTeam ? { value: selectedTeam._id, label: selectedTeam.teamName } : { value: null, label: 'No Team' }}
-                    onChange={handleTeamChange} // Handle dropdown selection
+                    onChange={handleTeamChange}
                   />
                 </div>
               ) : null}
@@ -216,7 +208,7 @@ const ProposalForm = () => {
                   type="checkbox"
                   {...register('sendNotifications')}
                   tabIndex="4"
-                  style={{ marginRight: '5px' }} // Adjust margin as needed
+                  style={{ marginRight: '5px' }}
                 />
                 <label htmlFor="sendNotifications">
                   Notify Team Members of Proposal Creation
@@ -231,7 +223,7 @@ const ProposalForm = () => {
                 type="checkbox"
                 {...register('receiveNotifications')}
                 tabIndex="4"
-                style={{ marginRight: '5px' }} // Adjust margin as needed
+                style={{ marginRight: '5px' }}
               />
               <label htmlFor="receiveNotifications">
                 Receive Email Notifications
@@ -247,7 +239,7 @@ const ProposalForm = () => {
                   {...register('email')} 
                   tabIndex="5"
                   aria-label="Email"
-                  name="email" // Add name attribute
+                  name="email"
                 />
               </>
             )}

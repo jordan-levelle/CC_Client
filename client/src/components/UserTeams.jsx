@@ -9,6 +9,7 @@ import { faPencil, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import UserEditTeams from '../components/UserEditTeams'; // Import UserEditTeams
 import ProposalForm from './proposalForm';
 import Modal from './PopupOverlay';
+import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 import 'react-tooltip/dist/react-tooltip.css';
 
 const UserTeams = () => {
@@ -43,8 +44,10 @@ const UserTeams = () => {
     try {
       await deleteTeam(teamId, user.token);
       fetchTeams(); 
+      showSuccessToast('teamDeleteSuccess');
     } catch (error) {
       console.error('Error deleting team:', error);
+      showErrorToast('teamDeleteError');
     }
   };
 

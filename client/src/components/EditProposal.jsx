@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { fetchEditProposalAPI, updateProposalAPI } from "../api/proposals";
 import { useAuthContext } from "../hooks/useAuthContext";
 import ReactQuill from 'react-quill'; 
+import { showSuccessToast, showErrorToast } from "src/utils/toastNotifications";
 import 'react-quill/dist/quill.snow.css'; 
 
 const EditProposal = ({ onUpdate, onClose, isModal }) => {
@@ -57,8 +58,10 @@ const EditProposal = ({ onUpdate, onClose, isModal }) => {
       } else {
         navigate(`/${response.uniqueUrl || uniqueUrl}`);
       }
+      showSuccessToast('proposalUpdateSuccess');
     } catch {
       setError('Failed to update proposal');
+      showErrorToast('proposalUpdateError');
     }
   };
 
@@ -123,3 +126,5 @@ const EditProposal = ({ onUpdate, onClose, isModal }) => {
 };
 
 export default EditProposal;
+
+

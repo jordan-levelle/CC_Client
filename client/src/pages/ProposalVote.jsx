@@ -87,34 +87,35 @@ const ProposalVote = () => {
     }
   }, [teamVotesSubmitted, clearSelectedTeam]);
 
+
   const handleNewTableEntry = async (voteData, isOwner) => {
     try {
       const response = await submitNewTableEntry(proposal._id, voteData, setSubmittedVotes, uniqueUrl);
   
       if (response && response.limitReached) {
-        showErrorToast('voteLimitError'); 
-      } else {
-        showSuccessToast('voteSuccess'); 
-        if (user && !isOwner) {
-          try {
-            const participationResponse = await setParticipatedProposal(proposal._id, response.addedVote._id, user.token);
-            if (participationResponse && participationResponse.success) {
-            } else {
-              console.error('Failed to update participated proposal:', participationResponse.message);
-            }
-          } catch (error) {
-            console.error('Error calling setParticipatedProposal API:', error);
-            showErrorToast('participationError'); // Show participation error toast
-          }
+        showErrorToast('voteLimitError');
+        return; // Exit early on limit error
+      }
+  
+      showSuccessToast('voteSuccess');
+  
+      // Fetch all votes after a successful vote submission
+      const updatedVotes = await fetchSubmittedVotes(proposal._id);
+      setSubmittedVotes(updatedVotes);  // Update the state with the latest votes from the server
+  
+      if (user && !isOwner) {
+        try {
+          await setParticipatedProposal(proposal._id, response.addedVote._id, user.token);
+        } catch (error) {
+          showErrorToast('participationError');
         }
-        const votes = await fetchSubmittedVotes(proposal._id);
-        setSubmittedVotes(votes); 
       }
     } catch (error) {
       console.error('Error submitting new entry:', error);
-      showErrorToast('voteError'); // Show error toast for vote submission
+      showErrorToast('voteError');
     }
   };
+  
 
   return (
     <div className="proposal-vote-page-container">
@@ -152,4 +153,5 @@ const ProposalVote = () => {
 };
 
 export default ProposalVote;
+
 

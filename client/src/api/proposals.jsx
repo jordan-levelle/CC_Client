@@ -167,7 +167,7 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
   try {
     const response = await fetch(`${PROP_URL}/${proposalId}/vote`, {
       method: 'POST',
-      body: JSON.stringify(voteDataToSend), // Send updated vote data
+      body: JSON.stringify(voteDataToSend),
       headers: headers,
     });
 
@@ -179,24 +179,17 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
 
     const voteData = await response.json();
 
-    // Update submitted votes in state
+    // Update submitted votes in state with the new vote at the beginning
     if (voteData && voteData.addedVote) {
-      setSubmittedVotes((prevVotes) => {
-        const isVoteAlreadySubmitted = prevVotes.some(vote => vote._id === voteData.addedVote._id);
-        if (!isVoteAlreadySubmitted) {
-          return [voteData.addedVote, ...prevVotes];
-        }
-        return prevVotes;
-      });
+      setSubmittedVotes((prevVotes) => [voteData.addedVote, ...prevVotes]);
     }
 
-    return voteData; // Return the vote data if submission was successful
+    return voteData;
   } catch (error) {
     console.error('Error in submitNewTableEntry:', error.message);
     return;
   }
 };
-
 
 
 

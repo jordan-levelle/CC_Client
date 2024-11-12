@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import Notification from './Notification';
 import validator from 'validator';
+import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 
 const UserCreateTeams = ({ existingTeam, defaultMembers = [], onClose }) => {
   const [teamName, setTeamName] = useState(existingTeam ? existingTeam.teamName : '');
@@ -68,18 +69,20 @@ const UserCreateTeams = ({ existingTeam, defaultMembers = [], onClose }) => {
 
     const invalidEmail = rows.filter(row => row.email && !validator.isEmail(row.email));
     if (invalidEmail.length > 0) {
-      setError('One or more emails are invalid')
+      setError('One or more emails are invalid');
+      return;
     }
 
     try {
-      // Sort members alphabetically by name
       const sortedRows = [...rows].sort((a, b) => a.name.localeCompare(b.name));
       const members = sortedRows.map(row => ({ memberName: row.name, memberEmail: row.email }));
 
       if (existingTeam) {
         await editTeam(existingTeam._id, { teamName, members }, user.token);
+        showSuccessToast('teamEditSuccess'); // Show success toast for edit
       } else {
         await createTeam({ teamName, members }, user.token);
+        showSuccessToast('teamCreateSuccess'); // Show success toast for creation
       }
       setTeamName('');
       setRows([{ name: '', email: '' }]);
@@ -88,6 +91,7 @@ const UserCreateTeams = ({ existingTeam, defaultMembers = [], onClose }) => {
       if (onClose) onClose();
     } catch (error) {
       setError('Failed to save team');
+      showErrorToast('teamError'); // Show error toast
     }
   };
 
@@ -174,4 +178,3 @@ const UserCreateTeams = ({ existingTeam, defaultMembers = [], onClose }) => {
 };
 
 export default UserCreateTeams;
-

@@ -8,10 +8,15 @@ const warningIcon = <FontAwesomeIcon icon={faExclamationTriangle} style={{ color
 
 export const messages = {
   teamCreateSuccess: 'Team Successfully Created',
+  teamEditSuccess: 'Team Successfully Edited',
+  teamDeleteSuccess: 'Team Deleted Successfully',
+  teamDeleteError: 'Failed to Delete Team',
+  teamError: 'Failed to save team', 
   teamVoteSuccess: 'Team votes submitted successfully!',
   teamVoteError: 'Failed to submit team votes.',
 
   proposalUpdateSuccess: 'Proposal Updated!',
+  proposalUpdateError: 'Could not update proposal.',
 
   voteLimitError: 'Limit of 15 votes reached. Upgrade subscription for unlimited votes.',
   voteSuccess: 'Vote submitted successfully!',
@@ -30,7 +35,7 @@ export const showSuccessToast = (messageKey) => {
 
 
 export const showErrorToast = (message) => {
-  const toastMessage = message || messages.voteError; 
+  const toastMessage = message || messages.voteError;  
   toast.error(toastMessage, { icon: warningIcon });
 };
 

@@ -137,10 +137,7 @@ const VoteCard = ({ submittedVotes, setSubmittedVotes, proposal }) => {
   return (
     <div className='vote-card'>
       {submittedVotes.length > 0 &&
-        submittedVotes.map((vote, index) => 
-          
-          (
-          
+        submittedVotes.map((vote, index) => (        
           <div key={vote._id} className={`vote-items ${expandedRows[vote._id] ? 'details-visible' : ''}`}>
             <div className='mobile-toggle-row'>
             <div className="name-and-details">
