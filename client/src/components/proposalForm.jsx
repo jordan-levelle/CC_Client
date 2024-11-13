@@ -66,10 +66,10 @@ const ProposalForm = () => {
   const handleTeamChange = (selectedOption) => {
     const teamId = selectedOption?.value || null;
     const team = teams.find(t => t._id === teamId);
-    updateSelectedTeam(team);
-    setValue('team', teamId);
+    updateSelectedTeam(team);  // Make sure selectedTeam is updated correctly
+    setValue('team', teamId);  // Set teamId in form state
   };
-
+  
   const generateDummyUser = () => ({
     _id: process.env.REACT_APP_NON_AUTH_USER,
     token: process.env.REACT_APP_NON_AUTH_TOKEN
@@ -113,7 +113,8 @@ const ProposalForm = () => {
         description: data.description,
         name: data.name || '',
         email: user ? (data.receiveNotifications ? currentUser.email : '') : data.email || '',
-        teamId: data.sendNotifications && selectedTeam ? selectedTeam._id : '',
+        teamId: selectedTeam ? selectedTeam._id : null, // Always include team ID (null if no team is selected)
+        sendNotifications: data.sendNotifications || false // Only set true if notifications should be sent
       };
   
       const createdProposal = await createProposal(proposalData, currentUser.token);
@@ -128,7 +129,7 @@ const ProposalForm = () => {
       //   formData.append('file', uploadedFile);
       //   await uploadDocument(createdProposal._id, formData);
       // }
-
+  
       navigate(`/${createdProposal.uniqueUrl}`);
   
       reset();
@@ -136,6 +137,7 @@ const ProposalForm = () => {
       console.error('Error submitting proposal:', error.message);
     }
   };
+  
   
   const descriptionValue = watch("description");
 

@@ -57,16 +57,21 @@ const ProposalVote = () => {
       if (selectedTeam && proposal && !teamVotesSubmitted) {
         try {
           const votePromises = selectedTeam.members.map((member) => {
-            const memberVote = { name: member.memberName, opinion: '', comment: '' };
+            const memberVote = { 
+              name: member.memberName, 
+              opinion: '', 
+              comment: '', 
+              teamId: selectedTeam._id // Add teamId here
+            };
             return submitNewTableEntry(proposal._id, memberVote, setSubmittedVotes);
           });
 
-          // Await all promises
           await Promise.all(votePromises);
-
+  
           // Fetch updated votes after submission
           const updatedVotes = await fetchSubmittedVotes(proposal._id);
           setSubmittedVotes(updatedVotes);
+          
           setTeamVotesSubmitted(true); // Mark as submitted
           showSuccessToast('teamVoteSuccess'); // Call the toast function with a message key
         } catch (error) {
@@ -77,9 +82,11 @@ const ProposalVote = () => {
         }
       }
     };
-
+  
     submitTeamVotes();
-  }, [proposal, selectedTeam, teamVotesSubmitted]);
+  }, [proposal, selectedTeam, setSubmittedVotes, teamVotesSubmitted]);
+  
+
 
   useEffect(() => {
     if (teamVotesSubmitted) {

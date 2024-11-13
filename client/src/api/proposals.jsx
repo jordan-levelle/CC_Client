@@ -179,11 +179,6 @@ export const submitNewTableEntry = async (proposalId, newVote, setSubmittedVotes
 
     const voteData = await response.json();
 
-    // Update submitted votes in state with the new vote at the beginning
-    if (voteData && voteData.addedVote) {
-      setSubmittedVotes((prevVotes) => [voteData.addedVote, ...prevVotes]);
-    }
-
     return voteData;
   } catch (error) {
     console.error('Error in submitNewTableEntry:', error.message);

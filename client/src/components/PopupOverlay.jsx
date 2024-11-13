@@ -14,10 +14,10 @@ const Modal = ({ isOpen, onClose, children }) => {
         >
           <FontAwesomeIcon icon={faXmark} />
         </button>
-    
-        {children}
-       
         
+        <div style={contentContainerStyles}>
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -40,13 +40,19 @@ const overlayStyles = {
 const modalStyles = {
   position: 'relative',
   backgroundColor: '#fff',
-  padding: '15px',
+  padding: '10px',
   borderRadius: '8px',
   width: '750px',
+  maxHeight: '90vh', // Ensures the modal has a max height of 80% of the viewport height
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+  overflow: 'hidden', // Hides overflow for content exceeding modal bounds
 };
 
-
+const contentContainerStyles = {
+  maxHeight: '77vh', // Set a max height for the content area
+  overflowY: 'auto', // Enable vertical scrolling when content exceeds max height
+  paddingRight: '10px', // Space for scrollbar
+};
 
 const closeButtonStyles = {
   position: 'absolute',
@@ -59,3 +65,5 @@ const closeButtonStyles = {
 };
 
 export default Modal;
+
+
