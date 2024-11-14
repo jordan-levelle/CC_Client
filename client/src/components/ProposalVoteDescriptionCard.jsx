@@ -16,6 +16,7 @@ import { deleteProposalAPI } from '../api/proposals';
 const DescriptionCard = ({
   proposal,
   user,
+  isSubscribed,
   uniqueUrl,
   showFirstRenderMessage,
   dispatch,
@@ -30,6 +31,7 @@ const DescriptionCard = ({
   const [copiedEditLink, setCopiedEditLink] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+
   const sanitizedProposal = DOMPurify.sanitize(proposal.description);
 
   const respondentNames = submittedVotes.map(vote => ({
@@ -58,7 +60,7 @@ const DescriptionCard = ({
       dispatch({ type: 'DELETE_PROPOSAL', payload: proposal });
       setIsDeleted(true);
     } catch (error) {
-      // Handle error appropriately
+      // Add Toast message
     }
   };
 
@@ -133,7 +135,11 @@ const DescriptionCard = ({
         {isOwner && (
           <div className="settings-dropdown">
             <DropdownMenu icon={faEllipsis} positionClass="dropdown-right">
-              <button className="dropdown-item" onClick={handleCreateTeamFromRespondents}>
+              <button
+                className={`dropdown-item ${!isSubscribed ? 'disabled' : ''}`}
+                onClick={handleCreateTeamFromRespondents}
+                disabled={!isSubscribed}
+              >
                 Create Team From Respondents
               </button>
               <button className="dropdown-item" onClick={handleEditProposal}>

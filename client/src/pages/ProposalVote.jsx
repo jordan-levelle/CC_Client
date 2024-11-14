@@ -10,7 +10,7 @@ import '../styles/pages/proposalvote.css';
 
 const ProposalVote = () => {
   const { dispatch } = useProposalsContext();
-  const { user } = useAuthContext();
+  const { user, isSubscribed } = useAuthContext();
   const { uniqueUrl } = useParams();
   const { selectedTeam, clearSelectedTeam } = useTeamsContext();
 
@@ -124,6 +124,7 @@ const ProposalVote = () => {
           <DescriptionCard
             proposal={proposal}
             user={user}
+            isSubscribed={isSubscribed}
             dispatch={dispatch}
             uniqueUrl={uniqueUrl}
             submittedVotes={submittedVotes}
