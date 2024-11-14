@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useProposalsContext } from '../hooks/useProposalContext';
-import { archiveParticipatedProposalAPI } from 'src/api/users'; // Removed fetchParticipatedProposalsAPI as unnecessary
+import { archiveParticipatedProposalAPI, removeParticipatedProposalAPI } from 'src/api/users'; // Removed fetchParticipatedProposalsAPI as unnecessary
 import { useAuthContext } from '../hooks/useAuthContext';
 
 const ParticipatedProposalList = ({ proposal }) => {
@@ -24,6 +24,15 @@ const ParticipatedProposalList = ({ proposal }) => {
       console.error('Error archiving/unarchiving participated proposal:', error);
     }
   };
+
+  const removeParticipatedProposal = async () => {
+    try {
+      await removeParticipatedProposalAPI(proposal._id);
+      
+    } catch (error) {
+      console.error('Error removing participated proposal:' , error )
+    }
+  }
 
   return (
     <div className="cardlist-item">
@@ -51,6 +60,12 @@ const ParticipatedProposalList = ({ proposal }) => {
           onClick={handleArchiveParticipatedProposal}
         >
           {proposal.isArchived ? "Unarchive" : "Archive"}
+        </button>
+        <button
+          className='small-delete-button'
+          onClick={removeParticipatedProposal}
+        >
+          Remove
         </button>
       </div>
     </div>

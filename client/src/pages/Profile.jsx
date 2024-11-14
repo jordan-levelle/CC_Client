@@ -15,7 +15,6 @@ const Profile = () => {
   const { proposals, participatedProposals, dispatch, filterProposals, filterParticipatedProposals } = useProposalsContext();
   const { user, isSubscribed } = useAuthContext();
 
-
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [participatedFilter, setParticipatedFilter] = useState('Active');
 
@@ -38,10 +37,6 @@ const Profile = () => {
     fetchData();
   }, [user, dispatch]);
   
-  
-
-
-
   const handlePropFilter = (event) => {
     setSelectedFilter(event.target.value);
   };
@@ -50,7 +45,6 @@ const Profile = () => {
     setParticipatedFilter(event.target.value);
   }
 
-  // Use the filteredProposals directly or from the state where it's updated
   const filteredProposals = filterProposals(proposals, selectedFilter);
   const filteredParticipatedProposals = filterParticipatedProposals(participatedProposals, participatedFilter)
 

@@ -189,29 +189,6 @@ export const cancelUserSubscription = async (token) => {
   }
 };
 
-export const setParticipatedProposal = async (proposalId, voteId, token) => {
-  try {
-    const response = await fetch(`${USER_URL}/setParticipatedProposal`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,  // Ensure token is valid
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ proposalId, voteId }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update participated proposal');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error updating participated proposal:', error);
-    throw error;
-  }
-};
-
 export const fetchParticipatedProposalsAPI = async (token) => {
   try {
     const response = await fetch(`${USER_URL}/getParticipatedProposals`, {

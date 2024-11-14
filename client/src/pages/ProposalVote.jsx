@@ -6,7 +6,6 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useTeamsContext } from '../context/TeamsContext';
 import { showSuccessToast, showErrorToast } from 'src/utils/toastNotifications';
 import { fetchProposalData, fetchSubmittedVotes, submitNewTableEntry, checkFirstRender } from '../api/proposals';
-import { setParticipatedProposal } from 'src/api/users';
 import '../styles/pages/proposalvote.css';
 
 const ProposalVote = () => {
@@ -109,14 +108,6 @@ const ProposalVote = () => {
       // Fetch all votes after a successful vote submission
       const updatedVotes = await fetchSubmittedVotes(proposal._id);
       setSubmittedVotes(updatedVotes);  // Update the state with the latest votes from the server
-  
-      if (user && !isOwner) {
-        try {
-          await setParticipatedProposal(proposal._id, response.addedVote._id, user.token);
-        } catch (error) {
-          showErrorToast('participationError');
-        }
-      }
     } catch (error) {
       console.error('Error submitting new entry:', error);
       showErrorToast('voteError');
