@@ -1,30 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
-import {
-  Grid,
-  Table,
-  TableHeaderRow,
-} from "@devexpress/dx-react-grid-material-ui";
-
-// Sample Data
-const sampleUsers = [
-  { id: 1, name: "John Doe", email: "john@example.com", signupDate: "2024-01-15" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", signupDate: "2024-02-10" },
-  { id: 3, name: "Alice Johnson", email: "alice@example.com", signupDate: "2024-03-05" },
-];
-
-// Exported UserList Component
+import { Grid, Table, TableHeaderRow } from "@devexpress/dx-react-grid-material-ui";
+import { fetchAllUsers } from "src/api/admin";
 export const AdminUserList = () => {
-  // Define columns based on the sampleUsers data
+  // Define columns for the table
   const [columns] = useState([
-    { name: "id", title: "ID" },
-    { name: "name", title: "Name" },
+    { name: "_id", title: "User ID" },
     { name: "email", title: "Email" },
-    { name: "signupDate", title: "Signup Date" },
+    { name: "proposalCount", title: "Number of Proposals" },
+    { name: "subscriptionStatus", title: "Subscription Status" },
   ]);
 
-  // Define rows as sampleUsers data
-  const [rows] = useState(sampleUsers);
+  // State for users data
+  const [rows, setRows] = useState([]);
+
+  // Fetch users from the backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await fetchAllUsers();
+        // Add proposal count to each user object
+        const processedData = data.map(user => ({
+          ...user,
+          proposalCount: user.proposals ? user.proposals.length : 0,
+          subscriptionStatus: user.subscriptionStatus ? "Subscribed" : "Not Subscribed",
+        }));
+        setRows(processedData); // Set the processed data to rows
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <div className="component-container-1">
@@ -33,9 +41,8 @@ export const AdminUserList = () => {
           <Table />
           <TableHeaderRow />
         </Grid>
-      </Paper>    
+      </Paper>
     </div>
-    
   );
 };
 

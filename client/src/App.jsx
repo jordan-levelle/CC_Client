@@ -51,7 +51,7 @@ export default function App() {
             <Route path='/settings' element={ <ProtectedRoute redirectTo='/auth'><Settings /></ProtectedRoute> } />
             <Route path='/teams' element={ <ProtectedRoute redirectTo='/auth'><Teams /></ProtectedRoute> } />
             <Route path='/reset/:token' element={<ForgotPassword />} />
-            <Route path='/admin' element={<Admin />} />
+            <Route path='/admin' element={<ProtectedRoute redirectTo='/auth'><Admin /></ProtectedRoute>} />
 
             {/* Public Routes */}
             <Route path='/create' element={<Create />} />
