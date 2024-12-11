@@ -14,6 +14,7 @@ const DropzoneUploader = ({ onFileUpload, initialFile, canCancel = false, onFile
         ...initialFile,
         name: initialFile.fileName || initialFile.name, // Set the file name for display
         preview: initialFile.fileUrl, // Use `fileUrl` for preview
+        _id: initialFile._id, // Ensure _id is available
         isExisting: true, // Mark as an existing file
       }]);
     }
@@ -40,6 +41,7 @@ const DropzoneUploader = ({ onFileUpload, initialFile, canCancel = false, onFile
   const handleCancel = async (file) => {
     try {
       if (file.isExisting && onFileRemove) {
+        if (!file._id) throw new Error("File ID is missing.");
         await onFileRemove(file); // Notify the parent about the existing file removal
       }
       setAcceptedFiles(prevFiles => prevFiles.filter((f) => f !== file));

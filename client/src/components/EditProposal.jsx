@@ -24,15 +24,25 @@ const EditProposal = ({ onUpdate, onClose, isModal }) => {
     const fetchProposalAndDocuments = async () => {
       try {
         const { proposal, documents } = await fetchEditProposalAPI(uniqueUrl);
+  
         setTitle(proposal.title || '');
         setDescription(proposal.description || '');
         setName(proposal.name || '');
         setEmail(proposal.email || '');
         setReceiveNotifications(!!proposal.email);
   
+        // Normalize documents for DropzoneUploader
+        const normalizedDocuments = documents.map(doc => ({
+          ...doc,
+          _id: doc.documentId, // Map `documentId` to `_id`
+          name: doc.fileName,  // Map `fileName` to `name`
+          preview: doc.fileUrl || '', // Optional: Add `preview` if needed
+          isExisting: true,    // Mark it as an existing file
+        }));
+  
         // Set the first document (if any) to `uploadedFile`
-        if (documents?.length > 0) {
-          setUploadedFile(documents[0]); // Use the first document if available
+        if (normalizedDocuments.length > 0) {
+          setUploadedFile(normalizedDocuments[0]); // Use the first document if available
         }
       } catch (error) {
         setError(error.message);
@@ -117,12 +127,14 @@ const EditProposal = ({ onUpdate, onClose, isModal }) => {
             canCancel={true}
             onFileRemove={async (file) => {
               try {
+                if (!file._id) throw new Error("Missing file ID for removal.");
                 await removeDocument(file._id);
                 setUploadedFile(null);
               } catch (error) {
                 console.error('Failed to remove document:', error);
               }
             }}
+            
           />          
           ) : null}
 

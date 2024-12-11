@@ -21,10 +21,8 @@ export const uploadDocument = async (proposalId, formData) => {
 
 
 export const fetchDocument = async (documentId) => {
-  console.log(`fetchDocument called with documentId: ${documentId}`);
 
   try {
-    console.log(`Sending API request to: ${DOCS_URL}/${documentId}`);
     const response = await fetch(`${DOCS_URL}/${documentId}`);
 
     if (!response.ok) {
@@ -33,14 +31,11 @@ export const fetchDocument = async (documentId) => {
     }
 
     const document = await response.json();
-    console.log('API response data:', document);
 
     if (!document.fileUrl) {
       console.error('Document fetched but fileUrl is missing');
       throw new Error('Document URL not found');
     }
-
-    console.log('Document successfully fetched:', document);
 
     // Open the document URL in a new tab
     window.open(document.fileUrl, '_blank');
@@ -53,26 +48,44 @@ export const fetchDocument = async (documentId) => {
 
 export const removeDocument = async (documentId) => {
   const token = localStorage.getItem('token');
+  
+  if (!token) {
+    throw new Error('Authentication token is missing. Please log in again.');
+  }
 
   try {
     const response = await fetch(`${DOCS_URL}/${documentId}`, {
-      method: 'DELETE', 
+      method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${token}`, 
+        'Authorization': `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      // Attempt to parse JSON error, fallback to generic message
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        throw new Error('Failed to remove document. Server returned an unexpected response.');
+      }
       throw new Error(errorData.error || 'Failed to remove document');
     }
 
-    return await response.json();
+    // Check if response has a JSON body
+    try {
+      return await response.json();
+    } catch {
+      // If no JSON body, return a success indicator
+      // TODO: Incorporate success true return for TOAST MESSAGES. Is it better? 
+      return { success: true };
+    }
   } catch (error) {
     console.error('Error in removeDocument API call:', error.message);
-    throw error; 
+    throw error; // Re-throw to let caller handle it
   }
 };
+
 
 
 
