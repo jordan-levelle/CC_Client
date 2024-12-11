@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import ProductDisplay from "../components/ProductDisplay";
 import ProductFeatures from '../components/ProductFeatures';
-import { AuthContext } from "../context/AuthContext";
+// import { AuthContext } from "../context/AuthContext";
 import { createCheckoutSession } from "../api/stripe";
 
 export default function Subscribe() {
   const [loading, setLoading] = useState(false);
-  const { dispatch } = useContext(AuthContext);
+  // const { dispatch } = useContext(AuthContext);
 
   const handleCheckout = async (sliderValue) => {
     const token = localStorage.getItem("token");
