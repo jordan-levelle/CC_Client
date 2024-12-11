@@ -7,7 +7,6 @@ export const HomePageText = {
   createProposalLink: "Create Proposal",
   exampleProposalLink: "View an Example Proposal",
   basicsSection: {
-    title: "Basics",
     description: "Consensus is a cooperative process in which group members develop and agree to support a decision in the best interest of the whole."
   },
   learnMoreLink: "Learn More"

@@ -47,10 +47,18 @@ export const createProposal = async (proposalData, token) => {
 // GET Selected Proposal to Edit API Call
 export const fetchEditProposalAPI = async (uniqueUrl) => {
   const response = await fetch(`${PROP_URL}/${uniqueUrl}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch proposal');
-  }
-  return response.json();
+  
+  const data = await response.json();
+    // Validate the response structure
+    if (!data.proposal || !Array.isArray(data.documents)) {
+      throw new Error('Invalid response structure');
+    }
+
+    return {
+      proposal: data.proposal,
+      isOwner: data.isOwner,
+      documents: data.documents, // Include documents metadata
+    };
 };
 
 // PUT Selected Proposal to Update API Call
@@ -108,18 +116,28 @@ export const fetchProposalData = async (uniqueUrl, token) => {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${PROP_URL}/${uniqueUrl}`, { headers }); 
+    const response = await fetch(`${PROP_URL}/${uniqueUrl}`, { headers });
 
     if (!response.ok) {
       throw new Error('Failed to fetch proposal');
     }
 
     const data = await response.json();
-    return data;
+    // Validate the response structure
+    if (!data.proposal || !Array.isArray(data.documents)) {
+      throw new Error('Invalid response structure');
+    }
+
+    return {
+      proposal: data.proposal,
+      isOwner: data.isOwner,
+      documents: data.documents, // Include documents metadata
+    };
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 
 
 // GET Check First Render API Call

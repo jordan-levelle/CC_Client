@@ -84,8 +84,12 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link to="/subscriptions" className="nav-link" onClick={closeMenu}>
-              {user ? 'Upgrade' : 'Pricing'}
+            <Link to="/" className="nav-link" onClick={closeMenu}>
+              {/* 
+              {user ? 'Upgrade' : 'Pricing'} 
+              TODO: Should this switch? or just stay 'Pricing'
+              */} 
+              Pricing
             </Link>
           </li>
           <li className="dropdown">

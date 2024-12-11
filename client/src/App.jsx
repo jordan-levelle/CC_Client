@@ -6,8 +6,7 @@ import { ExampleProposal, EditProposal, ForgotPassword, ProtectedRoute } from '.
 import { Home, 
          Profile, 
          Create, 
-         Basics, 
-         Subscriptions, 
+         Basics,  
          Subscribe, 
          Settings, 
          Teams, 
@@ -51,12 +50,11 @@ export default function App() {
             <Route path='/settings' element={ <ProtectedRoute redirectTo='/auth'><Settings /></ProtectedRoute> } />
             <Route path='/teams' element={ <ProtectedRoute redirectTo='/auth'><Teams /></ProtectedRoute> } />
             <Route path='/reset/:token' element={<ForgotPassword />} />
-            <Route path='/admin' element={<ProtectedRoute redirectTo='/auth'><Admin /></ProtectedRoute>} />
+            <Route path='/admin' element={<Admin />} />
 
             {/* Public Routes */}
             <Route path='/create' element={<Create />} />
             <Route path='/basics' element={<Basics />} />
-            <Route path='/subscriptions' element={<Subscriptions />} />
             <Route path='/subscribe' element={<Subscribe />} />
             <Route path='/example' element={<ExampleProposal />} />
             <Route path='/:uniqueUrl' element={<ProposalVote />} />

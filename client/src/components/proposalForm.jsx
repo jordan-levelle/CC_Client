@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import ReactQuill from 'react-quill';
 import Select from 'react-select';
-// import DropzoneUploader from './DropzoneUploader';
+import DropzoneUploader from './DropzoneUploader';
 import { useForm } from 'react-hook-form';
 import { createProposal } from 'src/api/proposals';
-// import { uploadDocument } from 'src/api/documents';
+import { uploadDocument } from 'src/api/documents';
 import { useProposalsContext } from "../hooks/useProposalContext";
 import { useVoteContext } from "../hooks/useVoteContext";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -27,7 +27,7 @@ const ProposalForm = () => {
 
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaError, setCaptchaError] = useState('');
-  // const [uploadedFile, setuploadedFile] = useState(null);
+  const [uploadedFile, setuploadedFile] = useState(null);
 
   const navigate = useNavigate();
   const titleInputRef = useRef(null);
@@ -123,12 +123,12 @@ const ProposalForm = () => {
   
       setSelectedProposalId(createdProposal._id);
   
-      // Commented out document upload functionality
-      // if (uploadedFile) {
-      //   const formData = new FormData();
-      //   formData.append('file', uploadedFile);
-      //   await uploadDocument(createdProposal._id, formData);
-      // }
+   
+      if (uploadedFile) {
+        const formData = new FormData();
+        formData.append('file', uploadedFile);
+        await uploadDocument(createdProposal._id, formData);
+      }
   
       navigate(`/${createdProposal.uniqueUrl}`);
   
@@ -177,9 +177,14 @@ const ProposalForm = () => {
           
 
 
-          {/* TODO:  {isSubscribed ? (
-            <DropzoneUploader onFileUpload={setuploadedFile} />
-          ) : null} */}
+          {isSubscribed ? (
+            <DropzoneUploader 
+            onFileUpload={setuploadedFile}
+            initialFile={uploadedFile} // Ensure this state holds the uploaded file
+            canCancel={true}
+            onFileRemove={() => setuploadedFile(null)} // Handle file removal
+          />          
+          ) : null}
 
           <label htmlFor="name">Proposed by:</label>
             <input 

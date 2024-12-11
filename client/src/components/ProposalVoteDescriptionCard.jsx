@@ -12,6 +12,7 @@ import EditProposal from './EditProposal';
 import '../styles/components/proposalvotedescriptioncard.css';
 import '../styles/components/dropdown.css';
 import { deleteProposalAPI } from '../api/proposals';
+import { fetchDocument } from 'src/api/documents';
 
 const DescriptionCard = ({
   proposal,
@@ -72,6 +73,14 @@ const DescriptionCard = ({
       setCopiedEditLink(true);
     }
   };
+
+  const handleDocumentClick = async (documentId) => {
+    try {
+      await fetchDocument(documentId);
+    } catch (error) {
+      console.error('Error opening document:', error);
+    }
+  }
 
   const opinionCounts = Array.isArray(submittedVotes)
     ? submittedVotes.reduce((acc, vote) => {
@@ -159,20 +168,25 @@ const DescriptionCard = ({
         <p dangerouslySetInnerHTML={{ __html: sanitizedProposal }}></p>
       </div>
 
-      {proposal.file && (
-        <div className="uploaded-file">
-          <h4>Uploaded File:</h4>
-          {proposal.file.type.startsWith('image/') ? (
-            <img src={proposal.file.url} alt="Uploaded" style={{ maxWidth: '100%', height: 'auto' }} />
-          ) : proposal.file.type === 'application/pdf' ? (
-            <a href={proposal.file.url} target="_blank" rel="noopener noreferrer">
-              View PDF
-            </a>
-          ) : (
-            <p>File: <a href={proposal.file.url} target="_blank" rel="noopener noreferrer">{proposal.file.name}</a></p>
-          )}
+       {/* Add the Uploaded Documents Section */}
+       {proposal.documents && proposal.documents.length > 0 && (
+        <div className="uploaded-documents">
+          <h5>Uploaded Documents</h5>
+          <ul>
+            {proposal.documents.map((document) => (
+              <li key={document.documentId}>
+                <button
+                  onClick={() => handleDocumentClick(document.documentId)}
+                  className="small-button"
+                >
+                  {document.fileName}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
+
 
       <div className="three-column-layout">
         <div className="left-column"></div>

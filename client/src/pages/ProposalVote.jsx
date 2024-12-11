@@ -29,12 +29,12 @@ const ProposalVote = () => {
     const getProposalData = async () => {
       setLoading(true);
       try {
-        const token = user?.token || null; // Safely access the token
-        const { proposal, isOwner } = await fetchProposalData(uniqueUrl, token); // Pass the token
+        const token = user?.token || null; 
+        const { proposal, isOwner, documents } = await fetchProposalData(uniqueUrl, token); // Pass the token
         if (!proposal || !proposal._id) {
           throw new Error('Invalid response structure');
         }
-        setProposal(proposal);
+        setProposal({ ...proposal, documents });
         setIsOwner(isOwner);
   
         const votes = await fetchSubmittedVotes(proposal._id);
@@ -124,6 +124,7 @@ const ProposalVote = () => {
           <DescriptionCard
             proposal={proposal}
             user={user}
+            documents={proposal.documents} // Pass documents explicitly
             isSubscribed={isSubscribed}
             dispatch={dispatch}
             uniqueUrl={uniqueUrl}

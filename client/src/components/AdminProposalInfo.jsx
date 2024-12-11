@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import { Grid, Table, TableHeaderRow } from "@devexpress/dx-react-grid-material-ui";
 import { fetchAllProposals } from "src/api/admin";
-export const AdminProposalList = () => {
+export const AdminProposalList = ({updateProposalMetrics}) => {
   // Define columns for the table
   const [columns] = useState([
     { name: "title", title: "Title" },
@@ -22,13 +22,14 @@ export const AdminProposalList = () => {
       try {
         const data = await fetchAllProposals();
         setRows(data); // Set the fetched data to rows
+        updateProposalMetrics(data.length);
       } catch (error) {
         console.error("Error fetching proposals:", error);
       }
     };
 
     fetchProposals();
-  }, []);
+  }, [updateProposalMetrics]);
 
   const Cell = ({ column, value }) => {
     if (column.name === "uniqueUrl") {

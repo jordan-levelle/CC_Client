@@ -1,23 +1,73 @@
 /* Styling for the dropzone container */
-.container div {
-    cursor: pointer; /* Changes cursor to pointer on hover */
-    width: 50%;
-    margin: 0 auto;
-    transition: font-weight 0.2s ease-in-out, border 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out; /* Smooth transition for font-weight, border, shadow, and background */
-    padding: 10px; /* Add some padding to space the content from the border */
-    border-radius: 5px; /* Adds rounded corners */
-  }
-  
-  /* Hover state: text becomes bold, border color changes, background lightens, and shadow is added */
-  .container div:hover,
-  .dropzone-active {
-    border: 1px solid lightblue;
-    border-radius: 5px;
-    background-color: #f9f9f9; /* Slightly lighter background on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
-  }
+.container {
+  margin: 20px auto;
+  text-align: center;
+}
 
-  .dropzone-active.isDragReject {
-    border-color: red;
-  }
-  
+.container div {
+  cursor: pointer;
+  width: 50%;
+  margin: 0 auto;
+  padding: 15px;
+  border: 2px dashed #ccc; /* Dashed border for better visibility */
+  border-radius: 10px;
+  background-color: #f4f4f4; /* Neutral background for readability */
+  transition: all 0.3s ease-in-out;
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Hover state */
+.container div:hover,
+.dropzone-active {
+  border: 2px solid #4caf50; /* Green border for active state */
+  background-color: #e8f5e9; /* Light green background to indicate activity */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+}
+
+/* Reject state */
+.dropzone-active.isDragReject {
+  border-color: #e53935; /* Red border for rejected files */
+  background-color: #ffebee; /* Light red background */
+  color: #d32f2f; /* Red text */
+}
+
+/* File list styling */
+.list-group {
+  list-style: none;
+  padding: 0;
+  margin: 10px auto;
+  width: 50%;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #d9f99d; /* Light green for success */
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.list-group-item-success {
+  background-color: #e0f7fa; /* Cyan background for visual consistency */
+  color: #00796b; /* Dark cyan text */
+}
+
+/* Cancel icon styling */
+.cancel-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 1.2rem;
+  color: #d32f2f; /* Red color for delete icon */
+  transition: transform 0.2s ease-in-out;
+}
+
+.cancel-icon:hover {
+  transform: scale(1.2); /* Slightly larger on hover for interactivity */
+}

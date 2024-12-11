@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import { Grid, Table, TableHeaderRow } from "@devexpress/dx-react-grid-material-ui";
 import { fetchAllUsers } from "src/api/admin";
-export const AdminUserList = () => {
+export const AdminUserList = ({updateUserMetrics}) => {
   // Define columns for the table
   const [columns] = useState([
     { name: "_id", title: "User ID" },
@@ -26,13 +26,14 @@ export const AdminUserList = () => {
           subscriptionStatus: user.subscriptionStatus ? "Subscribed" : "Not Subscribed",
         }));
         setRows(processedData); // Set the processed data to rows
+        updateUserMetrics(processedData.length);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [updateUserMetrics]);
 
   return (
     <div className="component-container-1">
