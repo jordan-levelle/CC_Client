@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { passwordCriteria } from '../constants/Constants';
 import { useSignup } from '../hooks/useSignup';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { useDeleteAccount, useUpdateAccount, useResetPassword } from '../hooks/useAccountUpdate';
-import { cancelUserSubscription } from '../api/users';
+import { useDeleteAccount, useUpdateEmail, useResetPassword, useSubscriptionUpdate } from '../hooks/useAccountUpdate';
+import { cancelUserSubscription } from 'src/api/stripe';
 import Modal from './PopupOverlay'; 
 import '../styles/components/editprofile.css';
 
@@ -11,7 +11,7 @@ import '../styles/components/editprofile.css';
 const EditProfile = () => {
    const { user, isSubscribed, dispatch } = useAuthContext();
    const { deleteAccount, deleteMessage, deleteError } = useDeleteAccount();
-   const { updateEmail, updateMessage, updateError } = useUpdateAccount();
+   const { updateEmail, updateMessage, updateError } = useUpdateEmail();
    const { resetPassword, resetPasswordMessage, resetPasswordError } = useResetPassword();
    const { validatePassword, passwordErrors } = useSignup();
 
@@ -25,6 +25,8 @@ const EditProfile = () => {
    const [showUpdateEmail, setShowUpdateEmail] = useState(false); // New state for email update modal
    const [oldPassword, setOldPassword] = useState('');
    const [newPassword, setNewPassword] = useState('');
+
+   useSubscriptionUpdate(dispatch);
 
 
    const confirmDeleteAccount = () => {

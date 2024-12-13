@@ -25,7 +25,8 @@ export const messages = {
   voteCommentSuccess: 'Comment updated successfully!',
   voteDelete: 'Vote deleted successfully',
   voteError: 'An error occurred while submitting your vote. Please try again.',
-  voteErrorName: 'Name field is required'
+  voteErrorName: 'Name field is required',
+
 };
 
 export const showSuccessToast = (messageKey) => {

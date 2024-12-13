@@ -166,29 +166,6 @@ export const checkVerificationStatusAPI = async (verificationToken) => {
   }
 };
 
-
-export const cancelUserSubscription = async (token) => {
-  try {
-    const response = await fetch(`${USER_URL}/cancel-subscription`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage || 'Failed to cancel subscription');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error(error.message || 'An error occurred while canceling subscription');
-  }
-};
-
 export const fetchParticipatedProposalsAPI = async (token) => {
   try {
     const response = await fetch(`${USER_URL}/getParticipatedProposals`, {

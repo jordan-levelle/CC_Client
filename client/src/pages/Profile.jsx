@@ -4,19 +4,28 @@ import ProposalList from '../components/ProposalList';
 import ParticipatedProposalList from '../components/ParticipatedProposalList';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProposalsContext } from '../hooks/useProposalContext';
-import {
-  fetchParticipatedProposalsAPI,
-} from '../api/users';
-import {
-  fetchProposalListAPI,
-} from '../api/proposals';
+import { useSubscriptionUpdate } from '../hooks/useAccountUpdate';
+import { fetchParticipatedProposalsAPI } from 'src/api/users';
+import { fetchProposalListAPI } from 'src/api/proposals';
 
 const Profile = () => {
-  const { proposals, participatedProposals, dispatch, filterProposals, filterParticipatedProposals } = useProposalsContext();
-  const { user, isSubscribed } = useAuthContext();
+  const { 
+    proposals, 
+    participatedProposals, 
+    dispatch, 
+    filterProposals, 
+    filterParticipatedProposals 
+  } = useProposalsContext();
+  
+  const { 
+    user, 
+    isSubscribed 
+  } = useAuthContext();
 
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [participatedFilter, setParticipatedFilter] = useState('Active');
+
+  useSubscriptionUpdate(dispatch);
 
 
   useEffect(() => {

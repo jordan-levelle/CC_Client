@@ -24,10 +24,33 @@ export const createCheckoutSession = async (amount, token) => {
       throw error;
     }
   };
+
+
+  export const cancelUserSubscription = async (token) => {
+    try {
+      const response = await fetch(`${USER_URL}/cancel-subscription`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || 'Failed to cancel subscription');
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(error.message || 'An error occurred while canceling subscription');
+    }
+  };
   
 
 // Fetch updated user info after successful subscription
-export const fetchUserInfo = async (token) => {
+export const fetchUserSubscription = async (token) => {
   try {
     const response = await fetch(`${USER_URL}/getUserInfo`, {
       method: "GET",

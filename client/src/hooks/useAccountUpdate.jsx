@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthContext } from './useAuthContext';
+import { useLocation } from 'react-router-dom';
 import { deleteAccountAPI, updateEmailAPI, resetPasswordAPI } from '../api/users'; // Import the API functions
+import { fetchUserSubscription } from 'src/api/stripe';
 
-
+/* Reset User Password Hook */
 const useResetPassword = () => {
   const { user } = useAuthContext();
   const [resetPasswordMessage, setResetPasswordMessage] = useState('');
@@ -20,7 +22,7 @@ const useResetPassword = () => {
   return { resetPassword, resetPasswordMessage, resetPasswordError };
 };
 
-
+/* Delete User Account Hook */
 const useDeleteAccount = () => {
   const { user, dispatch } = useAuthContext();
   const [deleteMessage, setDeleteMessage] = useState('');
@@ -45,7 +47,8 @@ const useDeleteAccount = () => {
   return { deleteAccount, deleteMessage, deleteError };
 };
 
-const useUpdateAccount = () => {
+/* Update User Password Hook */
+const useUpdateEmail = () => {
   const { user, dispatch } = useAuthContext();
   const [updateMessage, setUpdateMessage] = useState('');
   const [updateError, setUpdateError] = useState('');
@@ -65,4 +68,29 @@ const useUpdateAccount = () => {
   return { updateEmail, updateMessage, updateError };
 };
 
-export { useDeleteAccount, useUpdateAccount, useResetPassword };
+/* Update User Subscription Hook */
+const useSubscriptionUpdate = (dispatch) => {
+  const { user } = useAuthContext();
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const paymentSuccess = queryParams.get("payment_success");
+
+    if (paymentSuccess && user) {
+      const updateSubscriptionStatus = async () => {
+        try {
+          const updatedUser = await fetchUserSubscription(user.token);
+          dispatch({ type: "UPDATE_SUBSCRIPTION", payload: updatedUser });
+          console.log("Subscription updated:", updatedUser);
+        } catch (error) {
+          console.error("Error updating subscription status:", error);
+        }
+      };
+
+      updateSubscriptionStatus();
+    }
+  }, [location.search, user, dispatch]);
+};
+
+export { useDeleteAccount, useUpdateEmail, useResetPassword, useSubscriptionUpdate };
